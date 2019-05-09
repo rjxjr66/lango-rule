@@ -7,6 +7,7 @@
   "homepage": "https://github.com/rjxjr66/lango-rule",
   "main": "src/index.ts",
   "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "webpack",
     "build:watch": "webpack --watch",
