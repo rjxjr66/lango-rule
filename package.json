@@ -1,0 +1,51 @@
+{
+  "name": "lango-rule",
+  "version": "0.0.1",
+  "description": "DEMO Lango Rule Library",
+  "author": "hansol",
+  "license": "ISC",
+  "homepage": "https://github.com/rjxjr66/lango-rule",
+  "main": "index.ts",
+  "scripts": {
+    "build": "webpack",
+    "build:watch": "webpack --watch",
+    "pretest": "npm run build",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "test:notify": "npm run test:watch -- --notify",
+    "coverage": "npm test -- --coverage",
+    "coverage:notify": "npm run coverage -- --watch --notify",
+    "start": "npm run build && node dist/main.js",
+    "start:watch": "concurrently \"npm run build:watch\" \"node-dev dist/main.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+git@github.com:rjxjr66/lango-rule.git"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "mapCoverage": true,
+    "testEnvironment": "node",
+    "testRegex": ".*\\.spec\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "awesome-typescript-loader": "^3.2.1",
+    "concurrently": "^3.5.0",
+    "jest": "^24.5.0",
+    "node-dev": "^3.1.3",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333",
+    "webpack": "^3.0.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+  }
+}
