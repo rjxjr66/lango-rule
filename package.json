@@ -1,11 +1,11 @@
 {
   "name": "lango-rule",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "DEMO Lango Rule Library",
   "author": "hansol",
   "license": "ISC",
   "homepage": "https://github.com/rjxjr66/lango-rule",
-  "main": "dist/index.js",
+  "main": "dist/index.d.ts",
   "scripts": {
     "build": "webpack",
     "build:watch": "webpack --watch",
