@@ -5,7 +5,7 @@
   "author": "hansol",
   "license": "ISC",
   "homepage": "https://github.com/rjxjr66/lango-rule",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "webpack",
     "build:watch": "webpack --watch",
@@ -46,6 +46,5 @@
     "webpack": "^3.0.0",
     "webpack-node-externals": "^1.7.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
