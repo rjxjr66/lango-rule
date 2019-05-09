@@ -1,2 +1,2 @@
-export * from './tree';
-export * from './rule.interface';
+export { Tree } from "./tree";
+export { INode, IRule, ICommand } from "./rule.interface";

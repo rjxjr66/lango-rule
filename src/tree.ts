@@ -1,5 +1,6 @@
 // import { INode, IRule, ICommand, IRuleNode } from "./rule.interface";
-import {INode, IRule, ICommand, IRuleNode} from "./"
+import { INode, IRule, ICommand } from "./rule.interface";
+
 
 export class Tree {
     private _curNode: INode;
@@ -58,18 +59,18 @@ export class Tree {
             switch (command.cmd) {
                 case 'MOVE':
                     Tree._move(node, command.args)
-                break;
+                    break;
                 case 'DELETE':
                     Tree._delete(node, command.args)
-                break;
+                    break;
                 case 'CREATE':
                     Tree._create(node, command.args)
-                break;
+                    break;
                 case 'REPLACE':
                     Tree._replace(node, command.args)
-                break;
+                    break;
             }
-        }        
+        }
     }
 
     // 현재 노드를 리턴한다.
@@ -79,7 +80,7 @@ export class Tree {
 
     // 부모 노드로 이동하고 리턴한다. 실패시 null
     parent() {
-        if (this._curNode.parent) {            
+        if (this._curNode.parent) {
             return this._setCurrent(this._curNode.parent);
         } else {
             return null;
@@ -134,7 +135,7 @@ export class Tree {
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     private _loopMatchNode(node: INode, tokens: string[]) {
-        if (this._matchRule(node, tokens)) {            
+        if (this._matchRule(node, tokens)) {
             return node;
         } else {
             if (node.children) {
@@ -174,17 +175,17 @@ export class Tree {
                 case '(':
                     cur = tree.child();
                     star = false;
-                break;
+                    break;
                 case ')':
                     cur = tree.parent();
                     star = false;
-                break;
+                    break;
                 case '+':
                     cur = tree.nextSibiling()
-                break;
+                    break;
                 case '*':
                     star = true;
-                break;
+                    break;
                 default:
                     const node = token.split('=');
                     const _token = node[0].split('|');
@@ -218,7 +219,7 @@ export class Tree {
                             cur = tree._curNode;
                         }
                     }
-                break;
+                    break;
             }
 
             // 형제나 다음 노드가 없을 때
@@ -233,7 +234,7 @@ export class Tree {
             }
         }
 
-        return  true;
+        return true;
     }
 
     private static _getTokens(match: string) {
@@ -288,7 +289,7 @@ export class Tree {
                 case '(':
                     tree.child();
                     star = false;
-                break;
+                    break;
                 case ')':
                     if (star) {
                         star = false;
@@ -296,7 +297,7 @@ export class Tree {
                             select = false;
                             shouldEndSelection = false;
                             do {
-                                if (!selection.find(_=>_==tree.cur())) {
+                                if (!selection.find(_ => _ == tree.cur())) {
                                     selection.push(tree.cur());
                                 }
                             } while (tree.nextSibiling())
@@ -304,27 +305,27 @@ export class Tree {
                     }
 
                     tree.parent();
-                break;
+                    break;
                 case '+':
                     tree.nextSibiling()
-                break;
+                    break;
                 case '*':
                     star = true;
-                break;
+                    break;
                 case '[':
                     if (star) {
                         shouldStartSelection = true;
                     } else {
                         select = true;
                     }
-                break;
+                    break;
                 case ']':
                     if (star) {
                         shouldEndSelection = true;
                     } else {
                         select = false;
                     }
-                break;
+                    break;
                 default:
                     let nodes = token.split('|');
                     // 이전 토큰이 * 인경우
@@ -358,7 +359,7 @@ export class Tree {
                             selection.push(tree._curNode);
                         }
                     }
-                break;
+                    break;
             }
         }
 
@@ -371,9 +372,9 @@ export class Tree {
         const method = args[3] || 'push';
 
         // 삭제
-        let tmp = [ ...source ];
+        let tmp = [...source];
         for (let node of tmp) {
-            node.parent.children.splice(node.parent.children.findIndex(_=>_==node), 1);
+            node.parent.children.splice(node.parent.children.findIndex(_ => _ == node), 1);
         }
 
         // 삽입
@@ -389,16 +390,16 @@ export class Tree {
         const parent = target.parent;
 
         //삭제
-        parent.children.splice(parent.children.findIndex(_=>_==target), 1);
+        parent.children.splice(parent.children.findIndex(_ => _ == target), 1);
         //삽입
         parent.children.push(...target.children);
     }
 
     private static _create(node: INode, args: string[]) {
-        
+
     }
 
     private static _replace(node: INode, args: string[]) {
-        
+
     }
 }
