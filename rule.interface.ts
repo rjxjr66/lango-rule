@@ -63,8 +63,13 @@ export interface INode {
     parent: INode;
     children: INode[];
     word: string;
-    // token: Function;
+    token: IToken;
     matchRules: IRule[];
+}
+
+export interface IToken {
+    index?: number;
+    lemma?: string;
 }
 
 export interface IRuleNode {
@@ -86,4 +91,5 @@ export enum ECommand {
     DELETE = "DELETE",
     MOVE = "MOVE",
     CREATE = "CREATE",
+    REPLACE = "REPLACE",
 }

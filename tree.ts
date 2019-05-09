@@ -64,6 +64,9 @@ export class Tree {
                 case 'CREATE':
                     Tree._create(node, command.args)
                 break;
+                case 'REPLACE':
+                    Tree._replace(node, command.args)
+                break;
             }
         }        
     }
@@ -182,14 +185,19 @@ export class Tree {
                     star = true;
                 break;
                 default:
-                    let nodes = token.split('|');
+                    const node = token.split('=');
+                    const _token = node[0].split('|');
+                    const lemma = node[1];
                     // 이전 토큰이 * 인경우
                     if (star) {
                         star = false;
 
                         // 노드가 나올때까지 다음 노드로 이동
                         do {
-                            if (nodes.includes(tree._curNode.pos)) {
+                            if (_token.includes(tree._curNode.pos)) {
+                                if (lemma && lemma != tree._curNode.token.lemma) {
+                                    continue;
+                                }
                                 cur = tree._curNode;
                                 break; // 노드가 검색됨
                             }
@@ -200,9 +208,12 @@ export class Tree {
                         }
                     } else {
                         // 이전 토큰이 * 이 아닌경우 노드가 반드시 일치해야 함
-                        if (!nodes.includes(tree._curNode.pos)) {
+                        if (!_token.includes(tree._curNode.pos)) {
                             return false;
                         } else {
+                            if (lemma && lemma != tree._curNode.token.lemma) {
+                                return false;
+                            }
                             cur = tree._curNode;
                         }
                     }
@@ -383,6 +394,10 @@ export class Tree {
     }
 
     private static _create(node: INode, args: string[]) {
+        
+    }
+
+    private static _replace(node: INode, args: string[]) {
         
     }
 }
