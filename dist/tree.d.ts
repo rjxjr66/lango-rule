@@ -27,4 +27,5 @@ export declare class Tree {
     private static _create;
     private static _set;
     private static _replace;
+    private static _element;
 }

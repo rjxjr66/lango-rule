@@ -147,6 +147,9 @@ var Tree = /** @class */ (function () {
                 case 'REPLACE':
                     Tree._replace(node, command.args);
                     break;
+                case 'ELEMENT':
+                    Tree._element(node, command.args);
+                    break;
             }
         }
     };
@@ -477,6 +480,10 @@ var Tree = /** @class */ (function () {
         var target = Tree._select(node, args[0])[0];
         target.pos = args[1];
     };
+    Tree._element = function (node, args) {
+        var target = Tree._select(node, args[0])[0];
+        target.element = args[1];
+    };
     return Tree;
 }());
 exports.Tree = Tree;
@@ -497,6 +504,7 @@ var ECommand;
     ECommand["CREATE"] = "CREATE";
     ECommand["SET"] = "SET";
     ECommand["REPLACE"] = "REPLACE";
+    ECommand["ELEMENT"] = "ELEMENT";
 })(ECommand = exports.ECommand || (exports.ECommand = {}));
 
 

@@ -78,6 +78,7 @@ export declare enum ECommand {
     MOVE = "MOVE",
     CREATE = "CREATE",
     SET = "SET",
-    REPLACE = "REPLACE"
+    REPLACE = "REPLACE",
+    ELEMENT = "ELEMENT"
 }
 export {};
