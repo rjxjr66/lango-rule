@@ -5,7 +5,7 @@
   "author": "hansol",
   "license": "ISC",
   "homepage": "https://github.com/rjxjr66/lango-rule",
-  "main": "src/index.ts",
+  "main": "dist/main.js",
   "module": "dist/main.js",
   "typings": "dist/index.d.ts",
   "scripts": {

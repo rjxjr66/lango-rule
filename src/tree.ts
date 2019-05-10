@@ -1,5 +1,6 @@
 // import { INode, IRule, ICommand, IRuleNode } from "./rule.interface";
 import {INode, IRule, ICommand, IRuleNode} from "./"
+import { POS } from "./rule.interface";
 
 export class Tree {
     private _curNode: INode;
@@ -64,6 +65,9 @@ export class Tree {
                 break;
                 case 'CREATE':
                     Tree._create(node, command.args)
+                break;
+                case 'SET':
+                    Tree._set(node, command.args)
                 break;
                 case 'REPLACE':
                     Tree._replace(node, command.args)
@@ -398,7 +402,17 @@ export class Tree {
         
     }
 
-    private static _replace(node: INode, args: string[]) {
+    private static _set(node: INode, args: string[]) {
+        const target = Tree._select(node, args[0])[0];
+        if (!target.attr) {
+            target.attr = {}
+        }
         
+        target.attr[args[1]] = args[2];
+    }
+
+    private static _replace(node: INode, args: string[]) {
+        const target = Tree._select(node, args[0])[0];
+        target.pos = args[1] as POS;
     }
 }

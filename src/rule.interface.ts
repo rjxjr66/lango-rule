@@ -65,6 +65,8 @@ export interface INode {
     word: string;
     token: IToken;
     matchRules: IRule[];
+    attr: any;
+    element: string;
 }
 
 export interface IToken {
@@ -91,5 +93,6 @@ export enum ECommand {
     DELETE = "DELETE",
     MOVE = "MOVE",
     CREATE = "CREATE",
+    SET = "SET",
     REPLACE = "REPLACE",
 }
