@@ -4,7 +4,7 @@ export declare class Tree {
     private _curNode;
     private _curIndex;
     constructor(_tree: any);
-    buildParent(parent: INode, cur: INode): void;
+    buildParent(parent: INode, cur: any): void;
     static fromJSON(json: any): Tree;
     static fromNode(node: INode): Tree;
     toXML(): string;

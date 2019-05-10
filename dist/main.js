@@ -94,7 +94,11 @@ class Tree {
         }
     }
     static fromJSON(json) {
-        const tree = new Tree(json.rootNode);
+        // 이유는 모르겠지만, lango-api에서 불러올때는 children, parent등이 _children, _parent들로 정의된 행태로 너머옴
+        let rootNode = json.rootNode;
+        if (rootNode.toJSON)
+            rootNode = rootNode.toJSON();
+        const tree = new Tree(rootNode);
         tree.buildParent(null, tree._curNode);
         return tree;
     }
