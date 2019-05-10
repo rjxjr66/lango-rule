@@ -95,4 +95,5 @@ export enum ECommand {
     CREATE = "CREATE",
     SET = "SET",
     REPLACE = "REPLACE",
+    ELEMENT = "ELEMENT",
 }
