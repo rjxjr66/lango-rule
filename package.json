@@ -1,11 +1,11 @@
 {
   "name": "lango-rule",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "DEMO Lango Rule Library",
   "author": "hansol",
   "license": "ISC",
   "homepage": "https://github.com/rjxjr66/lango-rule",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "module": "dist/main.js",
   "typings": "dist/index.d.ts",
   "scripts": {
