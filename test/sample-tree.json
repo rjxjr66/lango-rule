@@ -1,0 +1,228 @@
+{
+    "rootNode": {
+        "pos": "ROOT",
+        "word": "",
+        "children": [
+            {
+                "pos": "S",
+                "word": "",
+                "children": [
+                    {
+                        "pos": "NP",
+                        "word": "",
+                        "children": [
+                            {
+                                "pos": "EX",
+                                "word": "There",
+                                "token": {
+                                    "index": 1,
+                                    "word": "There",
+                                    "originalText": "There",
+                                    "characterOffsetBegin": 0,
+                                    "characterOffsetEnd": 5,
+                                    "before": "",
+                                    "after": " ",
+                                    "pos": "EX",
+                                    "lemma": "there"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "pos": "VP",
+                        "word": "",
+                        "children": [
+                            {
+                                "pos": "VBZ",
+                                "word": "is",
+                                "token": {
+                                    "index": 2,
+                                    "word": "is",
+                                    "originalText": "is",
+                                    "characterOffsetBegin": 6,
+                                    "characterOffsetEnd": 8,
+                                    "before": " ",
+                                    "after": " ",
+                                    "pos": "VBZ",
+                                    "lemma": "be"
+                                },
+                                "children": []
+                            },
+                            {
+                                "pos": "NP",
+                                "word": "",
+                                "children": [
+                                    {
+                                        "pos": "DT",
+                                        "word": "a",
+                                        "token": {
+                                            "index": 3,
+                                            "word": "a",
+                                            "originalText": "a",
+                                            "characterOffsetBegin": 9,
+                                            "characterOffsetEnd": 10,
+                                            "before": " ",
+                                            "after": " ",
+                                            "pos": "DT",
+                                            "lemma": "a"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "pos": "NN",
+                                        "word": "hero",
+                                        "token": {
+                                            "index": 4,
+                                            "word": "hero",
+                                            "originalText": "hero",
+                                            "characterOffsetBegin": 11,
+                                            "characterOffsetEnd": 15,
+                                            "before": " ",
+                                            "after": " ",
+                                            "pos": "NN",
+                                            "lemma": "hero"
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "pos": "SBAR",
+                                "word": "",
+                                "children": [
+                                    {
+                                        "pos": "IN",
+                                        "word": "if",
+                                        "token": {
+                                            "index": 5,
+                                            "word": "if",
+                                            "originalText": "if",
+                                            "characterOffsetBegin": 16,
+                                            "characterOffsetEnd": 18,
+                                            "before": " ",
+                                            "after": " ",
+                                            "pos": "IN",
+                                            "lemma": "if"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "pos": "S",
+                                        "word": "",
+                                        "children": [
+                                            {
+                                                "pos": "NP",
+                                                "word": "",
+                                                "children": [
+                                                    {
+                                                        "pos": "PRP",
+                                                        "word": "You",
+                                                        "token": {
+                                                            "index": 6,
+                                                            "word": "You",
+                                                            "originalText": "You",
+                                                            "characterOffsetBegin": 19,
+                                                            "characterOffsetEnd": 22,
+                                                            "before": " ",
+                                                            "after": " ",
+                                                            "pos": "PRP",
+                                                            "lemma": "you"
+                                                        },
+                                                        "children": []
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "pos": "VP",
+                                                "word": "",
+                                                "children": [
+                                                    {
+                                                        "pos": "VBP",
+                                                        "word": "look",
+                                                        "token": {
+                                                            "index": 7,
+                                                            "word": "look",
+                                                            "originalText": "look",
+                                                            "characterOffsetBegin": 23,
+                                                            "characterOffsetEnd": 27,
+                                                            "before": " ",
+                                                            "after": " ",
+                                                            "pos": "VBP",
+                                                            "lemma": "look"
+                                                        },
+                                                        "children": []
+                                                    },
+                                                    {
+                                                        "pos": "PP",
+                                                        "word": "",
+                                                        "children": [
+                                                            {
+                                                                "pos": "IN",
+                                                                "word": "inside",
+                                                                "token": {
+                                                                    "index": 8,
+                                                                    "word": "inside",
+                                                                    "originalText": "inside",
+                                                                    "characterOffsetBegin": 28,
+                                                                    "characterOffsetEnd": 34,
+                                                                    "before": " ",
+                                                                    "after": " ",
+                                                                    "pos": "IN",
+                                                                    "lemma": "inside"
+                                                                },
+                                                                "children": []
+                                                            },
+                                                            {
+                                                                "pos": "NP",
+                                                                "word": "",
+                                                                "children": [
+                                                                    {
+                                                                        "pos": "PRP$",
+                                                                        "word": "your",
+                                                                        "token": {
+                                                                            "index": 9,
+                                                                            "word": "your",
+                                                                            "originalText": "your",
+                                                                            "characterOffsetBegin": 35,
+                                                                            "characterOffsetEnd": 39,
+                                                                            "before": " ",
+                                                                            "after": " ",
+                                                                            "pos": "PRP$",
+                                                                            "lemma": "you"
+                                                                        },
+                                                                        "children": []
+                                                                    },
+                                                                    {
+                                                                        "pos": "NN",
+                                                                        "word": "heart",
+                                                                        "token": {
+                                                                            "index": 10,
+                                                                            "word": "heart",
+                                                                            "originalText": "heart",
+                                                                            "characterOffsetBegin": 40,
+                                                                            "characterOffsetEnd": 45,
+                                                                            "before": " ",
+                                                                            "after": "",
+                                                                            "pos": "NN",
+                                                                            "lemma": "heart"
+                                                                        },
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
