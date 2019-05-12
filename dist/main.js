@@ -136,8 +136,14 @@ class Tree {
                 case 'CREATE':
                     Tree._create(node, command.args);
                     break;
+                case 'SET':
+                    Tree._set(node, command.args);
+                    break;
                 case 'REPLACE':
                     Tree._replace(node, command.args);
+                    break;
+                case 'ELEMENT':
+                    Tree._element(node, command.args);
                     break;
             }
         }
@@ -447,7 +453,20 @@ class Tree {
     }
     static _create(node, args) {
     }
+    static _set(node, args) {
+        const target = Tree._select(node, args[0])[0];
+        if (!target.attr) {
+            target.attr = {};
+        }
+        target.attr[args[1]] = args[2];
+    }
     static _replace(node, args) {
+        const target = Tree._select(node, args[0])[0];
+        target.pos = args[1];
+    }
+    static _element(node, args) {
+        const target = Tree._select(node, args[0])[0];
+        target.element = args[1];
     }
 }
 exports.Tree = Tree;

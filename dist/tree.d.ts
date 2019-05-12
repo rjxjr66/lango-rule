@@ -1,4 +1,4 @@
-import { INode, IRule, ICommand } from "./rule.interface";
+import { INode, IRule, ICommand } from "./";
 export declare class Tree {
     private _tree;
     private _curNode;
@@ -25,5 +25,7 @@ export declare class Tree {
     private static _move;
     private static _delete;
     private static _create;
+    private static _set;
     private static _replace;
+    private static _element;
 }
