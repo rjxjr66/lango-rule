@@ -1,6 +1,6 @@
 {
   "name": "lango-rule",
-  "version": "0.0.10-alpha",
+  "version": "0.0.10",
   "description": "DEMO Lango Rule Library",
   "author": "hansol",
   "license": "ISC",
@@ -28,18 +28,24 @@
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "mapCoverage": true,
     "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "moduleFileExtensions": [
       "ts",
       "js",
       "json"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": true
+      }
+    }
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/jest": "^24.0.11",
     "awesome-typescript-loader": "^3.2.1",
+    "chai": "^4.2.0",
     "concurrently": "^3.5.0",
     "jest": "^24.5.0",
     "node-dev": "^3.1.3",
