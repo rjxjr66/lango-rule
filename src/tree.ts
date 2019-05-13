@@ -43,6 +43,7 @@ export class Tree {
     search(rule: IRule, curNode: INode = null): INode {
         if (curNode) this._setCurrent(curNode);
         else this.reset();
+        const tokens = Tree._getTokens(rule.match);
         const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -205,6 +206,7 @@ export class Tree {
                     const node = token.split('=');
                     const _token = node[0].split('|');
                     const lemma = node[1];
+
                     // 이전 토큰이 * 인경우
                     if (star) {
                         star = false;
@@ -256,7 +258,7 @@ export class Tree {
         let tokens = [];
         let token = '';
         for (let c of match) {
-            if ('()+[]='.includes(c)) {
+            if ('()+[]'.includes(c)) {
                 if (token) {
                     tokens.push(token);
                     token = '';

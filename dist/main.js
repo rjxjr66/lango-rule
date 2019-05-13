@@ -119,6 +119,7 @@ var Tree = /** @class */ (function () {
             this._setCurrent(curNode);
         else
             this.reset();
+        var tokens = Tree._getTokens(rule.match);
         var match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -330,7 +331,7 @@ var Tree = /** @class */ (function () {
         var token = '';
         for (var _i = 0, match_1 = match; _i < match_1.length; _i++) {
             var c = match_1[_i];
-            if ('()+[]='.includes(c)) {
+            if ('()+[]'.includes(c)) {
                 if (token) {
                     tokens.push(token);
                     token = '';
