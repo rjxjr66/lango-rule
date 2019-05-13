@@ -29,5 +29,5 @@ export declare class Tree {
     private static _replace;
     private static _element;
     private loopNode;
-    toJSON(): string;
+    toJSON(): any;
 }

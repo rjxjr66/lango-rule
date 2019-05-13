@@ -504,10 +504,9 @@ var Tree = /** @class */ (function () {
         }
     };
     Tree.prototype.toJSON = function () {
-        var jsonObj = Object.assign({}, this);
-        jsonObj._curNode = null;
-        this.loopNode(jsonObj._tree, function (node) { node.parent = null; });
-        return JSON.stringify(jsonObj);
+        var jsonObj = Object.assign({}, this._tree);
+        this.loopNode(jsonObj, function (node) { node.parent = null; });
+        return jsonObj;
     };
     return Tree;
 }());
