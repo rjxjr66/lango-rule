@@ -310,21 +310,29 @@ describe('Test about \"There is a hero if You look inside your heart.\"', () => 
         expect(results.length).toBeGreaterThanOrEqual(1)
     })
 
-    it(`최상단 S가 VP01 룰에 매칭이 된다`, () => {
+    it(`최상단 S가 VP01 패턴 룰에 매칭되어야한다F`, () => {
         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         const rule = rules.find(_ => _.name === "VP01");
         const node = tree.search(rule);
         expect(node).toBeTruthy()
     })
 
-    it(`VP01에 매칭된 최상단 S의 하위 노드에서 다시 룰을 매칭이 가능해야한다`, () => {
+    it(`VP01 패턴 룰을 적용 가능해야한다.`, () => {
         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         const rule = rules.find(_ => _.name === "VP01");
         let node = tree.search(rule);
+        Tree.apply(node, rule.commands);
+        // expect(node).toBeTruthy()
+    })
+
+    it(`VP01 패턴 룰을 적용후에 다시 VP01 패턴 룰이 매칭되어야한다`, () => {
+        let tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
+        const rule = rules.find(_ => _.name === "VP01");
+        let node = tree.search(rule);
+        Tree.apply(node, rule.commands);
+
+        tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(tree)) })
         node = tree.search(rule);
-        // tree.child()
-        // let node = tree.nextSibiling()
-        // node = tree.search(rule);
         expect(node).toBeTruthy()
     })
 })

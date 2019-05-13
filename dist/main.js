@@ -89,8 +89,6 @@ var Tree = /** @class */ (function () {
     }
     Tree.prototype.buildParent = function (parent, cur) {
         cur.parent = parent;
-        if (!cur.matchRules)
-            cur.matchRules = [];
         for (var _i = 0, _a = cur.children; _i < _a.length; _i++) {
             var node = _a[_i];
             this.buildParent(cur, node);
@@ -115,8 +113,12 @@ var Tree = /** @class */ (function () {
     };
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    Tree.prototype.search = function (rule) {
-        this.reset();
+    Tree.prototype.search = function (rule, curNode) {
+        if (curNode === void 0) { curNode = null; }
+        if (curNode)
+            this._setCurrent(curNode);
+        else
+            this.reset();
         var match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -219,7 +221,7 @@ var Tree = /** @class */ (function () {
     };
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     Tree.prototype._loopMatchNode = function (node, rule, tokens) {
-        if (node.matchRules.includes(rule)) {
+        if (node.matchRules && node.matchRules.includes(rule)) {
             return null;
         }
         else if (this._matchRule(node, tokens)) {
@@ -492,6 +494,20 @@ var Tree = /** @class */ (function () {
     Tree._element = function (node, args) {
         var target = Tree._select(node, args[0])[0];
         target.element = args[1];
+    };
+    Tree.prototype.loopNode = function (node, cb) {
+        if (cb === void 0) { cb = null; }
+        cb && cb(node);
+        for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+            var child = _a[_i];
+            this.loopNode(child, cb);
+        }
+    };
+    Tree.prototype.toJSON = function () {
+        var jsonObj = Object.assign({}, this);
+        jsonObj._curNode = null;
+        this.loopNode(jsonObj._tree, function (node) { node.parent = null; });
+        return JSON.stringify(jsonObj);
     };
     return Tree;
 }());

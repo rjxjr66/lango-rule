@@ -11,7 +11,6 @@ export class Tree {
 
     buildParent(parent: INode, cur: any) {
         cur.parent = parent;
-        if (!cur.matchRules) cur.matchRules = [];
         for (let node of cur.children) {
             this.buildParent(cur, node);
         }
@@ -42,8 +41,9 @@ export class Tree {
 
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    search(rule: IRule): INode {
-        this.reset();
+    search(rule: IRule, curNode: INode = null): INode {
+        if (curNode) this._setCurrent(curNode);
+        else this.reset();
         const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -149,7 +149,7 @@ export class Tree {
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     private _loopMatchNode(node: INode, rule: IRule, tokens: string[]): INode {
-        if (node.matchRules.includes(rule)) {
+        if (node.matchRules && node.matchRules.includes(rule)) {
             return null;
         } else if (this._matchRule(node, tokens)) {
             return node;
@@ -432,5 +432,18 @@ export class Tree {
     private static _element(node: INode, args: string[]) {
         const target = Tree._select(node, args[0])[0];
         target.element = args[1];
+    }
+
+    private loopNode(node: INode, cb: Function = null) {
+        cb && cb(node);
+        for (let child of node.children) {
+            this.loopNode(child, cb);
+        }
+    }
+
+    public toJSON() {
+        const jsonObj = Object.assign({}, this._tree);
+        this.loopNode(jsonObj, (node) => { node.parent = null })
+        return jsonObj;
     }
 }

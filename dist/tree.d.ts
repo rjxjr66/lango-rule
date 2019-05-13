@@ -9,7 +9,7 @@ export declare class Tree {
     static fromNode(node: INode): Tree;
     toXML(): string;
     reset(): void;
-    search(rule: IRule): INode;
+    search(rule: IRule, curNode?: INode): INode;
     static apply(node: INode, commands: ICommand[]): void;
     cur(): INode;
     parent(): INode;
@@ -28,4 +28,6 @@ export declare class Tree {
     private static _set;
     private static _replace;
     private static _element;
+    private loopNode;
+    toJSON(): string;
 }
