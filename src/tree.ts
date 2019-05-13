@@ -1,4 +1,3 @@
-// import { INode, IRule, ICommand, IRuleNode } from "./rule.interface";
 import { INode, IRule, ICommand } from "./"
 import { POS } from "./rule.interface";
 
@@ -12,6 +11,7 @@ export class Tree {
 
     buildParent(parent: INode, cur: any) {
         cur.parent = parent;
+        if (!cur.matchRules) cur.matchRules = [];
         for (let node of cur.children) {
             this.buildParent(cur, node);
         }
@@ -41,14 +41,18 @@ export class Tree {
     }
 
     // 패턴과 매칭되는 노드를 선택한다.
-    // 선택된 노드(가 없으면 root부터)를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    search(rule: IRule, curNode: INode = null): INode {
-        if (curNode) this._setCurrent(curNode);
-        else this.reset();
-        
-        const match = this._loopMatchNode(this._curNode, Tree._getTokens(rule.match));
+    // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
+    search(rule: IRule): INode {
+        this.reset();
+        const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
+
+            if (!match.matchRules) {
+                match.matchRules = [];
+            }
+            match.matchRules.push(rule);
+
             return match;
         } else {
             return null;
@@ -146,13 +150,15 @@ export class Tree {
     }
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
-    private _loopMatchNode(node: INode, tokens: string[]): INode {
-        if (this._matchRule(node, tokens)) {
+    private _loopMatchNode(node: INode, rule: IRule, tokens: string[]): INode {
+        if (node.matchRules.includes(rule)) {
+            return null;
+        } else if (this._matchRule(node, tokens)) {
             return node;
         } else {
             if (node.children) {
                 for (let _node of node.children) {
-                    const match = this._loopMatchNode(_node, tokens);
+                    const match = this._loopMatchNode(_node, rule, tokens);
                     if (match) {
                         return match;
                     }
