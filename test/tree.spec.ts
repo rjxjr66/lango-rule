@@ -317,13 +317,13 @@ describe('Test about \"There is a hero if You look inside your heart.\"', () => 
         expect(node).toBeTruthy()
     })
 
-    // it(`VP01에 매칭된 최상단 S의 하위 노드에서 다시 룰을 매칭이 가능해야한다`, () => {
-    //     const tree = Tree.fromJSON(sampleTree);
-    //     const rule = rules.find(_ => _.name === "VP01");
-    //     tree.search(rule);
-    //     const node = tree.search(rule);
-    //     // console.log(JSON.stringify(node));
-    //     // const node = tree.search(rule);
-    //     console.log(node)
-    // })
+    it(`VP01에 매칭된 최상단 S의 하위 노드에서 다시 룰을 매칭이 가능해야한다`, () => {
+        const tree = Tree.fromJSON(sampleTree);
+        const rule = rules.find(_ => _.name === "VP01");
+        tree.search(rule);
+        tree.child()
+        let node = tree.nextSibiling()
+        node = tree.search(rule, node);
+        expect(node).toBeTruthy()
+    })
 })

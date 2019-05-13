@@ -41,10 +41,11 @@ export class Tree {
     }
 
     // 패턴과 매칭되는 노드를 선택한다.
-    // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    search(rule: IRule): INode {
-        // TODO: 이 부분 필요한건가? (지호)
-        this.reset();
+    // 선택된 노드(가 없으면 root부터)를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
+    search(rule: IRule, curNode: INode = null): INode {
+        if (curNode) this._setCurrent(curNode);
+        else this.reset();
+        
         const match = this._loopMatchNode(this._curNode, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -86,7 +87,8 @@ export class Tree {
     }
 
     // 부모 노드로 이동하고 리턴한다. 실패시 null
-    parent() {
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
+    parent(): INode {
         if (this._curNode.parent) {
             return this._setCurrent(this._curNode.parent);
         } else {
@@ -95,7 +97,8 @@ export class Tree {
     }
 
     // 다음 형제노드로 이동하고 리턴한다. 실패시 null
-    nextSibiling() {
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
+    nextSibiling(): INode {
         if (this._curNode.parent) {
             const nextIndex = this._curIndex + 1;
             if (nextIndex <= this._curNode.parent.children.length - 1) {
@@ -112,7 +115,8 @@ export class Tree {
     }
 
     // 이전 형제노드로 이동하고 리턴한다. 실패시 null
-    prevSibiling() {
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
+    prevSibiling(): INode {
         if (this._curNode.parent) {
             const prevIndex = this._curIndex - 1;
             if (prevIndex >= 0) {
@@ -129,7 +133,8 @@ export class Tree {
     }
 
     // 자식 노드로 이동
-    child() {
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
+    child(): INode {
         if (this._curNode.children.length) {
             this._curNode = this._curNode.children[0];
             this._curIndex = 0;
@@ -141,7 +146,7 @@ export class Tree {
     }
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
-    private _loopMatchNode(node: INode, tokens: string[]) {
+    private _loopMatchNode(node: INode, tokens: string[]): INode {
         if (this._matchRule(node, tokens)) {
             return node;
         } else {
@@ -161,7 +166,7 @@ export class Tree {
     // Node와 RuleNode가 매칭되는지 확인한다. (같은 Depth의 regex로 검색)
     // ex) S (NP (PRP)) (VP (VBP) (SBAR (...))) 와 S(*+VP(*+[SBAR|...]+*))
     // 일때 S와 S, NP+VP와 *+VP+*, VBP+SBAR와 *+SBAR+* 단계로 검색
-    private _matchRule(node: INode, tokens: string[]) {
+    private _matchRule(node: INode, tokens: string[]): boolean {
         const tree = Tree.fromNode(node);
         let star = false;
 
@@ -244,7 +249,7 @@ export class Tree {
         return true;
     }
 
-    private static _getTokens(match: string) {
+    private static _getTokens(match: string): string[] {
         let tokens = [];
         let token = '';
         for (let c of match) {
@@ -267,22 +272,22 @@ export class Tree {
         return tokens;
     }
 
-    private _setCurrent(node: INode) {
+    private _setCurrent(node: INode): INode {
         this._curNode = node;
         this._setCurrentIndex();
 
         return this._curNode;
     }
 
-    private _setCurrentIndex() {
+    private _setCurrentIndex(): number {
         if (this._curNode.parent) {
-            this._curIndex = this._curNode.parent.children.findIndex(_ => _ == this._curNode);
+            return this._curIndex = this._curNode.parent.children.findIndex(_ => _ == this._curNode);
         } else {
-            this._curIndex = 0;
+            return this._curIndex = 0;
         }
     }
 
-    private static _select(node: INode, arg: string) {
+    private static _select(node: INode, arg: string): INode[] {
         const tree = Tree.fromNode(node);
         const tokens = Tree._getTokens(arg);
         const selection: INode[] = [];

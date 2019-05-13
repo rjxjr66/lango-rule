@@ -15,6 +15,7 @@
     "test": "jest",
     "test:watch": "npm test -- --watch",
     "test:notify": "npm run test:watch -- --notify",
+    "test:debug": "node --inspect node_modules/.bin/jest --watch --runInBand",
     "coverage": "npm test -- --coverage",
     "coverage:notify": "npm run coverage -- --watch --notify",
     "start": "npm run build && node dist/main.js",

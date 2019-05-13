@@ -111,9 +111,12 @@ class Tree {
         this._curIndex = 0;
     }
     // 패턴과 매칭되는 노드를 선택한다.
-    // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    search(rule) {
-        this.reset();
+    // 선택된 노드(가 없으면 root부터)를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
+    search(rule, curNode = null) {
+        if (curNode)
+            this._setCurrent(curNode);
+        else
+            this.reset();
         const match = this._loopMatchNode(this._curNode, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -153,6 +156,7 @@ class Tree {
         return this._curNode;
     }
     // 부모 노드로 이동하고 리턴한다. 실패시 null
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
     parent() {
         if (this._curNode.parent) {
             return this._setCurrent(this._curNode.parent);
@@ -162,6 +166,7 @@ class Tree {
         }
     }
     // 다음 형제노드로 이동하고 리턴한다. 실패시 null
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
     nextSibiling() {
         if (this._curNode.parent) {
             const nextIndex = this._curIndex + 1;
@@ -179,6 +184,7 @@ class Tree {
         }
     }
     // 이전 형제노드로 이동하고 리턴한다. 실패시 null
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
     prevSibiling() {
         if (this._curNode.parent) {
             const prevIndex = this._curIndex - 1;
@@ -196,6 +202,7 @@ class Tree {
         }
     }
     // 자식 노드로 이동
+    // TODO : 실패시 현재 노드 그대로는 어떨지? (지호)
     child() {
         if (this._curNode.children.length) {
             this._curNode = this._curNode.children[0];
@@ -334,10 +341,10 @@ class Tree {
     }
     _setCurrentIndex() {
         if (this._curNode.parent) {
-            this._curIndex = this._curNode.parent.children.findIndex(_ => _ == this._curNode);
+            return this._curIndex = this._curNode.parent.children.findIndex(_ => _ == this._curNode);
         }
         else {
-            this._curIndex = 0;
+            return this._curIndex = 0;
         }
     }
     static _select(node, arg) {
