@@ -1,5 +1,3 @@
-// 주석으로 달아놓긴 했는데 README.md 작성 필요할것같아요..
-
 export type POS = 'S' | 'SBAR' | 'NP' | 'VP' | 'ADJP' | 'ADVP' | 'PP' | 'WHNP' | 'WHADJP' | 'WHAVP' | 'WHPP' | 'IN' | 'CC' | 'TO' | 'EX' | 'WDT' |
     'WP' | 'WP$' | 'WRB' | 'NN' | 'NNS' | 'NNP' | 'NNPS' | 'PRP' | 'VB' | 'VBP' | 'VBZ' | 'MD' | 'PRT' | 'JJ' | 'JJR' | 'JJS' | 'DT' | 'PRP$' |
     'CD' | 'VBG' | 'VBN' | 'RB' | 'RBS' | 'NP-TMP';
@@ -49,7 +47,7 @@ export interface ICommand {
 ********/
 
 
-interface IRelation {
+export interface IRelation {
     relation?: string; // ex1) nmod, ex2) nsubj|nsubjpass, ex3) nsubj&xcomp
     node1?: string; // 검색 패턴으로 선택
     node2?: string; // 검색 패턴으로 선택, optional
