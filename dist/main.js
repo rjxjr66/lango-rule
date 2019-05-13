@@ -82,43 +82,44 @@ exports.Tree = tree_1.Tree;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-class Tree {
-    constructor(_tree) {
+var Tree = /** @class */ (function () {
+    function Tree(_tree) {
         this._tree = _tree;
         this.reset();
     }
-    buildParent(parent, cur) {
+    Tree.prototype.buildParent = function (parent, cur) {
         cur.parent = parent;
-        for (let node of cur.children) {
+        for (var _i = 0, _a = cur.children; _i < _a.length; _i++) {
+            var node = _a[_i];
             this.buildParent(cur, node);
         }
-    }
-    static fromJSON(json) {
+    };
+    Tree.fromJSON = function (json) {
         // 이유는 모르겠지만, lango-api에서 불러올때는 children, parent등이 _children, _parent들로 정의된 행태로 너머옴
-        let rootNode = json.rootNode;
+        var rootNode = json.rootNode;
         if (rootNode.toJSON)
             rootNode = rootNode.toJSON();
-        const tree = new Tree(rootNode);
+        var tree = new Tree(rootNode);
         tree.buildParent(null, tree._curNode);
         return tree;
-    }
-    static fromNode(node) {
+    };
+    Tree.fromNode = function (node) {
         return new Tree(node);
-    }
+    };
     // 트리를 xml 로 변환한다.
-    toXML() {
+    Tree.prototype.toXML = function () {
         return null;
-    }
+    };
     // 노드 포인터를 루트노드로 옮긴다.
-    reset() {
+    Tree.prototype.reset = function () {
         this._curNode = this._tree;
         this._curIndex = 0;
-    }
+    };
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    search(rule) {
+    Tree.prototype.search = function (rule) {
         this.reset();
-        const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
+        var match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
             if (!match.matchRules) {
@@ -130,10 +131,11 @@ class Tree {
         else {
             return null;
         }
-    }
+    };
     // 커맨드를 적용한다.
-    static apply(node, commands) {
-        for (let command of commands) {
+    Tree.apply = function (node, commands) {
+        for (var _i = 0, commands_1 = commands; _i < commands_1.length; _i++) {
+            var command = commands_1[_i];
             switch (command.cmd) {
                 case 'MOVE':
                     Tree._move(node, command.args);
@@ -155,24 +157,24 @@ class Tree {
                     break;
             }
         }
-    }
+    };
     // 현재 노드를 리턴한다.
-    cur() {
+    Tree.prototype.cur = function () {
         return this._curNode;
-    }
+    };
     // 부모 노드로 이동하고 리턴한다. 실패시 null
-    parent() {
+    Tree.prototype.parent = function () {
         if (this._curNode.parent) {
             return this._setCurrent(this._curNode.parent);
         }
         else {
             return null;
         }
-    }
+    };
     // 다음 형제노드로 이동하고 리턴한다. 실패시 null
-    nextSibiling() {
+    Tree.prototype.nextSibiling = function () {
         if (this._curNode.parent) {
-            const nextIndex = this._curIndex + 1;
+            var nextIndex = this._curIndex + 1;
             if (nextIndex <= this._curNode.parent.children.length - 1) {
                 this._curIndex = nextIndex;
                 this._curNode = this._curNode.parent.children[nextIndex];
@@ -185,11 +187,11 @@ class Tree {
         else {
             return null;
         }
-    }
+    };
     // 이전 형제노드로 이동하고 리턴한다. 실패시 null
-    prevSibiling() {
+    Tree.prototype.prevSibiling = function () {
         if (this._curNode.parent) {
-            const prevIndex = this._curIndex - 1;
+            var prevIndex = this._curIndex - 1;
             if (prevIndex >= 0) {
                 this._curIndex = prevIndex;
                 this._curNode = this._curNode.parent.children[prevIndex];
@@ -202,9 +204,9 @@ class Tree {
         else {
             return null;
         }
-    }
+    };
     // 자식 노드로 이동
-    child() {
+    Tree.prototype.child = function () {
         if (this._curNode.children.length) {
             this._curNode = this._curNode.children[0];
             this._curIndex = 0;
@@ -213,9 +215,9 @@ class Tree {
         else {
             return null;
         }
-    }
+    };
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
-    _loopMatchNode(node, rule, tokens) {
+    Tree.prototype._loopMatchNode = function (node, rule, tokens) {
         if (node.matchRules.includes(rule)) {
             return null;
         }
@@ -224,8 +226,9 @@ class Tree {
         }
         else {
             if (node.children) {
-                for (let _node of node.children) {
-                    const match = this._loopMatchNode(_node, rule, tokens);
+                for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+                    var _node = _a[_i];
+                    var match = this._loopMatchNode(_node, rule, tokens);
                     if (match) {
                         return match;
                     }
@@ -235,16 +238,17 @@ class Tree {
                 return null;
             }
         }
-    }
+    };
     // Node와 RuleNode가 매칭되는지 확인한다. (같은 Depth의 regex로 검색)
     // ex) S (NP (PRP)) (VP (VBP) (SBAR (...))) 와 S(*+VP(*+[SBAR|...]+*))
     // 일때 S와 S, NP+VP와 *+VP+*, VBP+SBAR와 *+SBAR+* 단계로 검색
-    _matchRule(node, tokens) {
-        const tree = Tree.fromNode(node);
-        let star = false;
-        let checkNext = false;
-        for (let token of tokens) {
-            let cur = null;
+    Tree.prototype._matchRule = function (node, tokens) {
+        var tree = Tree.fromNode(node);
+        var star = false;
+        var checkNext = false;
+        for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
+            var token = tokens_1[_i];
+            var cur = null;
             // 다음 노드가 없을 때 * 이 아니면 false
             if (checkNext) {
                 if (token != '*') {
@@ -270,9 +274,9 @@ class Tree {
                     star = true;
                     break;
                 default:
-                    const node = token.split('=');
-                    const _token = node[0].split('|');
-                    const lemma = node[1];
+                    var node_1 = token.split('=');
+                    var _token = node_1[0].split('|');
+                    var lemma = node_1[1];
                     // 이전 토큰이 * 인경우
                     if (star) {
                         star = false;
@@ -317,11 +321,12 @@ class Tree {
             }
         }
         return true;
-    }
-    static _getTokens(match) {
-        let tokens = [];
-        let token = '';
-        for (let c of match) {
+    };
+    Tree._getTokens = function (match) {
+        var tokens = [];
+        var token = '';
+        for (var _i = 0, match_1 = match; _i < match_1.length; _i++) {
+            var c = match_1[_i];
             if ('()+[]='.includes(c)) {
                 if (token) {
                     tokens.push(token);
@@ -337,29 +342,31 @@ class Tree {
             tokens.push(token);
         }
         return tokens;
-    }
-    _setCurrent(node) {
+    };
+    Tree.prototype._setCurrent = function (node) {
         this._curNode = node;
         this._setCurrentIndex();
         return this._curNode;
-    }
-    _setCurrentIndex() {
+    };
+    Tree.prototype._setCurrentIndex = function () {
+        var _this = this;
         if (this._curNode.parent) {
-            this._curIndex = this._curNode.parent.children.findIndex(_ => _ == this._curNode);
+            this._curIndex = this._curNode.parent.children.findIndex(function (_) { return _ == _this._curNode; });
         }
         else {
             this._curIndex = 0;
         }
-    }
-    static _select(node, arg) {
-        const tree = Tree.fromNode(node);
-        const tokens = Tree._getTokens(arg);
-        const selection = [];
-        let star = false;
-        let select = false;
-        let shouldStartSelection = false;
-        let shouldEndSelection = false;
-        for (let token of tokens) {
+    };
+    Tree._select = function (node, arg) {
+        var tree = Tree.fromNode(node);
+        var tokens = Tree._getTokens(arg);
+        var selection = [];
+        var star = false;
+        var select = false;
+        var shouldStartSelection = false;
+        var shouldEndSelection = false;
+        for (var _i = 0, tokens_2 = tokens; _i < tokens_2.length; _i++) {
+            var token = tokens_2[_i];
             switch (token) {
                 case '(':
                     tree.child();
@@ -372,7 +379,7 @@ class Tree {
                             select = false;
                             shouldEndSelection = false;
                             do {
-                                if (!selection.find(_ => _ == tree.cur())) {
+                                if (!selection.find(function (_) { return _ == tree.cur(); })) {
                                     selection.push(tree.cur());
                                 }
                             } while (tree.nextSibiling());
@@ -403,7 +410,7 @@ class Tree {
                     }
                     break;
                 default:
-                    let nodes = token.split('|');
+                    var nodes = token.split('|');
                     // 이전 토큰이 * 인경우
                     if (star) {
                         star = false;
@@ -436,50 +443,57 @@ class Tree {
             }
         }
         return selection;
-    }
-    static _move(node, args) {
-        const source = Tree._select(node, args[0]);
-        const target = Tree._select(node, args[1])[0];
-        const method = args[3] || 'push';
+    };
+    Tree._move = function (node, args) {
+        var _a, _b;
+        var source = Tree._select(node, args[0]);
+        var target = Tree._select(node, args[1])[0];
+        var method = args[3] || 'push';
         // 삭제
-        let tmp = [...source];
-        for (let node of tmp) {
-            node.parent.children.splice(node.parent.children.findIndex(_ => _ == node), 1);
+        var tmp = source.slice();
+        var _loop_1 = function (node_2) {
+            node_2.parent.children.splice(node_2.parent.children.findIndex(function (_) { return _ == node_2; }), 1);
+        };
+        for (var _i = 0, tmp_1 = tmp; _i < tmp_1.length; _i++) {
+            var node_2 = tmp_1[_i];
+            _loop_1(node_2);
         }
         // 삽입
         if (method == 'push') {
-            target.children.push(...tmp);
+            (_a = target.children).push.apply(_a, tmp);
         }
         else {
-            target.children.unshift(...tmp);
+            (_b = target.children).unshift.apply(_b, tmp);
         }
-    }
-    static _delete(node, args) {
-        const target = Tree._select(node, args[0])[0];
-        const parent = target.parent;
+    };
+    Tree._delete = function (node, args) {
+        var _a;
+        var target = Tree._select(node, args[0])[0];
+        var parent = target.parent;
         //삭제
-        parent.children.splice(parent.children.findIndex(_ => _ == target), 1);
+        parent.children.splice(parent.children.findIndex(function (_) { return _ == target; }), 1);
         //삽입
-        parent.children.push(...target.children);
-    }
-    static _create(node, args) {
-    }
-    static _set(node, args) {
-        const target = Tree._select(node, args[0])[0];
+        (_a = parent.children).push.apply(_a, target.children);
+    };
+    Tree._create = function (node, args) {
+    };
+    Tree._set = function (node, args) {
+        var target = Tree._select(node, args[0])[0];
         if (!target.attr) {
             target.attr = {};
         }
         target.attr[args[1]] = args[2];
-    }
-    static _replace(node, args) {
-        const target = Tree._select(node, args[0])[0];
+    };
+    Tree._replace = function (node, args) {
+        var target = Tree._select(node, args[0])[0];
         target.pos = args[1];
-    }
-    static _element(node, args) {
-        const target = Tree._select(node, args[0])[0];
+    };
+    Tree._element = function (node, args) {
+        var target = Tree._select(node, args[0])[0];
         target.element = args[1];
-    }
-}
+    };
+    return Tree;
+}());
 exports.Tree = Tree;
 
 
