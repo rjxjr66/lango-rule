@@ -89,6 +89,8 @@ var Tree = /** @class */ (function () {
     }
     Tree.prototype.buildParent = function (parent, cur) {
         cur.parent = parent;
+        if (!cur.matchRules)
+            cur.matchRules = [];
         for (var _i = 0, _a = cur.children; _i < _a.length; _i++) {
             var node = _a[_i];
             this.buildParent(cur, node);
@@ -118,9 +120,8 @@ var Tree = /** @class */ (function () {
         var match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
-            if (!match.matchRules) {
+            if (!match.matchRules)
                 match.matchRules = [];
-            }
             match.matchRules.push(rule);
             return match;
         }

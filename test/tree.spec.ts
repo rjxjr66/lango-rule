@@ -271,24 +271,24 @@ const rules: IRule[] = [
 describe('Test about \"There is a hero if You look inside your heart.\"', () => {
 
     it('올바르게 트리가 빌드되어야 한다.', () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         expect(tree).toBeTruthy();
     });
 
     it('트리에서 자식 노드로 이동이 가능해야 한다.', () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         expect(tree.child()).toBeTruthy();
     });
 
     it('트리에서 다음 형제 노드로 이동이 가능해야 한다.', () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         tree.child();   // ROOT -> S
         tree.child();   // S -> NP
         expect(tree.nextSibiling()).toBeTruthy();
     });
 
     it(`성공적으로 전체 ${rules.length}개 룰을 반복해야한다`, () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         let i = 0;
         try {
             for (i = 0; tree && i < rules.length; i++) {
@@ -301,7 +301,7 @@ describe('Test about \"There is a hero if You look inside your heart.\"', () => 
     })
 
     it(`성공적으로 검색이 된 노드가 있다`, () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         let results = [];
         for (let rule of rules) {
             const result = tree.search(rule)
@@ -311,19 +311,20 @@ describe('Test about \"There is a hero if You look inside your heart.\"', () => 
     })
 
     it(`최상단 S가 VP01 룰에 매칭이 된다`, () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         const rule = rules.find(_ => _.name === "VP01");
         const node = tree.search(rule);
         expect(node).toBeTruthy()
     })
 
     it(`VP01에 매칭된 최상단 S의 하위 노드에서 다시 룰을 매칭이 가능해야한다`, () => {
-        const tree = Tree.fromJSON(sampleTree);
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree)));
         const rule = rules.find(_ => _.name === "VP01");
-        tree.search(rule);
-        tree.child()
-        let node = tree.nextSibiling()
-        node = tree.search(rule, node);
+        let node = tree.search(rule);
+        node = tree.search(rule);
+        // tree.child()
+        // let node = tree.nextSibiling()
+        // node = tree.search(rule);
         expect(node).toBeTruthy()
     })
 })

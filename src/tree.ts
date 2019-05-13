@@ -48,9 +48,7 @@ export class Tree {
         if (match) {
             this._setCurrent(match);
 
-            if (!match.matchRules) {
-                match.matchRules = [];
-            }
+            if (!match.matchRules) match.matchRules = [];
             match.matchRules.push(rule);
 
             return match;
