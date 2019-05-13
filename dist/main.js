@@ -218,7 +218,7 @@ var Tree = /** @class */ (function () {
     };
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     Tree.prototype._loopMatchNode = function (node, rule, tokens) {
-        if (node.matchRules.find(function (_) { return _ == rule; })) {
+        if (node.matchRules && node.matchRules.includes(rule)) {
             return null;
         }
         else if (this._matchRule(node, tokens)) {

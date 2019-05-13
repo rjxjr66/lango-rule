@@ -149,7 +149,7 @@ export class Tree {
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     private _loopMatchNode(node: INode, rule: IRule, tokens: string[]): INode {
-        if (node.matchRules.find(_=>_==rule)) {
+        if (node.matchRules && node.matchRules.includes(rule)) {
             return null;
         } else if (this._matchRule(node, tokens)) {            
             return node;
