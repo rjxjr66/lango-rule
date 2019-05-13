@@ -1,6 +1,5 @@
-// import { INode, IRule, ICommand, IRuleNode } from "./rule.interface";
-import { INode, IRule, ICommand } from "./rule.interface";
-
+import { INode, IRule, ICommand } from "./"
+import { POS } from "./rule.interface";
 
 export class Tree {
     private _curNode: INode;
@@ -47,9 +46,15 @@ export class Tree {
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
     search(rule: IRule): INode {
         this.reset();
-        const match = this._loopMatchNode(this._curNode, Tree._getTokens(rule.match));
+        const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
+            
+            if (!match.matchRules) {
+                match.matchRules = [];
+            }
+            match.matchRules.push(rule);
+
             return match;
         } else {
             return null;
@@ -68,10 +73,16 @@ export class Tree {
                     break;
                 case 'CREATE':
                     Tree._create(node, command.args)
-                    break;
+                break;
+                case 'SET':
+                    Tree._set(node, command.args)
+                break;
                 case 'REPLACE':
                     Tree._replace(node, command.args)
-                    break;
+                break;
+                case 'ELEMENT':
+                    Tree._element(node, command.args)
+                break;
             }
         }
     }
@@ -137,13 +148,15 @@ export class Tree {
     }
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
-    private _loopMatchNode(node: INode, tokens: string[]) {
-        if (this._matchRule(node, tokens)) {
+    private _loopMatchNode(node: INode, rule: IRule, tokens: string[]): INode {
+        if (node.matchRules.includes(rule)) {
+            return null;
+        } else if (this._matchRule(node, tokens)) {            
             return node;
         } else {
             if (node.children) {
                 for (let _node of node.children) {
-                    const match = this._loopMatchNode(_node, tokens);
+                    const match = this._loopMatchNode(_node, rule, tokens);
                     if (match) {
                         return match;
                     }
@@ -402,7 +415,22 @@ export class Tree {
 
     }
 
-    private static _replace(node: INode, args: string[]) {
+    private static _set(node: INode, args: string[]) {
+        const target = Tree._select(node, args[0])[0];
+        if (!target.attr) {
+            target.attr = {}
+        }
 
+        target.attr[args[1]] = args[2];
+    }
+
+    private static _replace(node: INode, args: string[]) {
+        const target = Tree._select(node, args[0])[0];
+        target.pos = args[1] as POS;
+    }
+
+    private static _element(node: INode, args: string[]) {
+        const target = Tree._select(node, args[0])[0];
+        target.element = args[1];
     }
 }
