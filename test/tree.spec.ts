@@ -678,7 +678,7 @@ const rules: IRule[] = [
         "match": "S(*+VP(VBD|VBP|VBZ=have+*+VP(VBN+*))+*)",
         "commands": [{
             "cmd": ECommand.DELETE,
-            "args": ["S(VP(VBD|VBP|VBZ=have+*+[VP]))"]
+            "args": ["S(*+VP(VBD|VBP|VBZ=have+*+[VP])+*)"]
         }],
         "relations": []
     }, {
@@ -860,9 +860,6 @@ describe('Test about \"There is a hero if You look inside your heart.\"', () => 
 
         for (let rule of rules) {
             let node;
-            // if (rule.name === "VP02") {
-            //     console.log(rule.name);
-            // }
             while (node = tree.search(rule)) {
                 Tree.apply(node, rule.commands)
             }

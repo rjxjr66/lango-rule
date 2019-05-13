@@ -119,7 +119,6 @@ var Tree = /** @class */ (function () {
             this._setCurrent(curNode);
         else
             this.reset();
-        var tokens = Tree._getTokens(rule.match);
         var match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
