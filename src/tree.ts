@@ -300,6 +300,7 @@ export class Tree {
         let select = false;
         let shouldStartSelection = false;
         let shouldEndSelection = false;
+        // let curIndex = -1;
         for (let token of tokens) {
             switch (token) {
                 case '(':
@@ -323,6 +324,9 @@ export class Tree {
                     tree.parent();
                     break;
                 case '+':
+                    // if ((select || shouldStartSelection) && star) {
+                    //     curIndex = tree._curIndex;
+                    // }
                     tree.nextSibiling()
                     break;
                 case '*':
@@ -386,16 +390,17 @@ export class Tree {
     private static _move(node: INode, args: string[]) {
         const source = Tree._select(node, args[0]);
         const target = Tree._select(node, args[1])[0];
-        const method = args[3] || 'push';
+        const method = args[2] || 'push';
 
         // 삭제
         let tmp = [...source];
         for (let node of tmp) {
             node.parent.children.splice(node.parent.children.findIndex(_ => _ == node), 1);
+            node.parent = target;   // parent가 업데이트됨
         }
 
         // 삽입
-        if (method == 'push') {
+        if (method === 'push') {
             target.children.push(...tmp);
         } else {
             target.children.unshift(...tmp);
@@ -413,7 +418,21 @@ export class Tree {
     }
 
     private static _create(node: INode, args: string[]) {
+        const target = Tree._select(node, args[0])[0];
+        const method = args[2] || 'push';
 
+        const newNode = {
+            pos: args[1],
+            parent: node,
+            children: [],
+            word: ""
+        }
+        // 삽입
+        if (method === 'push') {
+            target.children.push(<INode>newNode);
+        } else {
+            target.children.unshift(<INode>newNode);
+        }
     }
 
     private static _set(node: INode, args: string[]) {

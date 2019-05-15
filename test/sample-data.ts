@@ -939,7 +939,7 @@ export const rules: IRule[] = [
         "name": "VP01",
         "match": "S(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
         "commands": [{
-            "cmd": ECommand.DELETE,
+            "cmd": ECommand.MOVE,
             "args": ["S(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
                 "[S]"]
         }],
@@ -1061,7 +1061,23 @@ export const rules: IRule[] = [
     }, {
         "name": "NPMD04",
         "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S)",
-        "commands": [],
+        // "commands": [
+        //     {
+        //         "cmd": ECommand.CREATE,
+        //         "args": ["[NP]", "NP"]
+        //     },
+        //     {
+        //         "cmd": ECommand.MOVE,
+        //         "args": ["NP([*+NN|NNS|NNP|NNPS|PRP]+S+NP)", "NP([NP])"]
+        //     }
+        // ],
+        "commands": [{
+            "cmd": ECommand.CREATE,
+            "args": ["[NP]", "NP", "unshift"]
+        }, {
+            "cmd": ECommand.MOVE,
+            "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)", "NP([NP])"]
+        }],
         "relations": []
     }
 ]
