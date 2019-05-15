@@ -933,6 +933,758 @@ export const sampleTreeWithRelation = {
     }]
 }
 
+export const readBook = {
+    "text": "This book is written by him.",
+    "parse": "(ROOT\n  (S\n    (NP (DT This) (NN book))\n    (VP (VBZ is)\n      (VP (VBN written)\n        (PP (IN by)\n          (NP (PRP him)))))\n    (. .)))",
+    "tree": {
+        "rootNode": {
+            "pos": "ROOT",
+            "word": "",
+            "children": [{
+                "pos": "S",
+                "posInfo": {
+                    "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
+                    "examples": []
+                },
+                "word": "",
+                "children": [{
+                    "pos": "NP",
+                    "posInfo": {
+                        "description": "Noun Phrase. ",
+                        "examples": []
+                    },
+                    "word": "",
+                    "children": [{
+                        "pos": "DT",
+                        "posInfo": {
+                            "group": "Determiner",
+                            "tag": "Determiner",
+                            "examples": []
+                        },
+                        "word": "This",
+                        "token": {
+                            "index": 1,
+                            "word": "This",
+                            "originalText": "This",
+                            "characterOffsetBegin": 0,
+                            "characterOffsetEnd": 4,
+                            "before": "",
+                            "after": " ",
+                            "pos": "DT",
+                            "lemma": "this"
+                        },
+                        "children": []
+                    }, {
+                        "pos": "NN",
+                        "posInfo": {
+                            "group": "Noun, singular or mass",
+                            "tag": "Noun, singular or mass",
+                            "examples": []
+                        },
+                        "word": "book",
+                        "token": {
+                            "index": 2,
+                            "word": "book",
+                            "originalText": "book",
+                            "characterOffsetBegin": 5,
+                            "characterOffsetEnd": 9,
+                            "before": " ",
+                            "after": " ",
+                            "pos": "NN",
+                            "lemma": "book"
+                        },
+                        "children": []
+                    }]
+                }, {
+                    "pos": "VP",
+                    "posInfo": {
+                        "description": "Vereb Phrase. ",
+                        "examples": []
+                    },
+                    "word": "",
+                    "children": [{
+                        "pos": "VBZ",
+                        "posInfo": {
+                            "group": "Verb, 3rd person singular present",
+                            "tag": "Verb, 3rd person singular present",
+                            "examples": []
+                        },
+                        "word": "is",
+                        "token": {
+                            "index": 3,
+                            "word": "is",
+                            "originalText": "is",
+                            "characterOffsetBegin": 10,
+                            "characterOffsetEnd": 12,
+                            "before": " ",
+                            "after": " ",
+                            "pos": "VBZ",
+                            "lemma": "be"
+                        },
+                        "children": []
+                    }, {
+                        "pos": "VP",
+                        "posInfo": {
+                            "description": "Vereb Phrase. ",
+                            "examples": []
+                        },
+                        "word": "",
+                        "children": [{
+                            "pos": "VBN",
+                            "posInfo": {
+                                "group": "Verb, past participle",
+                                "tag": "Verb, past participle",
+                                "examples": []
+                            },
+                            "word": "written",
+                            "token": {
+                                "index": 4,
+                                "word": "written",
+                                "originalText": "written",
+                                "characterOffsetBegin": 13,
+                                "characterOffsetEnd": 20,
+                                "before": " ",
+                                "after": " ",
+                                "pos": "VBN",
+                                "lemma": "write"
+                            },
+                            "children": []
+                        }, {
+                            "pos": "PP",
+                            "posInfo": {
+                                "description": "Prepositional Phrase.",
+                                "examples": []
+                            },
+                            "word": "",
+                            "children": [{
+                                "pos": "IN",
+                                "posInfo": {
+                                    "group": "Preposition or subordinating conjunction",
+                                    "tag": "Preposition or subordinating conjunction",
+                                    "examples": []
+                                },
+                                "word": "by",
+                                "token": {
+                                    "index": 5,
+                                    "word": "by",
+                                    "originalText": "by",
+                                    "characterOffsetBegin": 21,
+                                    "characterOffsetEnd": 23,
+                                    "before": " ",
+                                    "after": " ",
+                                    "pos": "IN",
+                                    "lemma": "by"
+                                },
+                                "children": []
+                            }, {
+                                "pos": "NP",
+                                "posInfo": {
+                                    "description": "Noun Phrase. ",
+                                    "examples": []
+                                },
+                                "word": "",
+                                "children": [{
+                                    "pos": "PRP",
+                                    "posInfo": {
+                                        "group": "Personal pronoun",
+                                        "tag": "Personal pronoun",
+                                        "examples": []
+                                    },
+                                    "word": "him",
+                                    "token": {
+                                        "index": 6,
+                                        "word": "him",
+                                        "originalText": "him",
+                                        "characterOffsetBegin": 24,
+                                        "characterOffsetEnd": 27,
+                                        "before": " ",
+                                        "after": "",
+                                        "pos": "PRP",
+                                        "lemma": "he"
+                                    },
+                                    "children": []
+                                }]
+                            }]
+                        }]
+                    }]
+                }]
+            }]
+        }
+    },
+    "tokens": [{
+        "index": 1,
+        "word": "This",
+        "originalText": "This",
+        "characterOffsetBegin": 0,
+        "characterOffsetEnd": 4,
+        "before": "",
+        "after": " ",
+        "pos": "DT",
+        "lemma": "this"
+    }, {
+        "index": 2,
+        "word": "book",
+        "originalText": "book",
+        "characterOffsetBegin": 5,
+        "characterOffsetEnd": 9,
+        "before": " ",
+        "after": " ",
+        "pos": "NN",
+        "lemma": "book"
+    }, {
+        "index": 3,
+        "word": "is",
+        "originalText": "is",
+        "characterOffsetBegin": 10,
+        "characterOffsetEnd": 12,
+        "before": " ",
+        "after": " ",
+        "pos": "VBZ",
+        "lemma": "be"
+    }, {
+        "index": 4,
+        "word": "written",
+        "originalText": "written",
+        "characterOffsetBegin": 13,
+        "characterOffsetEnd": 20,
+        "before": " ",
+        "after": " ",
+        "pos": "VBN",
+        "lemma": "write"
+    }, {
+        "index": 5,
+        "word": "by",
+        "originalText": "by",
+        "characterOffsetBegin": 21,
+        "characterOffsetEnd": 23,
+        "before": " ",
+        "after": " ",
+        "pos": "IN",
+        "lemma": "by"
+    }, {
+        "index": 6,
+        "word": "him",
+        "originalText": "him",
+        "characterOffsetBegin": 24,
+        "characterOffsetEnd": 27,
+        "before": " ",
+        "after": "",
+        "pos": "PRP",
+        "lemma": "he"
+    }, {
+        "index": 7,
+        "word": ".",
+        "originalText": ".",
+        "characterOffsetBegin": 27,
+        "characterOffsetEnd": 28,
+        "before": "",
+        "after": "",
+        "pos": ".",
+        "lemma": "."
+    }],
+    "basicDependencies": [{
+        "dep": "ROOT",
+        "governor": 0,
+        "governorGloss": "ROOT",
+        "dependent": 4,
+        "dependentGloss": "written"
+    }, {
+        "dep": "det",
+        "governor": 2,
+        "governorGloss": "book",
+        "dependent": 1,
+        "dependentGloss": "This"
+    }, {
+        "dep": "nsubjpass",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 2,
+        "dependentGloss": "book"
+    }, {
+        "dep": "auxpass",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 3,
+        "dependentGloss": "is"
+    }, {
+        "dep": "case",
+        "governor": 6,
+        "governorGloss": "him",
+        "dependent": 5,
+        "dependentGloss": "by"
+    }, {
+        "dep": "nmod",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 6,
+        "dependentGloss": "him"
+    }, {
+        "dep": "punct",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 7,
+        "dependentGloss": "."
+    }]
+}
+
+export const testNode = {
+    "pos": "NP",
+    "word": "",
+    "children": [{
+        "pos": "DT",
+        "word": "a",
+        "token": {
+            "index": 3,
+            "word": "a",
+            "originalText": "a",
+            "characterOffsetBegin": 7,
+            "characterOffsetEnd": 8,
+            "before": " ",
+            "after": " ",
+            "pos": "DT",
+            "lemma": "a"
+        },
+        "children": []
+    }, {
+        "pos": "NN",
+        "word": "house",
+        "token": {
+            "index": 4,
+            "word": "house",
+            "originalText": "house",
+            "characterOffsetBegin": 9,
+            "characterOffsetEnd": 14,
+            "before": " ",
+            "after": " ",
+            "pos": "NN",
+            "lemma": "house"
+        },
+        "children": []
+    }, {
+        "pos": "S",
+        "word": "",
+        "children": [{
+            "pos": "VP",
+            "word": "",
+            "children": [{
+                "pos": "TO",
+                "word": "to",
+                "token": {
+                    "index": 5,
+                    "word": "to",
+                    "originalText": "to",
+                    "characterOffsetBegin": 15,
+                    "characterOffsetEnd": 17,
+                    "before": " ",
+                    "after": " ",
+                    "pos": "TO",
+                    "lemma": "to"
+                },
+                "children": []
+            }, {
+                "pos": "VP",
+                "word": "",
+                "children": [{
+                    "pos": "VB",
+                    "word": "live",
+                    "token": {
+                        "index": 6,
+                        "word": "live",
+                        "originalText": "live",
+                        "characterOffsetBegin": 18,
+                        "characterOffsetEnd": 22,
+                        "before": " ",
+                        "after": " ",
+                        "pos": "VB",
+                        "lemma": "live"
+                    },
+                    "children": []
+                }, {
+                    "pos": "PP",
+                    "word": "",
+                    "children": [{
+                        "pos": "IN",
+                        "word": "in",
+                        "token": {
+                            "index": 7,
+                            "word": "in",
+                            "originalText": "in",
+                            "characterOffsetBegin": 23,
+                            "characterOffsetEnd": 25,
+                            "before": " ",
+                            "after": "",
+                            "pos": "IN",
+                            "lemma": "in"
+                        },
+                        "children": []
+                    }]
+                }]
+            }]
+        }]
+    }]
+}
+
+export const advcl = {
+    "text": "I am aware of what is important.",
+    "parse": "(ROOT\n  (S\n    (NP (PRP I))\n    (VP (VBP am)\n      (ADJP (JJ aware)\n        (PP (IN of)\n          (SBAR\n            (WHNP (WP what))\n            (S\n              (VP (VBZ is)\n                (ADJP (JJ important))))))))\n    (. .)))",
+    "tree": {
+        "rootNode": {
+            "pos": "ROOT",
+            "word": "",
+            "children": [{
+                "pos": "S",
+                "posInfo": {
+                    "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
+                    "examples": []
+                },
+                "word": "",
+                "children": [{
+                    "pos": "NP",
+                    "posInfo": {
+                        "description": "Noun Phrase. ",
+                        "examples": []
+                    },
+                    "word": "",
+                    "children": [{
+                        "pos": "PRP",
+                        "posInfo": {
+                            "group": "Personal pronoun",
+                            "tag": "Personal pronoun",
+                            "examples": []
+                        },
+                        "word": "I",
+                        "token": {
+                            "index": 1,
+                            "word": "I",
+                            "originalText": "I",
+                            "characterOffsetBegin": 0,
+                            "characterOffsetEnd": 1,
+                            "before": "",
+                            "after": " ",
+                            "pos": "PRP",
+                            "lemma": "I"
+                        },
+                        "children": []
+                    }]
+                }, {
+                    "pos": "VP",
+                    "posInfo": {
+                        "description": "Vereb Phrase. ",
+                        "examples": []
+                    },
+                    "word": "",
+                    "children": [{
+                        "pos": "VBP",
+                        "posInfo": {
+                            "group": "Verb, non-3rd person singular present",
+                            "tag": "Verb, non-3rd person singular present",
+                            "examples": []
+                        },
+                        "word": "am",
+                        "token": {
+                            "index": 2,
+                            "word": "am",
+                            "originalText": "am",
+                            "characterOffsetBegin": 2,
+                            "characterOffsetEnd": 4,
+                            "before": " ",
+                            "after": " ",
+                            "pos": "VBP",
+                            "lemma": "be"
+                        },
+                        "children": []
+                    }, {
+                        "pos": "ADJP",
+                        "posInfo": {
+                            "description": "Adjective Phrase.",
+                            "examples": []
+                        },
+                        "word": "",
+                        "children": [{
+                            "pos": "JJ",
+                            "posInfo": {
+                                "group": "Adjective",
+                                "tag": "Adjective",
+                                "examples": []
+                            },
+                            "word": "aware",
+                            "token": {
+                                "index": 3,
+                                "word": "aware",
+                                "originalText": "aware",
+                                "characterOffsetBegin": 5,
+                                "characterOffsetEnd": 10,
+                                "before": " ",
+                                "after": " ",
+                                "pos": "JJ",
+                                "lemma": "aware"
+                            },
+                            "children": []
+                        }, {
+                            "pos": "PP",
+                            "posInfo": {
+                                "description": "Prepositional Phrase.",
+                                "examples": []
+                            },
+                            "word": "",
+                            "children": [{
+                                "pos": "IN",
+                                "posInfo": {
+                                    "group": "Preposition or subordinating conjunction",
+                                    "tag": "Preposition or subordinating conjunction",
+                                    "examples": []
+                                },
+                                "word": "of",
+                                "token": {
+                                    "index": 4,
+                                    "word": "of",
+                                    "originalText": "of",
+                                    "characterOffsetBegin": 11,
+                                    "characterOffsetEnd": 13,
+                                    "before": " ",
+                                    "after": " ",
+                                    "pos": "IN",
+                                    "lemma": "of"
+                                },
+                                "children": []
+                            }, {
+                                "pos": "SBAR",
+                                "posInfo": {
+                                    "description": "Clause introduced by a (possibly empty) subordinating conjunction.",
+                                    "examples": []
+                                },
+                                "word": "",
+                                "children": [{
+                                    "pos": "WHNP",
+                                    "posInfo": {
+                                        "description": "Wh-noun Phrase. Introduces a clause with an NP gap. May be null (containing the 0 complementizer) or lexical, containing some wh-word, e.g. who, which book, whose daughter, none of which, or how many leopards.",
+                                        "examples": []
+                                    },
+                                    "word": "",
+                                    "children": [{
+                                        "pos": "WP",
+                                        "posInfo": {
+                                            "group": "Wh-pronoun",
+                                            "tag": "Wh-pronoun",
+                                            "examples": []
+                                        },
+                                        "word": "what",
+                                        "token": {
+                                            "index": 5,
+                                            "word": "what",
+                                            "originalText": "what",
+                                            "characterOffsetBegin": 14,
+                                            "characterOffsetEnd": 18,
+                                            "before": " ",
+                                            "after": " ",
+                                            "pos": "WP",
+                                            "lemma": "what"
+                                        },
+                                        "children": []
+                                    }]
+                                }, {
+                                    "pos": "S",
+                                    "posInfo": {
+                                        "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
+                                        "examples": []
+                                    },
+                                    "word": "",
+                                    "children": [{
+                                        "pos": "VP",
+                                        "posInfo": {
+                                            "description": "Vereb Phrase. ",
+                                            "examples": []
+                                        },
+                                        "word": "",
+                                        "children": [{
+                                            "pos": "VBZ",
+                                            "posInfo": {
+                                                "group": "Verb, 3rd person singular present",
+                                                "tag": "Verb, 3rd person singular present",
+                                                "examples": []
+                                            },
+                                            "word": "is",
+                                            "token": {
+                                                "index": 6,
+                                                "word": "is",
+                                                "originalText": "is",
+                                                "characterOffsetBegin": 19,
+                                                "characterOffsetEnd": 21,
+                                                "before": " ",
+                                                "after": " ",
+                                                "pos": "VBZ",
+                                                "lemma": "be"
+                                            },
+                                            "children": []
+                                        }, {
+                                            "pos": "ADJP",
+                                            "posInfo": {
+                                                "description": "Adjective Phrase.",
+                                                "examples": []
+                                            },
+                                            "word": "",
+                                            "children": [{
+                                                "pos": "JJ",
+                                                "posInfo": {
+                                                    "group": "Adjective",
+                                                    "tag": "Adjective",
+                                                    "examples": []
+                                                },
+                                                "word": "important",
+                                                "token": {
+                                                    "index": 7,
+                                                    "word": "important",
+                                                    "originalText": "important",
+                                                    "characterOffsetBegin": 22,
+                                                    "characterOffsetEnd": 31,
+                                                    "before": " ",
+                                                    "after": "",
+                                                    "pos": "JJ",
+                                                    "lemma": "important"
+                                                },
+                                                "children": []
+                                            }]
+                                        }]
+                                    }]
+                                }]
+                            }]
+                        }]
+                    }]
+                }]
+            }]
+        }
+    },
+    "tokens": [{
+        "index": 1,
+        "word": "I",
+        "originalText": "I",
+        "characterOffsetBegin": 0,
+        "characterOffsetEnd": 1,
+        "before": "",
+        "after": " ",
+        "pos": "PRP",
+        "lemma": "I"
+    }, {
+        "index": 2,
+        "word": "am",
+        "originalText": "am",
+        "characterOffsetBegin": 2,
+        "characterOffsetEnd": 4,
+        "before": " ",
+        "after": " ",
+        "pos": "VBP",
+        "lemma": "be"
+    }, {
+        "index": 3,
+        "word": "aware",
+        "originalText": "aware",
+        "characterOffsetBegin": 5,
+        "characterOffsetEnd": 10,
+        "before": " ",
+        "after": " ",
+        "pos": "JJ",
+        "lemma": "aware"
+    }, {
+        "index": 4,
+        "word": "of",
+        "originalText": "of",
+        "characterOffsetBegin": 11,
+        "characterOffsetEnd": 13,
+        "before": " ",
+        "after": " ",
+        "pos": "IN",
+        "lemma": "of"
+    }, {
+        "index": 5,
+        "word": "what",
+        "originalText": "what",
+        "characterOffsetBegin": 14,
+        "characterOffsetEnd": 18,
+        "before": " ",
+        "after": " ",
+        "pos": "WP",
+        "lemma": "what"
+    }, {
+        "index": 6,
+        "word": "is",
+        "originalText": "is",
+        "characterOffsetBegin": 19,
+        "characterOffsetEnd": 21,
+        "before": " ",
+        "after": " ",
+        "pos": "VBZ",
+        "lemma": "be"
+    }, {
+        "index": 7,
+        "word": "important",
+        "originalText": "important",
+        "characterOffsetBegin": 22,
+        "characterOffsetEnd": 31,
+        "before": " ",
+        "after": "",
+        "pos": "JJ",
+        "lemma": "important"
+    }, {
+        "index": 8,
+        "word": ".",
+        "originalText": ".",
+        "characterOffsetBegin": 31,
+        "characterOffsetEnd": 32,
+        "before": "",
+        "after": "",
+        "pos": ".",
+        "lemma": "."
+    }],
+    "basicDependencies": [{
+        "dep": "ROOT",
+        "governor": 0,
+        "governorGloss": "ROOT",
+        "dependent": 3,
+        "dependentGloss": "aware"
+    }, {
+        "dep": "nsubj",
+        "governor": 3,
+        "governorGloss": "aware",
+        "dependent": 1,
+        "dependentGloss": "I"
+    }, {
+        "dep": "cop",
+        "governor": 3,
+        "governorGloss": "aware",
+        "dependent": 2,
+        "dependentGloss": "am"
+    }, {
+        "dep": "mark",
+        "governor": 7,
+        "governorGloss": "important",
+        "dependent": 4,
+        "dependentGloss": "of"
+    }, {
+        "dep": "nsubj",
+        "governor": 7,
+        "governorGloss": "important",
+        "dependent": 5,
+        "dependentGloss": "what"
+    }, {
+        "dep": "cop",
+        "governor": 7,
+        "governorGloss": "important",
+        "dependent": 6,
+        "dependentGloss": "is"
+    }, {
+        "dep": "advcl",
+        "governor": 3,
+        "governorGloss": "aware",
+        "dependent": 7,
+        "dependentGloss": "important"
+    }, {
+        "dep": "punct",
+        "governor": 3,
+        "governorGloss": "aware",
+        "dependent": 8,
+        "dependentGloss": "."
+    }]
+}
 
 export const rules: IRule[] = [
     {
@@ -1061,24 +1813,25 @@ export const rules: IRule[] = [
     }, {
         "name": "NPMD04",
         "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S)",
-        // "commands": [
-        //     {
-        //         "cmd": ECommand.CREATE,
-        //         "args": ["[NP]", "NP"]
-        //     },
-        //     {
-        //         "cmd": ECommand.MOVE,
-        //         "args": ["NP([*+NN|NNS|NNP|NNPS|PRP]+S+NP)", "NP([NP])"]
-        //     }
-        // ],
         "commands": [{
             "cmd": ECommand.CREATE,
-            "args": ["[NP]", "NP", "unshift"]
+            "args": ["[NP]",
+                "NP",
+                "unshift"]
         }, {
             "cmd": ECommand.MOVE,
-            "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)", "NP([NP])"]
+            "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)",
+                "NP([NP])"]
         }],
-        "relations": []
+        "relations": [
+            {
+                "relation": "acl",
+                "governor": "NP(*+[NN|NNS|NNP|NNPS|PRP])",
+                "dependent": "NP(*+NN|NNS|NNP|NNPS|PRP+S(TO|VPG|VBN+[VP])"
+            }
+        ]
     }
 ]
 
+
+// I am aware of what is important (advcl AJMD01)

@@ -368,6 +368,7 @@ var Tree = /** @class */ (function () {
         var select = false;
         var shouldStartSelection = false;
         var shouldEndSelection = false;
+        // let curIndex = -1;
         for (var _i = 0, tokens_2 = tokens; _i < tokens_2.length; _i++) {
             var token = tokens_2[_i];
             switch (token) {
@@ -391,6 +392,9 @@ var Tree = /** @class */ (function () {
                     tree.parent();
                     break;
                 case '+':
+                    // if ((select || shouldStartSelection) && star) {
+                    //     curIndex = tree._curIndex;
+                    // }
                     tree.nextSibiling();
                     break;
                 case '*':
@@ -451,18 +455,19 @@ var Tree = /** @class */ (function () {
         var _a, _b;
         var source = Tree._select(node, args[0]);
         var target = Tree._select(node, args[1])[0];
-        var method = args[3] || 'push';
+        var method = args[2] || 'push';
         // 삭제
         var tmp = source.slice();
         var _loop_1 = function (node_2) {
             node_2.parent.children.splice(node_2.parent.children.findIndex(function (_) { return _ == node_2; }), 1);
+            node_2.parent = target; // parent가 업데이트됨
         };
         for (var _i = 0, tmp_1 = tmp; _i < tmp_1.length; _i++) {
             var node_2 = tmp_1[_i];
             _loop_1(node_2);
         }
         // 삽입
-        if (method == 'push') {
+        if (method === 'push') {
             (_a = target.children).push.apply(_a, tmp);
         }
         else {
@@ -479,6 +484,21 @@ var Tree = /** @class */ (function () {
         (_a = parent.children).push.apply(_a, target.children);
     };
     Tree._create = function (node, args) {
+        var target = Tree._select(node, args[0])[0];
+        var method = args[2] || 'push';
+        var newNode = {
+            pos: args[1],
+            parent: node,
+            children: [],
+            word: ""
+        };
+        // 삽입
+        if (method === 'push') {
+            target.children.push(newNode);
+        }
+        else {
+            target.children.unshift(newNode);
+        }
     };
     Tree._set = function (node, args) {
         var target = Tree._select(node, args[0])[0];

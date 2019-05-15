@@ -1,4 +1,6 @@
 import { INode, IRule, ICommand, POS } from "./rule.interface";
+// const tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|(\\w)+\\-*(\\w)*", "g")
+const tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|((\\w)+\\-*(\\w)*)+(\\|((\\w)+\\-*(\\w)*)+)*", "g")
 
 export class Tree {
     private _curNode: INode;
@@ -35,7 +37,11 @@ export class Tree {
     // 노드 포인터를 루트노드로 옮긴다.
     reset() {
         this._curNode = this._tree;
-        this._curIndex = 0;
+        if (this._curNode.parent) {
+            this._curIndex = this._curNode.parent.children.findIndex(_ => _ === this._curNode)
+        } else {
+            this._curIndex = 0;
+        }
     }
 
     // 패턴과 매칭되는 노드를 선택한다.
@@ -272,7 +278,7 @@ export class Tree {
         if (token) {
             tokens.push(token);
         }
-
+        // let tokens = match.match(tokenRegexp);
         return tokens;
     }
 
@@ -296,90 +302,69 @@ export class Tree {
         const tokens = Tree._getTokens(arg);
         const selection: INode[] = [];
 
-        let star = false;
-        let select = false;
         let shouldStartSelection = false;
         let shouldEndSelection = false;
-        // let curIndex = -1;
+
+        let selectStartIdx = -1;
+        let selectEndIdx = -1;
+        let lastToken = null;
         for (let token of tokens) {
             switch (token) {
                 case '(':
                     tree.child();
-                    star = false;
                     break;
                 case ')':
-                    if (star) {
-                        star = false;
-                        if (shouldEndSelection) {
-                            select = false;
-                            shouldEndSelection = false;
-                            do {
-                                if (!selection.find(_ => _ == tree.cur())) {
-                                    selection.push(tree.cur());
-                                }
-                            } while (tree.nextSibiling())
-                        }
+                    if (shouldEndSelection) {
+                        selectEndIdx = tree._curIndex + 1;
+                        if (selectStartIdx >= 0 && selectEndIdx >= 0)
+                            selection.push(...(tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)))
+                        shouldEndSelection = false;
                     }
-
                     tree.parent();
                     break;
                 case '+':
-                    // if ((select || shouldStartSelection) && star) {
-                    //     curIndex = tree._curIndex;
-                    // }
-                    tree.nextSibiling()
+                    if (lastToken !== "*") {
+                        tree.nextSibiling()
+                    }
                     break;
                 case '*':
-                    star = true;
+                    lastToken = token;
                     break;
                 case '[':
-                    if (star) {
+                    if (lastToken === "*") {
                         shouldStartSelection = true;
                     } else {
-                        select = true;
+                        selectStartIdx = tree._curIndex;
                     }
                     break;
                 case ']':
-                    if (star) {
+                    if (lastToken === "*") {
                         shouldEndSelection = true;
                     } else {
-                        select = false;
+                        selectEndIdx = tree._curIndex + 1;
+                        if (selectStartIdx >= 0 && selectEndIdx >= 0)
+                            selection.push(...(tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)))
                     }
                     break;
                 default:
+                    lastToken = token;
                     let nodes = token.split('|');
 
-                    // 이전 토큰이 * 인경우
-                    if (star) {
-                        star = false;
-
-                        // 노드가 나올때까지 다음 노드로 이동
-                        do {
-                            if (select && !shouldEndSelection) {
-                                selection.push(tree._curNode);
+                    do {
+                        if (nodes.includes(tree._curNode.pos)) {
+                            if (shouldStartSelection) {
+                                selectStartIdx = tree._curIndex;
+                                shouldStartSelection = false;
                             }
-
-                            if (nodes.includes(tree._curNode.pos)) {
-                                if (shouldStartSelection) {
-                                    select = true;
-                                    shouldStartSelection = false;
-                                    selection.push(tree._curNode);
-                                }
-
-                                break; // 노드가 검색됨
-                            }
-
-                            if (select && shouldEndSelection) {
-                                select = false;
+                            if (shouldEndSelection) {
+                                selectEndIdx = tree._curIndex + 1;
+                                if (selectStartIdx >= 0 && selectEndIdx >= 0)
+                                    selection.push(...(tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)))
                                 shouldEndSelection = false;
-                                selection.push(tree._curNode);
                             }
-                        } while (tree.nextSibiling())
-                    } else {
-                        if (select) {
-                            selection.push(tree._curNode);
+                            break;
                         }
-                    }
+                    } while (tree.nextSibiling())
                     break;
             }
         }

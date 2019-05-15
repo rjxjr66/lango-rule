@@ -48,9 +48,9 @@ export interface ICommand {
 
 
 export interface IRelation {
-    relation?: string; // ex1) nmod, ex2) nsubj|nsubjpass, ex3) nsubj&xcomp
-    node1?: string; // 검색 패턴으로 선택
-    node2?: string; // 검색 패턴으로 선택, optional
+    relation?: string; // ex1) nmod, ex2) nsubj|nsubjpass
+    governor?: string; // 검색 패턴으로 선택
+    dependent?: string; // 검색 패턴으로 선택
 }
 
 export interface INode {
