@@ -82,6 +82,8 @@ exports.Tree = tree_1.Tree;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+// const tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|(\\w)+\\-*(\\w)*", "g")
+var tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|((\\w)+\\-*(\\w)*)+(\\|((\\w)+\\-*(\\w)*)+)*", "g");
 var Tree = /** @class */ (function () {
     function Tree(_tree) {
         this._tree = _tree;
@@ -108,8 +110,14 @@ var Tree = /** @class */ (function () {
     };
     // 노드 포인터를 루트노드로 옮긴다.
     Tree.prototype.reset = function () {
+        var _this = this;
         this._curNode = this._tree;
-        this._curIndex = 0;
+        if (this._curNode.parent) {
+            this._curIndex = this._curNode.parent.children.findIndex(function (_) { return _ === _this._curNode; });
+        }
+        else {
+            this._curIndex = 0;
+        }
     };
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
@@ -344,6 +352,7 @@ var Tree = /** @class */ (function () {
         if (token) {
             tokens.push(token);
         }
+        // let tokens = match.match(tokenRegexp);
         return tokens;
     };
     Tree.prototype._setCurrent = function (node) {
@@ -364,88 +373,70 @@ var Tree = /** @class */ (function () {
         var tree = Tree.fromNode(node);
         var tokens = Tree._getTokens(arg);
         var selection = [];
-        var star = false;
-        var select = false;
         var shouldStartSelection = false;
         var shouldEndSelection = false;
-        // let curIndex = -1;
+        var selectStartIdx = -1;
+        var selectEndIdx = -1;
+        var lastToken = null;
         for (var _i = 0, tokens_2 = tokens; _i < tokens_2.length; _i++) {
             var token = tokens_2[_i];
             switch (token) {
                 case '(':
                     tree.child();
-                    star = false;
                     break;
                 case ')':
-                    if (star) {
-                        star = false;
-                        if (shouldEndSelection) {
-                            select = false;
-                            shouldEndSelection = false;
-                            do {
-                                if (!selection.find(function (_) { return _ == tree.cur(); })) {
-                                    selection.push(tree.cur());
-                                }
-                            } while (tree.nextSibiling());
-                        }
+                    if (shouldEndSelection) {
+                        selectEndIdx = tree._curIndex + 1;
+                        if (selectStartIdx >= 0 && selectEndIdx >= 0)
+                            selection.push.apply(selection, (tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)));
+                        shouldEndSelection = false;
                     }
                     tree.parent();
                     break;
                 case '+':
-                    // if ((select || shouldStartSelection) && star) {
-                    //     curIndex = tree._curIndex;
-                    // }
-                    tree.nextSibiling();
+                    if (lastToken !== "*") {
+                        tree.nextSibiling();
+                    }
                     break;
                 case '*':
-                    star = true;
+                    lastToken = token;
                     break;
                 case '[':
-                    if (star) {
+                    if (lastToken === "*") {
                         shouldStartSelection = true;
                     }
                     else {
-                        select = true;
+                        selectStartIdx = tree._curIndex;
                     }
                     break;
                 case ']':
-                    if (star) {
+                    if (lastToken === "*") {
                         shouldEndSelection = true;
                     }
                     else {
-                        select = false;
+                        selectEndIdx = tree._curIndex + 1;
+                        if (selectStartIdx >= 0 && selectEndIdx >= 0)
+                            selection.push.apply(selection, (tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)));
                     }
                     break;
                 default:
+                    lastToken = token;
                     var nodes = token.split('|');
-                    // 이전 토큰이 * 인경우
-                    if (star) {
-                        star = false;
-                        // 노드가 나올때까지 다음 노드로 이동
-                        do {
-                            if (select && !shouldEndSelection) {
-                                selection.push(tree._curNode);
+                    do {
+                        if (nodes.includes(tree._curNode.pos)) {
+                            if (shouldStartSelection) {
+                                selectStartIdx = tree._curIndex;
+                                shouldStartSelection = false;
                             }
-                            if (nodes.includes(tree._curNode.pos)) {
-                                if (shouldStartSelection) {
-                                    select = true;
-                                    shouldStartSelection = false;
-                                    selection.push(tree._curNode);
-                                }
-                                break; // 노드가 검색됨
-                            }
-                            if (select && shouldEndSelection) {
-                                select = false;
+                            if (shouldEndSelection) {
+                                selectEndIdx = tree._curIndex + 1;
+                                if (selectStartIdx >= 0 && selectEndIdx >= 0)
+                                    selection.push.apply(selection, (tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)));
                                 shouldEndSelection = false;
-                                selection.push(tree._curNode);
                             }
-                        } while (tree.nextSibiling());
-                    }
-                    else {
-                        if (select) {
-                            selection.push(tree._curNode);
+                            break;
                         }
-                    }
+                    } while (tree.nextSibiling());
                     break;
             }
         }
