@@ -73,6 +73,7 @@ module.exports =
 Object.defineProperty(exports, "__esModule", { value: true });
 var tree_1 = __webpack_require__(1);
 exports.Tree = tree_1.Tree;
+exports.LANGO_RULE_VERSION = 'v0.0.17';
 
 
 /***/ }),
