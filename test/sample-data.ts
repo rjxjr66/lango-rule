@@ -1227,6 +1227,246 @@ export const readBook = {
     }]
 }
 
+export const readBook2 = {
+    "text": "There book is written by him.",
+    "parse": "(ROOT\n  (S\n    (NP (EX There))\n    (NP (NN book))\n    (VP (VBZ is)\n      (VP (VBN written)\n        (PP (IN by)\n          (NP (PRP him)))))\n    (. .)))",
+    "tree": {
+        "rootNode": {
+            "pos": "ROOT",
+            "word": "",
+            "children": [{
+                "pos": "S",
+                "word": "",
+                "children": [{
+                    "pos": "NP",
+                    "word": "",
+                    "children": [{
+                        "pos": "EX",
+                        "word": "There",
+                        "token": {
+                            "index": 1,
+                            "word": "There",
+                            "originalText": "There",
+                            "characterOffsetBegin": 0,
+                            "characterOffsetEnd": 5,
+                            "before": "",
+                            "after": " ",
+                            "pos": "EX",
+                            "lemma": "there"
+                        },
+                        "children": []
+                    }]
+                }, {
+                    "pos": "NP",
+                    "word": "",
+                    "children": [{
+                        "pos": "NN",
+                        "word": "book",
+                        "token": {
+                            "index": 2,
+                            "word": "book",
+                            "originalText": "book",
+                            "characterOffsetBegin": 6,
+                            "characterOffsetEnd": 10,
+                            "before": " ",
+                            "after": " ",
+                            "pos": "NN",
+                            "lemma": "book"
+                        },
+                        "children": []
+                    }]
+                }, {
+                    "pos": "VP",
+                    "word": "",
+                    "children": [{
+                        "pos": "VBZ",
+                        "word": "is",
+                        "token": {
+                            "index": 3,
+                            "word": "is",
+                            "originalText": "is",
+                            "characterOffsetBegin": 11,
+                            "characterOffsetEnd": 13,
+                            "before": " ",
+                            "after": " ",
+                            "pos": "VBZ",
+                            "lemma": "be"
+                        },
+                        "children": []
+                    }, {
+                        "pos": "VBN",
+                        "word": "written",
+                        "token": {
+                            "index": 4,
+                            "word": "written",
+                            "originalText": "written",
+                            "characterOffsetBegin": 14,
+                            "characterOffsetEnd": 21,
+                            "before": " ",
+                            "after": " ",
+                            "pos": "VBN",
+                            "lemma": "write"
+                        },
+                        "children": []
+                    }, {
+                        "pos": "PP",
+                        "word": "",
+                        "children": [{
+                            "pos": "IN",
+                            "word": "by",
+                            "token": {
+                                "index": 5,
+                                "word": "by",
+                                "originalText": "by",
+                                "characterOffsetBegin": 22,
+                                "characterOffsetEnd": 24,
+                                "before": " ",
+                                "after": " ",
+                                "pos": "IN",
+                                "lemma": "by"
+                            },
+                            "children": []
+                        }, {
+                            "pos": "NP",
+                            "word": "",
+                            "children": [{
+                                "pos": "PRP",
+                                "word": "him",
+                                "token": {
+                                    "index": 6,
+                                    "word": "him",
+                                    "originalText": "him",
+                                    "characterOffsetBegin": 25,
+                                    "characterOffsetEnd": 28,
+                                    "before": " ",
+                                    "after": "",
+                                    "pos": "PRP",
+                                    "lemma": "he"
+                                },
+                                "children": []
+                            }]
+                        }]
+                    }]
+                }]
+            }]
+        }
+    },
+    "tokens": [{
+        "index": 1,
+        "word": "There",
+        "originalText": "There",
+        "characterOffsetBegin": 0,
+        "characterOffsetEnd": 5,
+        "before": "",
+        "after": " ",
+        "pos": "EX",
+        "lemma": "there"
+    }, {
+        "index": 2,
+        "word": "book",
+        "originalText": "book",
+        "characterOffsetBegin": 6,
+        "characterOffsetEnd": 10,
+        "before": " ",
+        "after": " ",
+        "pos": "NN",
+        "lemma": "book"
+    }, {
+        "index": 3,
+        "word": "is",
+        "originalText": "is",
+        "characterOffsetBegin": 11,
+        "characterOffsetEnd": 13,
+        "before": " ",
+        "after": " ",
+        "pos": "VBZ",
+        "lemma": "be"
+    }, {
+        "index": 4,
+        "word": "written",
+        "originalText": "written",
+        "characterOffsetBegin": 14,
+        "characterOffsetEnd": 21,
+        "before": " ",
+        "after": " ",
+        "pos": "VBN",
+        "lemma": "write"
+    }, {
+        "index": 5,
+        "word": "by",
+        "originalText": "by",
+        "characterOffsetBegin": 22,
+        "characterOffsetEnd": 24,
+        "before": " ",
+        "after": " ",
+        "pos": "IN",
+        "lemma": "by"
+    }, {
+        "index": 6,
+        "word": "him",
+        "originalText": "him",
+        "characterOffsetBegin": 25,
+        "characterOffsetEnd": 28,
+        "before": " ",
+        "after": "",
+        "pos": "PRP",
+        "lemma": "he"
+    }, {
+        "index": 7,
+        "word": ".",
+        "originalText": ".",
+        "characterOffsetBegin": 28,
+        "characterOffsetEnd": 29,
+        "before": "",
+        "after": "",
+        "pos": ".",
+        "lemma": "."
+    }],
+    "basicDependencies": [{
+        "dep": "ROOT",
+        "governor": 0,
+        "governorGloss": "ROOT",
+        "dependent": 4,
+        "dependentGloss": "written"
+    }, {
+        "dep": "expl",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 1,
+        "dependentGloss": "There"
+    }, {
+        "dep": "nsubjpass",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 2,
+        "dependentGloss": "book"
+    }, {
+        "dep": "auxpass",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 3,
+        "dependentGloss": "is"
+    }, {
+        "dep": "case",
+        "governor": 6,
+        "governorGloss": "him",
+        "dependent": 5,
+        "dependentGloss": "by"
+    }, {
+        "dep": "nmod",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 6,
+        "dependentGloss": "him"
+    }, {
+        "dep": "punct",
+        "governor": 4,
+        "governorGloss": "written",
+        "dependent": 7,
+        "dependentGloss": "."
+    }]
+}
+
 export const testNode = {
     "pos": "NP",
     "word": "",
@@ -1333,17 +1573,9 @@ export const advcl = {
             "word": "",
             "children": [{
                 "pos": "S",
-                "posInfo": {
-                    "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
-                    "examples": []
-                },
                 "word": "",
                 "children": [{
                     "pos": "NP",
-                    "posInfo": {
-                        "description": "Noun Phrase. ",
-                        "examples": []
-                    },
                     "word": "",
                     "children": [{
                         "pos": "PRP",

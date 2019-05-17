@@ -1,7 +1,7 @@
 import { Tree } from "../src/tree";
-import { sampleTree, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules } from "./sample-data"
+import { readBook2, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules } from "./sample-data"
 
-describe(`Test about \"${sampleTree.text}\"`, () => {
+describe(`Test about \"${readBook2.text}\"`, () => {
 
     // it('올바르게 트리가 빌드되어야 한다.', () => {
     //     const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree.tree)));
@@ -59,7 +59,7 @@ describe(`Test about \"${sampleTree.text}\"`, () => {
     // })
 
     it(`VP01 패턴 룰을 적용후에 다시 VP01 패턴 룰이 매칭되어야한다`, () => {
-        let tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree.tree)));
+        let tree = Tree.fromJSON(JSON.parse(JSON.stringify(readBook2.tree)));
         const rule = rules.find(_ => _.name === "VP01");
         let node = tree.search(rule);
         Tree.apply(node, rule.commands);
