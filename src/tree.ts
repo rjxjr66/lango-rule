@@ -32,6 +32,10 @@ export class Tree {
         return null;
     }
 
+    root() {
+        return this._tree
+    }
+
     // 노드 포인터를 루트노드로 옮긴다.
     reset() {
         this._curNode = this._tree;

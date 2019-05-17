@@ -8,6 +8,7 @@ export declare class Tree {
     static fromJSON(json: any): Tree;
     static fromNode(node: INode): Tree;
     toXML(): string;
+    root(): any;
     reset(): void;
     search(rule: IRule, dependencies?: IDependency[], curNode?: INode): INode;
     init(): void;

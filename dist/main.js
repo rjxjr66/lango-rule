@@ -73,7 +73,7 @@ module.exports =
 Object.defineProperty(exports, "__esModule", { value: true });
 var tree_1 = __webpack_require__(1);
 exports.Tree = tree_1.Tree;
-exports.LANGO_RULE_VERSION = 'v0.0.20';
+exports.LANGO_RULE_VERSION = 'v0.0.21';
 
 
 /***/ }),
@@ -106,6 +106,9 @@ var Tree = /** @class */ (function () {
     // 트리를 xml 로 변환한다.
     Tree.prototype.toXML = function () {
         return null;
+    };
+    Tree.prototype.root = function () {
+        return this._tree;
     };
     // 노드 포인터를 루트노드로 옮긴다.
     Tree.prototype.reset = function () {
