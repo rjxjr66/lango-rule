@@ -94,11 +94,11 @@ import { notWorking, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rule
 
 describe(`Test about \"${notWorking}\"`, () => {
     it('변경된 VP01(S|SBAR)을 적용한다.', (done) => {
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(notWorking)));
+        const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(notWorking)) });
 
         for (let rule of rules) {
-            if (rule.name !== "NPMD04") continue;
-            const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
+            if (rule.name !== "VP01") continue;
+            const node = tree.search(rule)
             if (node) Tree.apply(node, rule.commands)
         }
         tree.init();
