@@ -1,4 +1,4 @@
-import { INode, IRule, ICommand } from "./rule.interface";
+import { INode, IRule, IDependency, ICommand } from "./rule.interface";
 export declare class Tree {
     private _tree;
     private _curNode;
@@ -9,7 +9,9 @@ export declare class Tree {
     static fromNode(node: INode): Tree;
     toXML(): string;
     reset(): void;
-    search(rule: IRule, curNode?: INode): INode;
+    search(rule: IRule, dependencies?: IDependency[], curNode?: INode): INode;
+    init(): void;
+    initNode(node: INode): void;
     static apply(node: INode, commands: ICommand[]): void;
     cur(): INode;
     parent(): INode;

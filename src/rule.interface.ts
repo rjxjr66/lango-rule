@@ -51,6 +51,8 @@ export interface IRelation {
     relation?: string; // ex1) nmod, ex2) nsubj|nsubjpass
     governor?: string; // 검색 패턴으로 선택
     dependent?: string; // 검색 패턴으로 선택
+    // governorIdx?: number;
+    // dependentIdx?: number;
 }
 
 export interface INode {
@@ -62,6 +64,14 @@ export interface INode {
     matchRules: IRule[];
     attr: any;
     element: string;
+}
+
+export interface IDependency {
+    dep: string;
+    governor: number;
+    governorGloss: string;
+    dependent: number;
+    dependentGloss: string;
 }
 
 export interface IToken {

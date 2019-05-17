@@ -1,6 +1,4 @@
-import { INode, IRule, ICommand, POS } from "./rule.interface";
-// const tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|(\\w)+\\-*(\\w)*", "g")
-const tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|((\\w)+\\-*(\\w)*)+(\\|((\\w)+\\-*(\\w)*)+)*", "g")
+import { INode, IRule, IDependency, ICommand, POS } from "./rule.interface";
 
 export class Tree {
     private _curNode: INode;
@@ -46,9 +44,29 @@ export class Tree {
 
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    search(rule: IRule, curNode: INode = null): INode {
+    search(rule: IRule, dependencies: IDependency[] = [], curNode: INode = null): INode {
         if (curNode) this._setCurrent(curNode);
         else this.reset();
+
+        const _dependencies = dependencies.filter(dep => {
+            return rule.relations.filter(_ => _.relation === dep.dep).length
+        })
+        // for (let relation of rule.relations) {
+        //     const _dep = dependencies.find(_ => _.dep === relation.relation);
+        //     if (_dep) {
+        //         relation.governorIdx = _dep.governor;
+        //         relation.dependentIdx = _dep.dependent;
+        //     }
+        // }
+        // rule.relations.map(relation => {
+        //     const _dep = dependencies.find(_ => _.dep === relation.relation);
+        //     let ret = { ...relation };
+        //     if (_dep) ret = Object.assign(ret, {
+        //         governorIdx: _dep.governor,
+        //         dependentIdx: _dep.dependent
+        //     })
+        //     return ret;
+        // })
         const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -61,6 +79,21 @@ export class Tree {
             return null;
         }
     }
+
+    // Tree 전체 Node들을 초기화한다.
+    init() {
+        this.reset();
+        this.initNode(this._curNode);
+    }
+
+    // 하위 node들을 돌면서 저장된 matchRules을 초기화시킨다.
+    initNode(node: INode) {
+        if (node.matchRules && node.matchRules.length) node.matchRules = [];
+        for (let child of node.children) {
+            this.initNode(child);
+        }
+    }
+
 
     // 커맨드를 적용한다.
     static apply(node: INode, commands: ICommand[]) {
