@@ -942,25 +942,12 @@ export const readBook = {
             "word": "",
             "children": [{
                 "pos": "S",
-                "posInfo": {
-                    "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
-                    "examples": []
-                },
                 "word": "",
                 "children": [{
                     "pos": "NP",
-                    "posInfo": {
-                        "description": "Noun Phrase. ",
-                        "examples": []
-                    },
                     "word": "",
                     "children": [{
                         "pos": "DT",
-                        "posInfo": {
-                            "group": "Determiner",
-                            "tag": "Determiner",
-                            "examples": []
-                        },
                         "word": "This",
                         "token": {
                             "index": 1,
@@ -976,11 +963,6 @@ export const readBook = {
                         "children": []
                     }, {
                         "pos": "NN",
-                        "posInfo": {
-                            "group": "Noun, singular or mass",
-                            "tag": "Noun, singular or mass",
-                            "examples": []
-                        },
                         "word": "book",
                         "token": {
                             "index": 2,
@@ -997,18 +979,9 @@ export const readBook = {
                     }]
                 }, {
                     "pos": "VP",
-                    "posInfo": {
-                        "description": "Vereb Phrase. ",
-                        "examples": []
-                    },
                     "word": "",
                     "children": [{
                         "pos": "VBZ",
-                        "posInfo": {
-                            "group": "Verb, 3rd person singular present",
-                            "tag": "Verb, 3rd person singular present",
-                            "examples": []
-                        },
                         "word": "is",
                         "token": {
                             "index": 3,
@@ -1024,18 +997,9 @@ export const readBook = {
                         "children": []
                     }, {
                         "pos": "VP",
-                        "posInfo": {
-                            "description": "Vereb Phrase. ",
-                            "examples": []
-                        },
                         "word": "",
                         "children": [{
                             "pos": "VBN",
-                            "posInfo": {
-                                "group": "Verb, past participle",
-                                "tag": "Verb, past participle",
-                                "examples": []
-                            },
                             "word": "written",
                             "token": {
                                 "index": 4,
@@ -1051,18 +1015,9 @@ export const readBook = {
                             "children": []
                         }, {
                             "pos": "PP",
-                            "posInfo": {
-                                "description": "Prepositional Phrase.",
-                                "examples": []
-                            },
                             "word": "",
                             "children": [{
                                 "pos": "IN",
-                                "posInfo": {
-                                    "group": "Preposition or subordinating conjunction",
-                                    "tag": "Preposition or subordinating conjunction",
-                                    "examples": []
-                                },
                                 "word": "by",
                                 "token": {
                                     "index": 5,
@@ -1078,18 +1033,9 @@ export const readBook = {
                                 "children": []
                             }, {
                                 "pos": "NP",
-                                "posInfo": {
-                                    "description": "Noun Phrase. ",
-                                    "examples": []
-                                },
                                 "word": "",
                                 "children": [{
                                     "pos": "PRP",
-                                    "posInfo": {
-                                        "group": "Personal pronoun",
-                                        "tag": "Personal pronoun",
-                                        "examples": []
-                                    },
                                     "word": "him",
                                     "token": {
                                         "index": 6,
@@ -1579,11 +1525,6 @@ export const advcl = {
                     "word": "",
                     "children": [{
                         "pos": "PRP",
-                        "posInfo": {
-                            "group": "Personal pronoun",
-                            "tag": "Personal pronoun",
-                            "examples": []
-                        },
                         "word": "I",
                         "token": {
                             "index": 1,
@@ -1600,18 +1541,9 @@ export const advcl = {
                     }]
                 }, {
                     "pos": "VP",
-                    "posInfo": {
-                        "description": "Vereb Phrase. ",
-                        "examples": []
-                    },
                     "word": "",
                     "children": [{
                         "pos": "VBP",
-                        "posInfo": {
-                            "group": "Verb, non-3rd person singular present",
-                            "tag": "Verb, non-3rd person singular present",
-                            "examples": []
-                        },
                         "word": "am",
                         "token": {
                             "index": 2,
@@ -1627,18 +1559,9 @@ export const advcl = {
                         "children": []
                     }, {
                         "pos": "ADJP",
-                        "posInfo": {
-                            "description": "Adjective Phrase.",
-                            "examples": []
-                        },
                         "word": "",
                         "children": [{
                             "pos": "JJ",
-                            "posInfo": {
-                                "group": "Adjective",
-                                "tag": "Adjective",
-                                "examples": []
-                            },
                             "word": "aware",
                             "token": {
                                 "index": 3,
@@ -1654,18 +1577,9 @@ export const advcl = {
                             "children": []
                         }, {
                             "pos": "PP",
-                            "posInfo": {
-                                "description": "Prepositional Phrase.",
-                                "examples": []
-                            },
                             "word": "",
                             "children": [{
                                 "pos": "IN",
-                                "posInfo": {
-                                    "group": "Preposition or subordinating conjunction",
-                                    "tag": "Preposition or subordinating conjunction",
-                                    "examples": []
-                                },
                                 "word": "of",
                                 "token": {
                                     "index": 4,
@@ -1681,25 +1595,12 @@ export const advcl = {
                                 "children": []
                             }, {
                                 "pos": "SBAR",
-                                "posInfo": {
-                                    "description": "Clause introduced by a (possibly empty) subordinating conjunction.",
-                                    "examples": []
-                                },
                                 "word": "",
                                 "children": [{
                                     "pos": "WHNP",
-                                    "posInfo": {
-                                        "description": "Wh-noun Phrase. Introduces a clause with an NP gap. May be null (containing the 0 complementizer) or lexical, containing some wh-word, e.g. who, which book, whose daughter, none of which, or how many leopards.",
-                                        "examples": []
-                                    },
                                     "word": "",
                                     "children": [{
                                         "pos": "WP",
-                                        "posInfo": {
-                                            "group": "Wh-pronoun",
-                                            "tag": "Wh-pronoun",
-                                            "examples": []
-                                        },
                                         "word": "what",
                                         "token": {
                                             "index": 5,
@@ -1716,25 +1617,12 @@ export const advcl = {
                                     }]
                                 }, {
                                     "pos": "S",
-                                    "posInfo": {
-                                        "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
-                                        "examples": []
-                                    },
                                     "word": "",
                                     "children": [{
                                         "pos": "VP",
-                                        "posInfo": {
-                                            "description": "Vereb Phrase. ",
-                                            "examples": []
-                                        },
                                         "word": "",
                                         "children": [{
                                             "pos": "VBZ",
-                                            "posInfo": {
-                                                "group": "Verb, 3rd person singular present",
-                                                "tag": "Verb, 3rd person singular present",
-                                                "examples": []
-                                            },
                                             "word": "is",
                                             "token": {
                                                 "index": 6,
@@ -1750,18 +1638,9 @@ export const advcl = {
                                             "children": []
                                         }, {
                                             "pos": "ADJP",
-                                            "posInfo": {
-                                                "description": "Adjective Phrase.",
-                                                "examples": []
-                                            },
                                             "word": "",
                                             "children": [{
                                                 "pos": "JJ",
-                                                "posInfo": {
-                                                    "group": "Adjective",
-                                                    "tag": "Adjective",
-                                                    "examples": []
-                                                },
                                                 "word": "important",
                                                 "token": {
                                                     "index": 7,
@@ -2045,6 +1924,13 @@ export const rules: IRule[] = [
     }, {
         "name": "NPMD04",
         "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S)",
+        "relations": [
+            {
+                "relation": "acl",
+                "governor": "NP(*+[NN|NNS|NNP|NNPS|PRP])",
+                "dependent": "NP(*+NN|NNS|NNP|NNPS|PRP+[S])"
+            }
+        ],
         "commands": [{
             "cmd": ECommand.CREATE,
             "args": ["[NP]",
@@ -2055,13 +1941,6 @@ export const rules: IRule[] = [
             "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)",
                 "NP([NP])"]
         }],
-        "relations": [
-            {
-                "relation": "acl",
-                "governor": "NP(*+[NN|NNS|NNP|NNPS|PRP])",
-                "dependent": "NP(*+NN|NNS|NNP|NNPS|PRP+S(TO|VPG|VBN+[VP])"
-            }
-        ]
     }
 ]
 

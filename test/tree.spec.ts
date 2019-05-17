@@ -70,24 +70,24 @@ import { readBook2, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules
 // })
 // })
 
-describe(`Test about \"${sampleTreeWithLemma.text}\"`, () => {
-    it('Lemma가 있는 트리가 빌드되어야한다.', () => {
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithLemma.tree)));
-        expect(tree).toBeTruthy();
-    });
+// describe(`Test about \"${sampleTreeWithLemma.text}\"`, () => {
+//     it('Lemma가 있는 트리가 빌드되어야한다.', () => {
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithLemma.tree)));
+//         expect(tree).toBeTruthy();
+//     });
 
-    it('Lemma가 있는 트리에 패턴 룰들을 적용한다.', (done) => {
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithLemma.tree)));
+//     it('Lemma가 있는 트리에 패턴 룰들을 적용한다.', (done) => {
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithLemma.tree)));
 
-        for (let rule of rules) {
-            let node;
-            while (node = tree.search(rule)) {
-                Tree.apply(node, rule.commands)
-            }
-        }
-        done();
-    });
-})
+//         for (let rule of rules) {
+//             let node;
+//             while (node = tree.search(rule)) {
+//                 Tree.apply(node, rule.commands)
+//             }
+//         }
+//         done();
+//     });
+// })
 
 describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
@@ -95,7 +95,7 @@ describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
 
         for (let rule of rules) {
             if (rule.name !== "NPMD04") continue;
-            const node = tree.search(rule)
+            const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
             if (node) Tree.apply(node, rule.commands)
         }
         done();
