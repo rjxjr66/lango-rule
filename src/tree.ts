@@ -80,6 +80,21 @@ export class Tree {
         }
     }
 
+    // Tree 전체 Node들을 초기화한다.
+    init() {
+        this.reset();
+        this.initNode(this._curNode);
+    }
+
+    // 하위 node들을 돌면서 저장된 matchRules을 초기화시킨다.
+    initNode(node: INode) {
+        if (node.matchRules && node.matchRules.length) node.matchRules = [];
+        for (let child of node.children) {
+            this.initNode(child);
+        }
+    }
+
+
     // 커맨드를 적용한다.
     static apply(node: INode, commands: ICommand[]) {
         for (let command of commands) {

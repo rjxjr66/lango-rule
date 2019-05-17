@@ -83,8 +83,6 @@ exports.LANGO_RULE_VERSION = 'v0.0.17';
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// const tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|(\\w)+\\-*(\\w)*", "g")
-var tokenRegexp = new RegExp("\\[\\S*\\]|\\(|\\)|\\+|(\\*)|((\\w)+\\-*(\\w)*)+(\\|((\\w)+\\-*(\\w)*)+)*", "g");
 var Tree = /** @class */ (function () {
     function Tree(_tree) {
         this._tree = _tree;
@@ -122,12 +120,32 @@ var Tree = /** @class */ (function () {
     };
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
-    Tree.prototype.search = function (rule, curNode) {
+    Tree.prototype.search = function (rule, dependencies, curNode) {
+        if (dependencies === void 0) { dependencies = []; }
         if (curNode === void 0) { curNode = null; }
         if (curNode)
             this._setCurrent(curNode);
         else
             this.reset();
+        var _dependencies = dependencies.filter(function (dep) {
+            return rule.relations.filter(function (_) { return _.relation === dep.dep; }).length;
+        });
+        // for (let relation of rule.relations) {
+        //     const _dep = dependencies.find(_ => _.dep === relation.relation);
+        //     if (_dep) {
+        //         relation.governorIdx = _dep.governor;
+        //         relation.dependentIdx = _dep.dependent;
+        //     }
+        // }
+        // rule.relations.map(relation => {
+        //     const _dep = dependencies.find(_ => _.dep === relation.relation);
+        //     let ret = { ...relation };
+        //     if (_dep) ret = Object.assign(ret, {
+        //         governorIdx: _dep.governor,
+        //         dependentIdx: _dep.dependent
+        //     })
+        //     return ret;
+        // })
         var match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -138,6 +156,20 @@ var Tree = /** @class */ (function () {
         }
         else {
             return null;
+        }
+    };
+    // Tree 전체 Node들을 초기화한다.
+    Tree.prototype.init = function () {
+        this.reset();
+        this.initNode(this._curNode);
+    };
+    // 하위 node들을 돌면서 저장된 matchRules을 초기화시킨다.
+    Tree.prototype.initNode = function (node) {
+        if (node.matchRules && node.matchRules.length)
+            node.matchRules = [];
+        for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+            var child = _a[_i];
+            this.initNode(child);
         }
     };
     // 커맨드를 적용한다.

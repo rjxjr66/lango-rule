@@ -98,6 +98,7 @@ describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
             const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
             if (node) Tree.apply(node, rule.commands)
         }
+        tree.init();
         done();
     });
 })
