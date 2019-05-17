@@ -1,4 +1,4 @@
-import { IRule, ECommand } from "../src/rule.interface";
+import { IRule, INode, POS, ECommand } from "../src/rule.interface";
 export const sampleTree = {
     "text": "There is a hero if You look inside your heart.",
     "parse": "(ROOT\n  (S\n    (NP (EX There))\n    (VP (VBZ is)\n      (NP (DT a) (NN hero))\n      (SBAR (IN if)\n        (S\n          (NP (PRP You))\n          (VP (VBP look)\n            (PP (IN inside)\n              (NP (PRP$ your) (NN heart)))))))\n    (. .)))",
@@ -1797,152 +1797,406 @@ export const advcl = {
     }]
 }
 
-export const rules: IRule[] = [
-    {
-        "name": "VP01",
-        "match": "S(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
-        "commands": [{
-            "cmd": ECommand.MOVE,
-            "args": ["S(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
-                "[S]"]
-        }],
-        "relations": []
-    }, {
-        "name": "CAJ01",
-        "match": "S(NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+PP(IN=of+NP)))",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+[PP]))"]
-        }],
-        "relations": []
-    }, {
-        "name": "VP02",
-        "match": "S(*+VP(VBD|VBP|VBZ=have+*+VP(VBN+*))+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(*+VP(VBD|VBP|VBZ=have+*+[VP])+*)"]
-        }],
-        "relations": []
-    }, {
-        "name": "VP03",
-        "match": "S(*+VP(MD+*+VP(VB+*))+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(VP(MD+*+[VP]))"]
-        }],
-        "relations": []
-    }, {
-        "name": "VP04",
-        "match": "S(*+VP(MD+*+VP(VBN+*))+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(VP(MD+*+[VP]))"]
-        }],
-        "relations": []
-    }, {
-        "name": "VP05",
-        "match": "S(*+VP(VBD|VBP|VBZ=do+*+VP(VB+*))+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(VP(VBD|VBP|VBZ=do+*+[VP]))"]
-        }],
-        "relations": []
-    }, {
-        "name": "VP06",
-        "match": "S(*+VP(VBD|VBP|VBZ=be+*+VP(VBG+*))+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(*+VP(VBD|VBP|VBZ=be+*+[VP])"]
-        }],
-        "relations": []
-    }, {
-        "name": "VPMD01",
-        "match": "S(*+PP(IN+PP)+*)",
-        "commands": [{
-            "cmd": ECommand.MOVE,
-            "args": ["S(PP(IN+[PP]))",
-                "[S]"]
-        }],
-        "relations": []
-    }, {
-        "name": "VPMD02-1",
-        "match": "S(*+VP(*)+ADVP+*)",
-        "commands": [{
-            "cmd": ECommand.MOVE,
-            "args": ["S(*+VP(*)+[ADVP]+*)",
-                "S(*+[VP])"]
-        }],
-        "relations": []
-    }, {
-        "name": "VPMD02-2",
-        "match": "S(*+ADVP+VP(*)+*)",
-        "commands": [{
-            "cmd": ECommand.MOVE,
-            "args": ["S(*+[ADVP]+VP(*)+*)",
-                "S(*+ADVP+[VP])"]
-        }],
-        "relations": []
-    }, {
-        "name": "SS01",
-        "match": "S(*+VP(TO+VP(VB+*))+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S([VP])"]
-        }],
-        "relations": []
-    }, {
-        "name": "SS02",
-        "match": "S(*+VP(*+VP(VBG+*))+*)",
-        "commands": [{
-            "cmd": ECommand.MOVE,
-            "args": ["S(*+VP(*+[VP])",
-                "[S]"]
-        }],
-        "relations": []
-    }, {
-        "name": "SS03",
-        "match": "S(*+VP(VBG+*)+*)",
-        "commands": [{
-            "cmd": ECommand.DELETE,
-            "args": ["S(*+[VP])"]
-        }],
-        "relations": []
-    }, {
-        "name": "SS04",
-        "match": "S(*+VP(*+VP(VBN+*))+*)",
-        "commands": [{
-            "cmd": ECommand.MOVE,
-            "args": ["S(*+VP(*+[VP])",
-                "[S]"]
-        }],
-        "relations": []
-    }, {
-        "name": "CAJ02",
-        "match": "NP(NP(*+CD)+PP(IN=of+NP))",
-        "commands": [],
-        "relations": []
-    }, {
-        "name": "NPMD04",
-        "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S)",
-        "relations": [
-            {
-                "relation": "acl",
-                "governor": "NP(*+[NN|NNS|NNP|NNPS|PRP])",
-                "dependent": "NP(*+NN|NNS|NNP|NNPS|PRP+[S])"
-            }
-        ],
-        "commands": [{
-            "cmd": ECommand.CREATE,
-            "args": ["[NP]",
-                "NP",
-                "unshift"]
+export const notWorking = {
+    "pos": "ROOT",
+    "word": "",
+    "children": [{
+        "pos": "S",
+        "posInfo": {
+            "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
+            "examples": []
+        },
+        "word": "",
+        "children": [{
+            "pos": "NP",
+            "posInfo": {
+                "description": "Noun Phrase. ",
+                "examples": []
+            },
+            "word": "",
+            "children": [{
+                "pos": "PRP",
+                "posInfo": {
+                    "group": "Personal pronoun",
+                    "tag": "Personal pronoun",
+                    "examples": []
+                },
+                "word": "I",
+                "token": {
+                    "index": 1,
+                    "word": "I",
+                    "originalText": "I",
+                    "characterOffsetBegin": 0,
+                    "characterOffsetEnd": 1,
+                    "before": "",
+                    "after": " ",
+                    "pos": "PRP",
+                    "lemma": "I"
+                },
+                "children": [],
+                "parent": null
+            }],
+            "parent": null
         }, {
-            "cmd": ECommand.MOVE,
-            "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)",
-                "NP([NP])"]
+            "pos": "VP",
+            "posInfo": {
+                "description": "Vereb Phrase. ",
+                "examples": []
+            },
+            "word": "",
+            "children": [{
+                "pos": "VBP",
+                "posInfo": {
+                    "group": "Verb, non-3rd person singular present",
+                    "tag": "Verb, non-3rd person singular present",
+                    "examples": []
+                },
+                "word": "know",
+                "token": {
+                    "index": 2,
+                    "word": "know",
+                    "originalText": "know",
+                    "characterOffsetBegin": 2,
+                    "characterOffsetEnd": 6,
+                    "before": " ",
+                    "after": " ",
+                    "pos": "VBP",
+                    "lemma": "know"
+                },
+                "children": [],
+                "parent": null
+            }],
+            "parent": null
+        }, {
+            "pos": "SBAR",
+            "posInfo": {
+                "description": "Clause introduced by a (possibly empty) subordinating conjunction.",
+                "examples": []
+            },
+            "word": "",
+            "children": [{
+                "pos": "IN",
+                "posInfo": {
+                    "group": "Preposition or subordinating conjunction",
+                    "tag": "Preposition or subordinating conjunction",
+                    "examples": []
+                },
+                "word": "that",
+                "token": {
+                    "index": 3,
+                    "word": "that",
+                    "originalText": "that",
+                    "characterOffsetBegin": 7,
+                    "characterOffsetEnd": 11,
+                    "before": " ",
+                    "after": " ",
+                    "pos": "IN",
+                    "lemma": "that"
+                },
+                "children": [],
+                "parent": null
+            }, {
+                "pos": "NP",
+                "posInfo": {
+                    "description": "Noun Phrase. ",
+                    "examples": []
+                },
+                "word": "",
+                "children": [{
+                    "pos": "PRP",
+                    "posInfo": {
+                        "group": "Personal pronoun",
+                        "tag": "Personal pronoun",
+                        "examples": []
+                    },
+                    "word": "you",
+                    "token": {
+                        "index": 4,
+                        "word": "you",
+                        "originalText": "you",
+                        "characterOffsetBegin": 12,
+                        "characterOffsetEnd": 15,
+                        "before": " ",
+                        "after": " ",
+                        "pos": "PRP",
+                        "lemma": "you"
+                    },
+                    "children": [],
+                    "parent": null
+                }],
+                "parent": null
+            }, {
+                "pos": "VP",
+                "posInfo": {
+                    "description": "Vereb Phrase. ",
+                    "examples": []
+                },
+                "word": "",
+                "children": [{
+                    "pos": "VBP",
+                    "posInfo": {
+                        "group": "Verb, non-3rd person singular present",
+                        "tag": "Verb, non-3rd person singular present",
+                        "examples": []
+                    },
+                    "word": "are",
+                    "token": {
+                        "index": 5,
+                        "word": "are",
+                        "originalText": "are",
+                        "characterOffsetBegin": 16,
+                        "characterOffsetEnd": 19,
+                        "before": " ",
+                        "after": " ",
+                        "pos": "VBP",
+                        "lemma": "be"
+                    },
+                    "children": [],
+                    "parent": null
+                }, {
+                    "pos": "ADJP",
+                    "posInfo": {
+                        "description": "Adjective Phrase.",
+                        "examples": []
+                    },
+                    "word": "",
+                    "children": [{
+                        "pos": "JJ",
+                        "posInfo": {
+                            "group": "Adjective",
+                            "tag": "Adjective",
+                            "examples": []
+                        },
+                        "word": "smart",
+                        "token": {
+                            "index": 6,
+                            "word": "smart",
+                            "originalText": "smart",
+                            "characterOffsetBegin": 20,
+                            "characterOffsetEnd": 25,
+                            "before": " ",
+                            "after": "",
+                            "pos": "JJ",
+                            "lemma": "smart"
+                        },
+                        "children": [],
+                        "parent": null
+                    }],
+                    "parent": null
+                }],
+                "parent": null
+            }],
+            "parent": null,
+            "matchRules": [{
+                "name": "SB01",
+                "match": "SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+S(*))",
+                "commands": [{
+                    "cmd": ECommand.DELETE,
+                    "args": ["SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+[S])"]
+                }]
+            }]
         }],
-    }
-]
+        "parent": null,
+        "matchRules": [{
+            "name": "VP01",
+            "match": "S|SBAR(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
+            "commands": [{
+                "cmd": ECommand.MOVE,
+                "args": ["S|SBAR(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
+                    "[S|SBAR]"]
+            }]
+        }]
+    }],
+    "parent": null
+}
+
+export const rules: IRule[] = [{
+    "name": "VP02(have+VBN)",
+    "match": "S|SBAR(*+VP(VBD|VBP|VBZ=have+*+VP(VBN+*))+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S|SBAR(*+VP(VBD|VBP|VBZ=have+*+[VP]))"]
+    }]
+}, {
+    "name": "VP03(MD+VB)",
+    "match": "S|SBAR(*+VP(MD+*+VP(VB+*))+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S|SBAR(*+VP(MD+*+[VP]))"]
+    }]
+}, {
+    "name": "VP04(MD+VBN)",
+    "match": "S|SBAR(*+VP(MD+*+VP(VBN+*))+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S|SBAR(*+VP(MD+*+[VP]))"]
+    }]
+}, {
+    "name": "VP05(do+RB+VB)",
+    "match": "S|SBAR(*+VP(VBD|VBP|VBZ=do+RB+VP(VB+*))+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S|SBAR(*+VP(VBD|VBP|VBZ=do+RB+[VP]))"]
+    }]
+}, {
+    "name": "VPMD01",
+    "match": "S(*+PP(IN+PP)+*)",
+    "commands": [{
+        "cmd": ECommand.MOVE,
+        "args": ["S(*+PP(IN+[PP]))",
+            "[S]"]
+    }]
+}, {
+    "name": "VPMD02",
+    "match": "S(*+VP(*)+PP(IN)+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S(*+VP(*)+[PP])"]
+    }]
+}, {
+    "name": "VPMD03-1",
+    "match": "S|SBAR(*+VP(*)+ADVP+*)",
+    "commands": [{
+        "cmd": ECommand.MOVE,
+        "args": ["S|SBAR(*+VP(*)+[ADVP])",
+            "[VP]"]
+    }]
+}, {
+    "name": "VPMD03-2",
+    "match": "S|SBAR(*+ADVP+VP(*)+*)",
+    "commands": [{
+        "cmd": ECommand.MOVE,
+        "args": ["S|SBAR(*+[ADVP])",
+            "[VP]"]
+    }]
+}, {
+    "name": "SB01",
+    "match": "SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+S(*))",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+[S])"]
+    }]
+}, {
+    "name": "SS01-TO",
+    "match": "S(*+VP(TO+VP(VB+*))+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S(*+[VP])"]
+    }]
+}, {
+    "name": "SS01-VBG/VBN",
+    "match": "S(*+VP(VBG|VBN+VP(VB+*))+*)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S(*+[VP])"]
+    }]
+}, {
+    "name": "SS02",
+    "match": "NP(*+VP(VBG|VBN+*))",
+    "commands": [{
+        "cmd": ECommand.REPLACE,
+        "args": ["NP(*+[VP])",
+            "S"]
+    }]
+}, {
+    "name": "SS03",
+    "match": "VP(*+VP(VBG+*))",
+    "commands": [{
+        "cmd": ECommand.REPLACE,
+        "args": ["VP(*+[VP])",
+            "S"]
+    }]
+}, {
+    "name": "SS04",
+    "match": "VP(*+VP(VBN+*))",
+    "commands": [{
+        "cmd": ECommand.REPLACE,
+        "args": ["NP(*+[VP])",
+            "S"]
+    }]
+}, {
+    "name": "VP01",
+    "match": "S|SBAR(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
+    "commands": [{
+        "cmd": ECommand.MOVE,
+        "args": ["S|SBAR(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
+            "[S]"]
+    }]
+}, {
+    "name": "CAJ01",
+    "match": "NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+PP(IN=of+NP))",
+    "commands": [{
+        "cmd": ECommand.REPLACE,
+        "args": ["NP([NP])",
+            "ADJP"]
+    }, {
+        "cmd": ECommand.MOVE,
+        "args": ["NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+PP([IN])",
+            "NP([NP])"]
+    }, {
+        "cmd": ECommand.DELETE,
+        "args": ["NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+[PP])"]
+    }]
+}, {
+    "name": "CAJ02",
+    "match": "NP(NP(*+NN|RB|JJ|JJS|NNS=acre|total|glass)+PP(IN=of+NP))",
+    "commands": [{
+        "cmd": ECommand.REPLACE,
+        "args": ["NP([NP])", "ADJP"]
+    }, {
+        "cmd": ECommand.MOVE,
+        "args": ["NP(NP(*+NN|RB|JJ|JJS|NNS=acre|total|glass)+PP([IN])",
+            "NP([NP])"]
+    }, {
+        "cmd": ECommand.DELETE,
+        "args": ["NP(NP(*+NN|RB|JJ|JJS|NNS=acre|total|glass)+[PP])"]
+    }]
+}, {
+    "name": "CAJ03",
+    "match": "NP(NP(*+CD)+PP(IN=of+NP))",
+    "commands": [{
+        "cmd": ECommand.REPLACE,
+        "args": ["NP([NP])",
+            "ADJP"]
+    }, {
+        "cmd": ECommand.MOVE,
+        "args": ["NP(NP(*+CD)+PP([IN])",
+            "NP([NP])"]
+    }, {
+        "cmd": ECommand.DELETE,
+        "args": ["NP(NP(*+CD)+[PP])"]
+    }]
+}, {
+    "name": "AJMD03",
+    "match": "S(*+ADJP(*+JJ|VBN+SBAR)+*)",
+    "commands": [{
+        "cmd": ECommand.MOVE,
+        "args": ["S(*+ADJP(*+JJ|VBN+[SBAR]))",
+            "[S]"]
+    }]
+}, {
+    "name": "AJMD05",
+    "match": "VP(*+ADVP(RB)+S(VBG|VBN+*)+*)",
+    "commands": [{
+        "cmd": ECommand.MOVE,
+        "args": ["S(*+ADVP([RB]))",
+            "S(*+ADVP(RB)+S([VBG|VBN]))"]
+    }]
+}, {
+    "name": "S|SBAR(*+S(*))",
+    "match": "S|SBAR(*+S(*))",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["S|SBAR(*+[S])"]
+    }]
+}, {
+    "name": "NP(NP+SBAR)",
+    "match": "NP(NP+SBAR)",
+    "commands": [{
+        "cmd": ECommand.DELETE,
+        "args": ["[NP]"]
+    }]
+}]
 
 
 // I am aware of what is important (advcl AJMD01)

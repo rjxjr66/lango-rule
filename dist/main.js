@@ -70,10 +70,13 @@ module.exports =
 
 "use strict";
 
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-var tree_1 = __webpack_require__(1);
-exports.Tree = tree_1.Tree;
-exports.LANGO_RULE_VERSION = 'v0.0.21';
+__export(__webpack_require__(1));
+__export(__webpack_require__(2));
+exports.LANGO_RULE_VERSION = 'v0.0.22';
 
 
 /***/ }),
@@ -558,6 +561,24 @@ var Tree = /** @class */ (function () {
     return Tree;
 }());
 exports.Tree = Tree;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ECommand;
+(function (ECommand) {
+    ECommand["DELETE"] = "DELETE";
+    ECommand["MOVE"] = "MOVE";
+    ECommand["CREATE"] = "CREATE";
+    ECommand["SET"] = "SET";
+    ECommand["REPLACE"] = "REPLACE";
+    ECommand["ELEMENT"] = "ELEMENT";
+})(ECommand = exports.ECommand || (exports.ECommand = {}));
 
 
 /***/ })

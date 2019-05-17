@@ -1,5 +1,6 @@
 import { Tree } from "../src/tree";
-import { readBook2, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules } from "./sample-data"
+import { INode } from "../src/rule.interface";
+import { notWorking, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules } from "./sample-data"
 
 // describe(`Test about \"${readBook2.text}\"`, () => {
 
@@ -88,6 +89,22 @@ import { readBook2, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules
 //         done();
 //     });
 // })
+
+
+
+describe(`Test about \"${notWorking}\"`, () => {
+    it('변경된 VP01(S|SBAR)을 적용한다.', (done) => {
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(notWorking)));
+
+        for (let rule of rules) {
+            if (rule.name !== "NPMD04") continue;
+            const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
+            if (node) Tree.apply(node, rule.commands)
+        }
+        tree.init();
+        done();
+    });
+})
 
 describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {

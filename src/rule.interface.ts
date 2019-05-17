@@ -9,7 +9,7 @@ export interface IRule {
     tokens?: string[];
     tree?: IRuleNode;
     commands: ICommand[];
-    relations: IRelation[]; // 관계 패턴
+    relations?: IRelation[]; // 관계 패턴
     // apply: Function;
 }
 
