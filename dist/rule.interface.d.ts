@@ -3,7 +3,6 @@ export interface IRule {
     name?: string;
     match: string;
     tokens?: string[];
-    tree?: IRuleNode;
     commands: ICommand[];
     relations?: IRelation[];
 }
@@ -63,13 +62,6 @@ export interface IDependency {
 export interface IToken {
     index?: number;
     lemma?: string;
-}
-export interface IRuleNode {
-    tokens: string[];
-    parent: IRuleNode;
-    word: string;
-    lemma: string;
-    children: IRuleNode[];
 }
 export interface ICommandNode {
     tokens: string[];

@@ -46,6 +46,9 @@ export class Tree {
         }
     }
 
+    mergeRuleWithRelation(rule) {
+
+    }
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
     search(rule: IRule, dependencies: IDependency[] = [], curNode: INode = null): INode {
@@ -435,6 +438,11 @@ export class Tree {
 
         //삭제
         parent.children.splice(parent.children.findIndex(_ => _ == target), 1);
+
+        //부모변경
+        for (let child of target.children) {
+            child.parent = parent;
+        }
         //삽입
         parent.children.push(...target.children);
     }

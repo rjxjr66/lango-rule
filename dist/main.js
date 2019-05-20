@@ -76,7 +76,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(1));
 __export(__webpack_require__(2));
-exports.LANGO_RULE_VERSION = 'v0.0.22';
+exports.LANGO_RULE_VERSION = 'v0.0.23';
 
 
 /***/ }),
@@ -123,6 +123,8 @@ var Tree = /** @class */ (function () {
         else {
             this._curIndex = 0;
         }
+    };
+    Tree.prototype.mergeRuleWithRelation = function (rule) {
     };
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
@@ -510,6 +512,11 @@ var Tree = /** @class */ (function () {
         var parent = target.parent;
         //삭제
         parent.children.splice(parent.children.findIndex(function (_) { return _ == target; }), 1);
+        //부모변경
+        for (var _i = 0, _b = target.children; _i < _b.length; _i++) {
+            var child = _b[_i];
+            child.parent = parent;
+        }
         //삽입
         (_a = parent.children).push.apply(_a, target.children);
     };

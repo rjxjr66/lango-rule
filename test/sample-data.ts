@@ -2043,8 +2043,7 @@ export const rules: IRule[] = [{
     "match": "S(*+PP(IN+PP)+*)",
     "commands": [{
         "cmd": ECommand.MOVE,
-        "args": ["S(*+PP(IN+[PP]))",
-            "[S]"]
+        "args": ["S(*+PP(IN+[PP]))", "[S]"]
     }]
 }, {
     "name": "VPMD02",
@@ -2058,16 +2057,14 @@ export const rules: IRule[] = [{
     "match": "S|SBAR(*+VP(*)+ADVP+*)",
     "commands": [{
         "cmd": ECommand.MOVE,
-        "args": ["S|SBAR(*+VP(*)+[ADVP])",
-            "[VP]"]
+        "args": ["S|SBAR(*+VP(*)+[ADVP])", "[VP]"]
     }]
 }, {
     "name": "VPMD03-2",
     "match": "S|SBAR(*+ADVP+VP(*)+*)",
     "commands": [{
         "cmd": ECommand.MOVE,
-        "args": ["S|SBAR(*+[ADVP])",
-            "[VP]"]
+        "args": ["S|SBAR(*+[ADVP])", "[VP]"]
     }]
 }, {
     "name": "SB01",
@@ -2095,44 +2092,38 @@ export const rules: IRule[] = [{
     "match": "NP(*+VP(VBG|VBN+*))",
     "commands": [{
         "cmd": ECommand.REPLACE,
-        "args": ["NP(*+[VP])",
-            "S"]
+        "args": ["NP(*+[VP])", "S"]
     }]
 }, {
     "name": "SS03",
     "match": "VP(*+VP(VBG+*))",
     "commands": [{
         "cmd": ECommand.REPLACE,
-        "args": ["VP(*+[VP])",
-            "S"]
+        "args": ["VP(*+[VP])", "S"]
     }]
 }, {
     "name": "SS04",
     "match": "VP(*+VP(VBN+*))",
     "commands": [{
         "cmd": ECommand.REPLACE,
-        "args": ["NP(*+[VP])",
-            "S"]
+        "args": ["NP(*+[VP])", "S"]
     }]
 }, {
     "name": "VP01",
     "match": "S|SBAR(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
     "commands": [{
         "cmd": ECommand.MOVE,
-        "args": ["S|SBAR(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
-            "[S]"]
+        "args": ["S|SBAR(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))", "[S]"]
     }]
 }, {
     "name": "CAJ01",
     "match": "NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+PP(IN=of+NP))",
     "commands": [{
         "cmd": ECommand.REPLACE,
-        "args": ["NP([NP])",
-            "ADJP"]
+        "args": ["NP([NP])", "ADJP"]
     }, {
         "cmd": ECommand.MOVE,
-        "args": ["NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+PP([IN])",
-            "NP([NP])"]
+        "args": ["NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+PP([IN])", "NP([NP])"]
     }, {
         "cmd": ECommand.DELETE,
         "args": ["NP(NP(*+NN|DT|RB|JJ|JJS|NNS)+[PP])"]
@@ -2145,8 +2136,7 @@ export const rules: IRule[] = [{
         "args": ["NP([NP])", "ADJP"]
     }, {
         "cmd": ECommand.MOVE,
-        "args": ["NP(NP(*+NN|RB|JJ|JJS|NNS=acre|total|glass)+PP([IN])",
-            "NP([NP])"]
+        "args": ["NP(NP(*+NN|RB|JJ|JJS|NNS=acre|total|glass)+PP([IN])", "NP([NP])"]
     }, {
         "cmd": ECommand.DELETE,
         "args": ["NP(NP(*+NN|RB|JJ|JJS|NNS=acre|total|glass)+[PP])"]
@@ -2156,12 +2146,10 @@ export const rules: IRule[] = [{
     "match": "NP(NP(*+CD)+PP(IN=of+NP))",
     "commands": [{
         "cmd": ECommand.REPLACE,
-        "args": ["NP([NP])",
-            "ADJP"]
+        "args": ["NP([NP])", "ADJP"]
     }, {
         "cmd": ECommand.MOVE,
-        "args": ["NP(NP(*+CD)+PP([IN])",
-            "NP([NP])"]
+        "args": ["NP(NP(*+CD)+PP([IN])", "NP([NP])"]
     }, {
         "cmd": ECommand.DELETE,
         "args": ["NP(NP(*+CD)+[PP])"]
@@ -2171,16 +2159,14 @@ export const rules: IRule[] = [{
     "match": "S(*+ADJP(*+JJ|VBN+SBAR)+*)",
     "commands": [{
         "cmd": ECommand.MOVE,
-        "args": ["S(*+ADJP(*+JJ|VBN+[SBAR]))",
-            "[S]"]
+        "args": ["S(*+ADJP(*+JJ|VBN+[SBAR]))", "[S]"]
     }]
 }, {
     "name": "AJMD05",
     "match": "VP(*+ADVP(RB)+S(VBG|VBN+*)+*)",
     "commands": [{
         "cmd": ECommand.MOVE,
-        "args": ["S(*+ADVP([RB]))",
-            "S(*+ADVP(RB)+S([VBG|VBN]))"]
+        "args": ["S(*+ADVP([RB]))", "S(*+ADVP(RB)+S([VBG|VBN]))"]
     }]
 }, {
     "name": "S|SBAR(*+S(*))",
@@ -2196,7 +2182,25 @@ export const rules: IRule[] = [{
         "cmd": ECommand.DELETE,
         "args": ["[NP]"]
     }]
-}]
+}, {
+    "name": "NPMD04",
+    "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S)",
+    "commands": [{
+        "cmd": ECommand.CREATE,
+        "args": ["[NP]", "NP", "unshift"]
+    }, {
+        "cmd": ECommand.MOVE,
+        "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)", "NP([NP])"]
+    }],
+    "relations": [
+        {
+            "relation": "acl",
+            "governor": "NP(*+[NN|NNS|NNP|NNPS|PRP])",
+            "dependent": "NP(*+NN|NNS|NNP|NNPS|PRP+[S])"
+        }
+    ]
+}
+]
 
 
 // I am aware of what is important (advcl AJMD01)
