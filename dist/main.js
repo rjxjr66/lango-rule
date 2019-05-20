@@ -76,7 +76,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(1));
 __export(__webpack_require__(2));
-exports.LANGO_RULE_VERSION = 'v0.0.23';
+exports.LANGO_RULE_VERSION = 'v0.0.24';
 
 
 /***/ }),
