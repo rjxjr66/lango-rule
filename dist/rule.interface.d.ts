@@ -41,6 +41,7 @@ export interface IRelation {
     relation?: string;
     governor?: string;
     dependent?: string;
+    references?: IDependency[];
 }
 export interface INode {
     pos: POS;

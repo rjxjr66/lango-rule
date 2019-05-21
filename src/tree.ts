@@ -496,7 +496,7 @@ export class Tree {
 
         const newNode = {
             pos: args[1],
-            parent: node,
+            parent: target,
             children: [],
             word: ""
         }

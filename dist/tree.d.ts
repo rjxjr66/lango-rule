@@ -21,6 +21,7 @@ export declare class Tree {
     prevSibiling(): INode;
     child(): INode;
     private _loopMatchNode;
+    private static _findRefNode;
     private _matchRule;
     private static _getTokens;
     private _setCurrent;
