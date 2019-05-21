@@ -436,15 +436,13 @@ export class Tree {
         const target = Tree._select(node, args[0])[0];
         const parent = target.parent;
 
-        //삭제
-        parent.children.splice(parent.children.findIndex(_ => _ == target), 1);
+        // 교체
+        parent.children.splice(parent.children.findIndex(_ => _ == target), 1, ...target.children);
 
-        //부모변경
+        // 부모변경
         for (let child of target.children) {
             child.parent = parent;
         }
-        //삽입
-        parent.children.push(...target.children);
     }
 
     private static _create(node: INode, args: string[]) {
