@@ -76,7 +76,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(1));
 __export(__webpack_require__(2));
-exports.LANGO_RULE_VERSION = 'v0.0.24';
+exports.LANGO_RULE_VERSION = 'v0.0.25';
 
 
 /***/ }),
@@ -510,15 +510,13 @@ var Tree = /** @class */ (function () {
         var _a;
         var target = Tree._select(node, args[0])[0];
         var parent = target.parent;
-        //삭제
-        parent.children.splice(parent.children.findIndex(function (_) { return _ == target; }), 1);
-        //부모변경
+        // 교체
+        (_a = parent.children).splice.apply(_a, [parent.children.findIndex(function (_) { return _ == target; }), 1].concat(target.children));
+        // 부모변경
         for (var _i = 0, _b = target.children; _i < _b.length; _i++) {
             var child = _b[_i];
             child.parent = parent;
         }
-        //삽입
-        (_a = parent.children).push.apply(_a, target.children);
     };
     Tree._create = function (node, args) {
         var target = Tree._select(node, args[0])[0];

@@ -18,7 +18,8 @@
     "coverage": "npm test -- --coverage",
     "coverage:notify": "npm run coverage -- --watch --notify",
     "start": "npm run build && node dist/main.js",
-    "start:watch": "concurrently \"npm run build:watch\" \"node-dev dist/main.js\""
+    "start:watch": "concurrently \"npm run build:watch\" \"node-dev dist/main.js\"",
+    "deploy": "npm run build && npm publish"
   },
   "repository": {
     "type": "git",
