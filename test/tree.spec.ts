@@ -2,8 +2,6 @@ import { Tree } from "../src/tree";
 import { INode } from "../src/rule.interface";
 import { notWorking, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules } from "./sample-data"
 
-// describe(`Test about \"${readBook2.text}\"`, () => {
-
 // it('올바르게 트리가 빌드되어야 한다.', () => {
 //     const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree.tree)));
 //     expect(tree).toBeTruthy();
@@ -92,19 +90,19 @@ import { notWorking, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rule
 
 
 
-describe(`Test about \"${notWorking}\"`, () => {
-    it('변경된 VP01(S|SBAR)을 적용한다.', (done) => {
-        const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(notWorking)) });
+// describe(`Test about \"${notWorking}\"`, () => {
+//     it('변경된 VP01(S|SBAR)을 적용한다.', (done) => {
+//         const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(notWorking)) });
 
-        for (let rule of rules) {
-            if (rule.name !== "VP01") continue;
-            const node = tree.search(rule)
-            if (node) Tree.apply(node, rule.commands)
-        }
-        tree.init();
-        done();
-    });
-})
+//         for (let rule of rules) {
+//             if (rule.name !== "VP01") continue;
+//             const node = tree.search(rule)
+//             if (node) Tree.apply(node, rule.commands)
+//         }
+//         tree.init();
+//         done();
+//     });
+// })
 
 describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {

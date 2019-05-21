@@ -50,8 +50,7 @@ export interface IRelation {
     relation?: string; // ex1) nmod, ex2) nsubj|nsubjpass
     governor?: string; // 검색 패턴으로 선택
     dependent?: string; // 검색 패턴으로 선택
-    // governorIdx?: number;
-    // dependentIdx?: number;
+    references?: IDependency[]  // 관계관련 의존성들
 }
 
 export interface INode {

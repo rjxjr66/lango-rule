@@ -1,5 +1,6 @@
 import { INode, IRule, IDependency, ICommand, POS } from "./rule.interface";
-
+import { bindExpression } from "@babel/types";
+const relRegExp = new RegExp("\\{|\\}", "g")
 export class Tree {
     private _curNode: INode;
     private _curIndex: number;
@@ -55,25 +56,10 @@ export class Tree {
         if (curNode) this._setCurrent(curNode);
         else this.reset();
 
-        const _dependencies = dependencies.filter(dep => {
-            return rule.relations.filter(_ => _.relation === dep.dep).length
-        })
-        // for (let relation of rule.relations) {
-        //     const _dep = dependencies.find(_ => _.dep === relation.relation);
-        //     if (_dep) {
-        //         relation.governorIdx = _dep.governor;
-        //         relation.dependentIdx = _dep.dependent;
-        //     }
-        // }
-        // rule.relations.map(relation => {
-        //     const _dep = dependencies.find(_ => _.dep === relation.relation);
-        //     let ret = { ...relation };
-        //     if (_dep) ret = Object.assign(ret, {
-        //         governorIdx: _dep.governor,
-        //         dependentIdx: _dep.dependent
-        //     })
-        //     return ret;
-        // })
+        for (let relation of rule.relations) {
+            relation.references = dependencies.filter(dep => dep.dep === relation.relation);
+        }
+
         const match = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
         if (match) {
             this._setCurrent(match);
@@ -196,9 +182,42 @@ export class Tree {
     private _loopMatchNode(node: INode, rule: IRule, tokens: string[]): INode {
         if (node.matchRules && node.matchRules.includes(rule)) {
             return null;
-        } else if (this._matchRule(node, tokens)) {
-            return node;
         } else {
+            const matched = this._matchRule(node, tokens);
+            if (matched.match) {
+                if (rule.relations && rule.relations.length && matched.relArgs) {
+                    const passed = rule.relations.filter(relation => {
+                        if (relation.governor) {
+                            if (!matched.relArgs[relation.governor]) return false;
+                        }
+                        if (relation.dependent) {
+                            if (!matched.relArgs[relation.dependent]) return false;
+                        }
+
+                        const found = relation.references.find(ref => {
+                            if (relation.governor && !Tree._findRefNode(
+                                matched.relArgs[relation.governor],
+                                {
+                                    index: ref.governor,
+                                    lemma: ref.governorGloss
+                                }))
+                                return false;
+
+                            if (relation.dependent && !Tree._findRefNode(
+                                matched.relArgs[relation.dependent],
+                                {
+                                    index: ref.dependent,
+                                    lemma: ref.dependentGloss
+                                }))
+                                return false;
+                            return true;
+                        })
+                        return !!found;
+                    });
+                    if (passed.length === rule.relations.length) return node;
+                } else return node;
+            }
+
             if (node.children) {
                 for (let _node of node.children) {
                     const match = this._loopMatchNode(_node, rule, tokens);
@@ -212,10 +231,25 @@ export class Tree {
         }
     }
 
+    // Node내에 해당 릴레이션 정보를 가진 하위 Node를 찾는다.
+    private static _findRefNode(node: INode, ref: { index: number, lemma: string }) {
+        if (node.token && node.token.index === ref.index && node.token.lemma === ref.lemma)
+            return node;
+
+        if (node.children) {
+            for (let child of node.children) {
+                const ret = Tree._findRefNode(child, ref);
+                if (ret) return ret;
+            }
+        }
+        return null;
+    }
+
     // Node와 RuleNode가 매칭되는지 확인한다. (같은 Depth의 regex로 검색)
     // ex) S (NP (PRP)) (VP (VBP) (SBAR (...))) 와 S(*+VP(*+[SBAR|...]+*))
     // 일때 S와 S, NP+VP와 *+VP+*, VBP+SBAR와 *+SBAR+* 단계로 검색
-    private _matchRule(node: INode, tokens: string[]): boolean {
+    private _matchRule(node: INode, tokens: string[]) {
+        const relArgs = {};
         const tree = Tree.fromNode(node);
         let star = false;
 
@@ -226,7 +260,7 @@ export class Tree {
             // 다음 노드가 없을 때 * 이 아니면 false
             if (checkNext) {
                 if (token != '*') {
-                    return false;
+                    return { match: false };
                 } else {
                     checkNext = false;
                 }
@@ -250,7 +284,14 @@ export class Tree {
                 default:
                     const node = token.split('=');
                     const _token = node[0].split('|');
-                    const lemma = node[1];
+                    let lemma;
+                    let rel;
+                    if (node[1] && node[1].match(relRegExp)) {
+                        rel = node[1].replace(relRegExp, "")
+                    } else {
+                        lemma = node[1];
+                    }
+                    // const lemma = node[1];
 
                     // 이전 토큰이 * 인경우
                     if (star) {
@@ -259,6 +300,8 @@ export class Tree {
                         // 노드가 나올때까지 다음 노드로 이동
                         do {
                             if (_token.includes(tree._curNode.pos)) {
+                                // relation 변수 등록
+                                if (rel) relArgs[rel] = tree._curNode;
                                 if (lemma && lemma != tree._curNode.token.lemma) {
                                     continue;
                                 }
@@ -268,15 +311,17 @@ export class Tree {
                         } while (tree.nextSibiling())
 
                         if (!cur) {
-                            return false;
+                            return { match: false };
                         }
                     } else {
                         // 이전 토큰이 * 이 아닌경우 노드가 반드시 일치해야 함
                         if (!_token.includes(tree._curNode.pos)) {
-                            return false;
+                            return { match: false };
                         } else {
+                            // relation 변수 등록
+                            if (rel) relArgs[rel] = tree._curNode;
                             if (lemma && lemma != tree._curNode.token.lemma) {
-                                return false;
+                                return { match: false };
                             }
                             cur = tree._curNode;
                         }
@@ -291,12 +336,12 @@ export class Tree {
                     checkNext = true;
                 } else {
                     // 자식, 부모, 해당 노드가 없을 때
-                    return false;
+                    return { match: false };
                 }
             }
         }
 
-        return true;
+        return { relArgs, match: true };
     }
 
     private static _getTokens(match: string): string[] {
