@@ -286,10 +286,14 @@ export class Tree {
                     const _token = node[0].split('|');
                     let lemma;
                     let rel;
-                    if (node[1] && node[1].match(relRegExp)) {
-                        rel = node[1].replace(relRegExp, "")
-                    } else {
-                        lemma = node[1];
+                    if (node[1]) {
+                        for (let query of node[1].split("&")) {
+                            if (query.match(relRegExp)) {
+                                rel = query.replace(relRegExp, "");
+                            } else {
+                                lemma = query;
+                            }
+                        }
                     }
                     // const lemma = node[1];
 
@@ -302,7 +306,7 @@ export class Tree {
                             if (_token.includes(tree._curNode.pos)) {
                                 // relation 변수 등록
                                 if (rel) relArgs[rel] = tree._curNode;
-                                if (lemma && lemma != tree._curNode.token.lemma) {
+                                if (lemma && lemma !== tree._curNode.token.lemma) {
                                     continue;
                                 }
                                 cur = tree._curNode;
@@ -320,7 +324,7 @@ export class Tree {
                         } else {
                             // relation 변수 등록
                             if (rel) relArgs[rel] = tree._curNode;
-                            if (lemma && lemma != tree._curNode.token.lemma) {
+                            if (lemma && lemma !== tree._curNode.token.lemma) {
                                 return { match: false };
                             }
                             cur = tree._curNode;

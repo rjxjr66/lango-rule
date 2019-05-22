@@ -2184,7 +2184,15 @@ export const rules: IRule[] = [{
     }]
 }, {
     "name": "NPMD04",
-    "match": "NP(*+NN|NNS|NNP|NNPS|PRP={gov}+S={dep})",
+    // "match": "NP(*+NN|NNS|NNP|NNPS|PRP={gov}+S={dep})",
+    "match": "NP(*+NN|NNS|NNP|NNPS|PRP=house&{gov}+S={dep})",
+    "relations": [
+        {
+            "relation": "acl",
+            "governor": "gov",
+            "dependent": "dep"
+        }
+    ],
     "commands": [{
         "cmd": ECommand.CREATE,
         "args": ["[NP]", "NP", "unshift"]
@@ -2192,13 +2200,6 @@ export const rules: IRule[] = [{
         "cmd": ECommand.MOVE,
         "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP]+S)", "NP([NP])"]
     }],
-    "relations": [
-        {
-            "relation": "acl",
-            "governor": "gov",
-            "dependent": "dep"
-        }
-    ]
 }
 ]
 
