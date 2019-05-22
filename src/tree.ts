@@ -1,5 +1,4 @@
 import { INode, IRule, IDependency, ICommand, POS } from "./rule.interface";
-import { bindExpression } from "@babel/types";
 const relRegExp = new RegExp("\\{|\\}", "g")
 export class Tree {
     private _curNode: INode;
@@ -56,6 +55,9 @@ export class Tree {
         if (curNode) this._setCurrent(curNode);
         else this.reset();
 
+        if (!rule.relations) {
+            rule.relations = [];
+        }
         for (let relation of rule.relations) {
             relation.references = dependencies.filter(dep => dep.dep === relation.relation);
         }
