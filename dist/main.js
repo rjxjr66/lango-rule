@@ -76,7 +76,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(1));
 __export(__webpack_require__(2));
-exports.LANGO_RULE_VERSION = 'v0.0.25';
+exports.LANGO_RULE_VERSION = 'v0.0.29';
 
 
 /***/ }),
@@ -125,8 +125,6 @@ var Tree = /** @class */ (function () {
             this._curIndex = 0;
         }
     };
-    Tree.prototype.mergeRuleWithRelation = function (rule) {
-    };
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
     Tree.prototype.search = function (rule, dependencies, curNode) {
@@ -136,9 +134,15 @@ var Tree = /** @class */ (function () {
             this._setCurrent(curNode);
         else
             this.reset();
+        if (!rule.relations) {
+            rule.relations = [];
+        }
         var _loop_1 = function (relation) {
-            relation.references = dependencies.filter(function (dep) { return dep.dep === relation.relation; });
+            relation.references = dependencies.filter(function (dep) {
+                return relation.relation.split("|").includes(dep.dep);
+            });
         };
+        // relation의 OR조건
         for (var _i = 0, _a = rule.relations; _i < _a.length; _i++) {
             var relation = _a[_i];
             _loop_1(relation);
@@ -362,15 +366,18 @@ var Tree = /** @class */ (function () {
                 default:
                     var node_1 = token.split('=');
                     var _token = node_1[0].split('|');
-                    var lemma = void 0;
-                    var rel = void 0;
-                    if (node_1[1] && node_1[1].match(relRegExp)) {
-                        rel = node_1[1].replace(relRegExp, "");
+                    var lemma = void 0, rel = void 0;
+                    if (node_1[1]) {
+                        for (var _a = 0, _b = node_1[1].split("&"); _a < _b.length; _a++) {
+                            var query = _b[_a];
+                            if (query.match(relRegExp)) {
+                                rel = query.replace(relRegExp, "");
+                            }
+                            else {
+                                lemma = query;
+                            }
+                        }
                     }
-                    else {
-                        lemma = node_1[1];
-                    }
-                    // const lemma = node[1];
                     // 이전 토큰이 * 인경우
                     if (star) {
                         star = false;
@@ -380,7 +387,7 @@ var Tree = /** @class */ (function () {
                                 // relation 변수 등록
                                 if (rel)
                                     relArgs[rel] = tree._curNode;
-                                if (lemma && lemma != tree._curNode.token.lemma) {
+                                if (lemma && lemma !== tree._curNode.token.lemma) {
                                     continue;
                                 }
                                 cur = tree._curNode;
@@ -400,7 +407,7 @@ var Tree = /** @class */ (function () {
                             // relation 변수 등록
                             if (rel)
                                 relArgs[rel] = tree._curNode;
-                            if (lemma && lemma != tree._curNode.token.lemma) {
+                            if (lemma && lemma !== tree._curNode.token.lemma) {
                                 return { match: false };
                             }
                             cur = tree._curNode;
@@ -475,7 +482,7 @@ var Tree = /** @class */ (function () {
                     break;
                 case ')':
                     if (shouldEndSelection) {
-                        selectEndIdx = tree._curIndex + 1;
+                        selectEndIdx = tree._curNode.parent.children.length;
                         if (selectStartIdx >= 0 && selectEndIdx >= 0)
                             selection.push.apply(selection, (tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)));
                         shouldEndSelection = false;

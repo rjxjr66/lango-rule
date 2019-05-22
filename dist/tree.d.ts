@@ -10,7 +10,6 @@ export declare class Tree {
     toXML(): string;
     root(): any;
     reset(): void;
-    mergeRuleWithRelation(rule: any): void;
     search(rule: IRule, dependencies?: IDependency[], curNode?: INode): INode;
     init(): void;
     initNode(node: INode): void;
