@@ -1,6 +1,6 @@
 import { Tree } from "../src/tree";
 import { INode } from "../src/rule.interface";
-import { notWorking, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rules } from "./sample-data"
+import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules } from "./sample-data"
 
 // it('올바르게 트리가 빌드되어야 한다.', () => {
 //     const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree.tree)));
@@ -104,34 +104,36 @@ import { notWorking, sampleTreeWithLemma, sampleTreeWithRelation, testNode, rule
 //     });
 // })
 
-describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
+// describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
+//     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
+
+//         for (let rule of rules) {
+//             if (rule.name !== "NPMD04") continue;
+//             while (1) {
+//                 const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
+//                 if (!node) break;
+//                 Tree.apply(node, rule.commands)
+//             }
+//         }
+//         tree.init();
+//         done();
+//     });
+// })
+
+describe(`Test about \"${withComma.text}\"`, () => {
     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(withComma.tree)));
 
         for (let rule of rules) {
-            if (rule.name !== "NPMD04") continue;
-            const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
-            if (node) Tree.apply(node, rule.commands)
+            if (rule.name !== "VP01") continue;
+            while (1) {
+                const node = tree.search(rule, withComma.basicDependencies)
+                if (!node) break;
+                Tree.apply(node, rule.commands)
+            }
         }
         tree.init();
         done();
     });
 })
-// describe(`Test about sampleNode"`, () => {
-//     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
-//         const tree = Tree.fromJSON({
-//             rootNode: {
-//                 pos: "ROOT",
-//                 children: [testNode]
-//             }
-//         });
-
-//         for (let rule of rules) {
-//             if (rule.name !== "NPMD04") continue;
-//             const node = tree.search(rule)
-//             if (node)
-//                 Tree.apply(node, rule.commands)
-//         }
-//         done();
-//     });
-// })

@@ -405,7 +405,7 @@ export class Tree {
                     break;
                 case ')':
                     if (shouldEndSelection) {
-                        selectEndIdx = tree._curIndex + 1;
+                        selectEndIdx = tree._curNode.parent.children.length;
                         if (selectStartIdx >= 0 && selectEndIdx >= 0)
                             selection.push(...(tree._curNode.parent.children.slice(selectStartIdx, selectEndIdx)))
                         shouldEndSelection = false;
