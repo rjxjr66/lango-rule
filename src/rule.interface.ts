@@ -92,3 +92,11 @@ export enum ECommand {
     REPLACE = "REPLACE",
     ELEMENT = "ELEMENT",
 }
+
+
+export interface IXMLNode {
+    type: string;
+    attributes?: Object;
+    text?: string;
+    elements?: Array<IXMLNode>;
+}

@@ -1,4 +1,6 @@
-import { INode, IRule, IDependency, ICommand, POS } from "./rule.interface";
+import { INode, IXMLNode, IRule, IDependency, ICommand, POS } from "./rule.interface";
+import * as convert from "xml-js";
+
 const relRegExp = new RegExp("\\{|\\}", "g")
 export class Tree {
     private _curNode: INode;
@@ -28,8 +30,97 @@ export class Tree {
 
     // 트리를 xml 로 변환한다.
     toXML(): string {
+        var options = {
+            compact: false,
+            ignoreComment: true, spaces: 4,
+            doctypeFn: (val) => {
+                return val.toUpperCase();
+            },
+            cdataFn: val => {
+                return val;
+            },
+            instructionFn: (val) => {
+                return val;
+            },
+            instructionNameFn: val => {
+                return val;
+            },
+            elementNameFn: val => {
+                return val;
+            },
+            attributeNameFn: val => {
+                return val;
+            },
+            attributeValueFn: val => {
+                return val;
+            },
+            attributesFn: val => {
+                return val;
+            },
+            fullTagEmptyElementFn: val => {
+                return val;
+            }
+        }
 
-        return null;
+        const form = {
+            declaration: {
+                attributes: {
+                    version: "1.0",
+                    encoding: "utf-8"
+                }
+            },
+            elements: [{
+                type: "element",
+                name: "sentence",
+                elements: [],
+            }]
+        }
+
+        const json = this.toJSON();
+        this.loopNode(json, (node) => {
+            const element: IXMLNode = { type: "" };
+            if (node.children && node.children.length) {
+                element["type"] = "element";
+                if (!element.elements) element.elements = [];
+                for (let child of node.children) {
+                    element.elements.push(child.element);
+                }
+
+                //하위에 word만 있는 경우 하나의 word로 통합
+                // if (element.elements.filter(child => child["name"] === "word").length === element.elements.length) {
+                //     element["name"] = "word";
+                //     element.elements = element.elements.map(elm => {
+                //         const word = elm.elements[0];
+                //         return word;
+                //     });
+                // }
+
+                // 하위에 part가 있으면 chunk, 없으면 part
+                if (element.elements.filter(child => ["chunk", "word"].includes(child["name"])).length)
+                    element["name"] = "part"
+                else element["name"] = "chunk"
+
+            } else {
+                element["type"] = "element";
+                element["name"] = "word";
+                if (!element.elements) element.elements = [];
+                if (node.word) {
+                    element.elements.push({
+                        type: "text",
+                        text: node.word
+                    })
+                }
+                if (node.pos) {
+                    element.attributes = Object.assign({ pos: node.pos }, element.attributes)
+                }
+            }
+            node.element = element;
+        })
+        form.elements[0].elements.push(json.element)
+
+        // const result = convert.json2xml(JSON.parse(JSON.stringify({ sentence: this.toJSON() })), options);
+        const result = convert.json2xml(JSON.stringify(form), options);
+        return result;
     }
 
     root() {
@@ -533,15 +624,17 @@ export class Tree {
     }
 
     private loopNode(node: INode, cb: Function = null) {
-        cb && cb(node);
         for (let child of node.children) {
             this.loopNode(child, cb);
         }
+        cb && cb(node);
     }
 
     public toJSON() {
         const jsonObj = Object.assign({}, this._tree);
-        this.loopNode(jsonObj, (node) => { node.parent = null })
+        this.loopNode(jsonObj, (node) => {
+            delete node.parent;
+        })
         return jsonObj;
     }
 }

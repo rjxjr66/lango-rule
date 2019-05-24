@@ -1,6 +1,6 @@
 import { Tree } from "../src/tree";
 import { INode } from "../src/rule.interface";
-import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules } from "./sample-data"
+import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSentence, testJSON } from "./sample-data"
 
 // it('올바르게 트리가 빌드되어야 한다.', () => {
 //     const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree.tree)));
@@ -121,19 +121,37 @@ import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules } from ".
 //     });
 // })
 
-describe(`Test about \"${withComma.text}\"`, () => {
-    it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(withComma.tree)));
+// describe(`Test about \"${withComma.text}\"`, () => {
+//     it(', 가 들어있는 부분의 VP01 테스트를 적용한다.', (done) => {
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(withComma.tree)));
 
+//         for (let rule of rules) {
+//             // if (rule.name !== "VP01") continue;
+//             while (1) {
+//                 const node = tree.search(rule, withComma.basicDependencies)
+//                 if (!node) break;
+//                 Tree.apply(node, rule.commands)
+//                 tree.init();
+//             }
+//         }
+//         done();
+//     });
+// })
+
+describe('Test about parse JSON to XML', () => {
+    it('JSON Tree객체를 XML로 파싱한다.', (done) => {
+        // const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(testJSON)) });
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(testSentence.tree));
         for (let rule of rules) {
-            if (rule.name !== "VP01") continue;
             while (1) {
                 const node = tree.search(rule, withComma.basicDependencies)
                 if (!node) break;
                 Tree.apply(node, rule.commands)
+                tree.init();
             }
         }
-        tree.init();
+        tree.toXML();
         done();
     });
 })
+
