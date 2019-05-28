@@ -108,15 +108,15 @@ import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSent
 //     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
 //         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
 
-//         for (let rule of rules) {
-//             if (rule.name !== "NPMD04") continue;
+//         for (let rule of rules[0]) {
+//             // if (rule.name !== "NPMD04") continue;
 //             while (1) {
 //                 const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
 //                 if (!node) break;
 //                 Tree.apply(node, rule.commands)
+//                 tree.init();
 //             }
 //         }
-//         tree.init();
 //         done();
 //     });
 // })
@@ -141,13 +141,20 @@ import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSent
 describe('Test about parse JSON to XML', () => {
     it('JSON Tree객체를 XML로 파싱한다.', (done) => {
         // const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(testJSON)) });
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(testSentence.tree));
-        for (let rule of rules) {
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(testSentence.tree)));
+        for (let rule of rules[0]) {
             while (1) {
                 const node = tree.search(rule, withComma.basicDependencies)
                 if (!node) break;
                 Tree.apply(node, rule.commands)
                 tree.init();
+            }
+        }
+        for (let rule of rules[1]) {
+            while (1) {
+                const node = tree.search(rule, withComma.basicDependencies)
+                if (!node) break;
+                Tree.apply(node, rule.commands)
             }
         }
         tree.toXML();

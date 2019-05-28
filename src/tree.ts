@@ -79,41 +79,41 @@ export class Tree {
         const json = this.toJSON();
         this.loopNode(json, (node) => {
             const element: IXMLNode = { type: "" };
-            if (node.children && node.children.length) {
+
+            // leaf node
+            if (!(node.children && node.children.length)) {
+                if (node.word) {
+                    element["type"] = "text";
+                    element["text"] = node.word
+                } else {
+                    element["type"] = "element";
+                    element["name"] = node.element;
+                }
+            }
+            // non-leaf node
+            else {
                 element["type"] = "element";
                 if (!element.elements) element.elements = [];
+
                 for (let child of node.children) {
+                    // 띄어쓰기 추가
+                    if (child.element.type === "text" && element.elements.length)
+                        child.element.text = " " + child.element.text
                     element.elements.push(child.element);
                 }
 
-                //하위에 word만 있는 경우 하나의 word로 통합
-                // if (element.elements.filter(child => child["name"] === "word").length === element.elements.length) {
-                //     element["name"] = "word";
-                //     element.elements = element.elements.map(elm => {
-                //         const word = elm.elements[0];
-                //         return word;
-                //     });
-                // }
-
-                // 하위에 part가 있으면 chunk, 없으면 part
-                if (element.elements.filter(child => ["chunk", "word"].includes(child["name"])).length)
-                    element["name"] = "part"
-                else element["name"] = "chunk"
-
-            } else {
-                element["type"] = "element";
-                element["name"] = "word";
-                if (!element.elements) element.elements = [];
-                if (node.word) {
-                    element.elements.push({
-                        type: "text",
-                        text: node.word
-                    })
-                }
-                if (node.pos) {
-                    element.attributes = Object.assign({ pos: node.pos }, element.attributes)
+                if (node.element) {
+                    element["name"] = node.element;
+                } else {
+                    if (element.elements.filter(child => child.type === "text").length)
+                        element["name"] = "word"
+                    else if (element.elements.filter(child => ["word", "chunk"].includes(child["name"])).length)
+                        element["name"] = "part"
+                    else
+                        element["name"] = "chunk"
                 }
             }
+            if (node.attr) element["attributes"] = node.attr
             node.element = element;
         })
         form.elements[0].elements.push(json.element)
@@ -375,16 +375,16 @@ export class Tree {
                     star = true;
                     break;
                 default:
-                    const node = token.split('=');
-                    const _token = node[0].split('|');
-                    let lemma, rel;
+                    const _node = token.split('=');
+                    const _token = _node[0].split('|');
+                    let lemmas = [], rels = [];
 
-                    if (node[1]) {
-                        for (let query of node[1].split("&")) {
+                    if (_node[1]) {
+                        for (let query of _node[1].split("|")) {
                             if (query.match(relRegExp)) {
-                                rel = query.replace(relRegExp, "");
+                                rels.push(query.replace(relRegExp, ""));
                             } else {
-                                lemma = query;
+                                lemmas.push(query);
                             }
                         }
                     }
@@ -397,8 +397,11 @@ export class Tree {
                         do {
                             if (_token.includes(tree._curNode.pos)) {
                                 // relation 변수 등록
-                                if (rel) relArgs[rel] = tree._curNode;
-                                if (lemma && lemma !== tree._curNode.token.lemma) {
+                                for (let rel of rels) {
+                                    relArgs[rel] = tree._curNode
+                                }
+
+                                if (lemmas.length && !lemmas.includes(tree._curNode.token.lemma)) {
                                     continue;
                                 }
                                 cur = tree._curNode;
@@ -415,10 +418,13 @@ export class Tree {
                             return { match: false };
                         } else {
                             // relation 변수 등록
-                            if (rel) relArgs[rel] = tree._curNode;
-                            if (lemma && lemma !== tree._curNode.token.lemma) {
+                            for (let rel of rels) {
+                                relArgs[rel] = tree._curNode
+                            }
+                            if (lemmas.length && !lemmas.includes(tree._curNode.token.lemma)) {
                                 return { match: false };
                             }
+                            
                             cur = tree._curNode;
                         }
                     }
