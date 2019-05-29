@@ -2012,7 +2012,6 @@ export const withComma = {
     }]
 }
 
-
 export const rules: IRule[][] = [[{
     "name": "have to",
     "match": "VP(VBP|VBZ=have+S(VP(TO+*)))",
@@ -2297,6 +2296,115 @@ export const rules: IRule[][] = [[{
     "match": "S(*+S(PP(IN+NP)))",
     "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[S])"] }], "relations": []
 }], [
+    {
+        "name": "NPROLE01",
+        "match": "S|SBAR(*+NP={dep}+*)",
+        "relations": [{
+            "relation": "nsubj|nsubjpass",
+            "dependent": "dep"
+        }],
+        "commands": [
+            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE01"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE01])", "NP", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE01(NP+[*]))", "S|SBAR(*+PARTNPROLE01([NP]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE01])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE01])", "role", "sbj"] },
+        ]
+    },
+    {
+        "name": "NPROLE02-03",
+        "match": "S|SBAR(*+NP={dep}+*)",
+        "relations": [{
+            "relation": "dobj|iobj",
+            "dependent": "dep"
+        }],
+        "commands": [
+            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE02"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE02])", "NP", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE02(NP+[*]))", "S|SBAR(*+PARTNPROLE02([NP]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE02])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE02])", "role", "obj"] },
+        ]
+    },
+    {
+        "name": "NPROLE04-05",
+        "match": "S|SBAR(*+NP={dep}+*)",
+        "relations": [{
+            "relation": "cop|xcomp",
+            "dependent": "dep"
+        }],
+        "commands": [
+            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE04"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE04])", "NP", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE04(NP+[*]))", "S|SBAR(*+PARTNPROLE04([NP]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE04])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE04])", "role", "cpm"] },
+        ]
+    },
+    {
+        "name": "NPROLE06",
+        "match": "S|SBAR(*+NP={dep}+*)",
+        "relations": [{
+            "relation": "nsubj",
+            "dependent": "dep"
+        }, {
+            "relation": "xcomp",
+            "dependent": "dep"
+        }],
+        "commands": [
+            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE06"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE06])", "NP", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE06(NP+[*]))", "S|SBAR(*+PARTNPROLE06([NP]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE06])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE06])", "role", "cpm"] },
+        ]
+    },
+    {
+        "name": "AJROLE01-02",
+        "match": "S|SBAR(*+ADJP={dep}+*)",
+        "relations": [{
+            "relation": "cop|xcomp",
+            "dependent": "dep"
+        }],
+        "commands": [
+            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[ADJP])", "PARTAJROLE01"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTAJROLE01])", "ADJP", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTAJROLE01(ADJP+[*]))", "S|SBAR(*+PARTAJROLE01([ADJP]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTAJROLE01])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTAJROLE01])", "role", "cpm"] },
+        ]
+    },
+    {
+        "name": "AJROLE03",
+        "match": "S|SBAR(*+ADJP={dep}+*)",
+        "relations": [{
+            "relation": "nsubj",
+            "dependent": "dep"
+        },
+        {
+            "relation": "xcomp",
+            "dependent": "dep"
+        }],
+        "commands": [
+            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[ADJP])", "PARTAJROLE03"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTAJROLE03])", "ADJP", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTAJROLE03(ADJP+[*]))", "S|SBAR(*+PARTAJROLE03([ADJP]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTAJROLE03])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTAJROLE03])", "role", "cpm"] },
+        ]
+    },
+    {
+        "name": "VPROLE01",
+        "match": "S|SBAR(*+VP+*)",
+        "commands": [
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE01", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE01+[*])+*)", "S|SBAR(*+VP([WORDVPROLE01]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "word"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "pos", "vb"] },
+        ], "relations": []
+    },
     {
         "name": "NP01",
         "match": "NP(*+NN|NNS|NNP|NNPS|PRP)",

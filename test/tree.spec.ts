@@ -104,22 +104,22 @@ import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSent
 //     });
 // })
 
-// describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
-//     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
-//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
+describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
+    it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
 
-//         for (let rule of rules[0]) {
-//             // if (rule.name !== "NPMD04") continue;
-//             while (1) {
-//                 const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
-//                 if (!node) break;
-//                 Tree.apply(node, rule.commands)
-//                 tree.init();
-//             }
-//         }
-//         done();
-//     });
-// })
+        for (let rule of rules[0]) {
+            // if (rule.name !== "NPMD04") continue;
+            while (1) {
+                const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
+                if (!node) break;
+                Tree.apply(node, rule.commands)
+                tree.init();
+            }
+        }
+        done();
+    });
+})
 
 // describe(`Test about \"${withComma.text}\"`, () => {
 //     it(', 가 들어있는 부분의 VP01 테스트를 적용한다.', (done) => {
@@ -144,7 +144,7 @@ describe('Test about parse JSON to XML', () => {
         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(testSentence.tree)));
         for (let rule of rules[0]) {
             while (1) {
-                const node = tree.search(rule, withComma.basicDependencies)
+                const node = tree.search(rule, testSentence.basicDependencies)
                 if (!node) break;
                 Tree.apply(node, rule.commands)
                 tree.init();
@@ -152,7 +152,9 @@ describe('Test about parse JSON to XML', () => {
         }
         for (let rule of rules[1]) {
             while (1) {
-                const node = tree.search(rule, withComma.basicDependencies)
+                if (rule.name === "NPROLE01")
+                    rule.name;
+                const node = tree.search(rule, testSentence.basicDependencies)
                 if (!node) break;
                 Tree.apply(node, rule.commands)
             }

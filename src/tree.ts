@@ -273,54 +273,56 @@ export class Tree {
 
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     private _loopMatchNode(node: INode, rule: IRule, tokens: string[]): INode {
+        let matched;
         if (node.matchRules && node.matchRules.includes(rule)) {
-            return null;
+            matched = { match: false };
         } else {
-            const matched = this._matchRule(node, tokens);
-            if (matched.match) {
-                if (rule.relations && rule.relations.length && matched.relArgs) {
-                    const passed = rule.relations.filter(relation => {
-                        if (relation.governor) {
-                            if (!matched.relArgs[relation.governor]) return false;
-                        }
-                        if (relation.dependent) {
-                            if (!matched.relArgs[relation.dependent]) return false;
-                        }
+            matched = this._matchRule(node, tokens);
+        }
 
-                        const found = relation.references.find(ref => {
-                            if (relation.governor && !Tree._findRefNode(
-                                matched.relArgs[relation.governor],
-                                {
-                                    index: ref.governor,
-                                    lemma: ref.governorGloss
-                                }))
-                                return false;
-
-                            if (relation.dependent && !Tree._findRefNode(
-                                matched.relArgs[relation.dependent],
-                                {
-                                    index: ref.dependent,
-                                    lemma: ref.dependentGloss
-                                }))
-                                return false;
-                            return true;
-                        })
-                        return !!found;
-                    });
-                    if (passed.length === rule.relations.length) return node;
-                } else return node;
-            }
-
-            if (node.children) {
-                for (let _node of node.children) {
-                    const match = this._loopMatchNode(_node, rule, tokens);
-                    if (match) {
-                        return match;
+        if (matched.match) {
+            if (rule.relations && rule.relations.length && matched.relArgs) {
+                const passed = rule.relations.filter(relation => {
+                    if (relation.governor) {
+                        if (!matched.relArgs[relation.governor]) return false;
                     }
+                    if (relation.dependent) {
+                        if (!matched.relArgs[relation.dependent]) return false;
+                    }
+
+                    const found = relation.references.find(ref => {
+                        if (relation.governor && !Tree._findRefNode(
+                            matched.relArgs[relation.governor],
+                            {
+                                index: ref.governor,
+                                lemma: ref.governorGloss
+                            }))
+                            return false;
+
+                        if (relation.dependent && !Tree._findRefNode(
+                            matched.relArgs[relation.dependent],
+                            {
+                                index: ref.dependent,
+                                lemma: ref.dependentGloss
+                            }))
+                            return false;
+                        return true;
+                    })
+                    return !!found;
+                });
+                if (passed.length === rule.relations.length) return node;
+            } else return node;
+        }
+
+        if (node.children) {
+            for (let _node of node.children) {
+                const match = this._loopMatchNode(_node, rule, tokens);
+                if (match) {
+                    return match;
                 }
-            } else {
-                return null;
             }
+        } else {
+            return null;
         }
     }
 
@@ -369,7 +371,7 @@ export class Tree {
                     star = false;
                     break;
                 case '+':
-                    cur = tree.nextSibiling()
+                    if (!star) cur = tree.nextSibiling()
                     break;
                 case '*':
                     star = true;
@@ -424,7 +426,7 @@ export class Tree {
                             if (lemmas.length && !lemmas.includes(tree._curNode.token.lemma)) {
                                 return { match: false };
                             }
-                            
+
                             cur = tree._curNode;
                         }
                     }
