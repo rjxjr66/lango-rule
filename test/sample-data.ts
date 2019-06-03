@@ -2239,7 +2239,8 @@ export const rules: IRule[][] = [[{
         "cmd": ECommand.MOVE, "args": ["S(*+ADVP([RB]))",
             "S(*+ADVP(RB)+S([VBG|VBN]))"]
     }], "relations": []
-}, {
+},
+{
     "name": "NPMD04",
     "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S(*))",
     "commands": [{
@@ -2297,6 +2298,43 @@ export const rules: IRule[][] = [[{
     "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[S])"] }], "relations": []
 }], [
     {
+        "name": "NP01",
+        "match": "NP(*+NN|NNS|NNP|NNPS|PRP)",
+        "commands": [
+            { "cmd": ECommand.ELEMENT, "args": ["[NP]", "word"] },
+            { "cmd": ECommand.SET, "args": ["[NP]", "pos", "nn"] },
+        ], "relations": []
+    },
+    {
+        "name": "AJ01",
+        "match": "ADJP(*+JJ|VBN)",
+        "commands": [
+            { "cmd": ECommand.ELEMENT, "args": ["[ADJP]", "word"] },
+            { "cmd": ECommand.SET, "args": ["[ADJP]", "pos", "aj"] },
+        ], "relations": []
+    },
+    {
+        "name": "AJ02",
+        "match": "ADVP",
+        "commands": [
+            { "cmd": ECommand.ELEMENT, "args": ["[ADVP]", "word"] },
+            { "cmd": ECommand.SET, "args": ["[ADVP]", "pos", "av"] },
+        ], "relations": []
+    },
+    {
+        "name": "NPMD02",
+        "match": "NP(NP={gov}+SBAR={dep})",
+        "commands": [
+            { "cmd": ECommand.ELEMENT, "args": ["NP(NP+[SBAR])", "chunk"] },
+            { "cmd": ECommand.SET, "args": ["NP(NP+[SBAR])", "pos", "aj"] }
+        ], "relations": [{
+            "relation": "acl:relcl",
+            "governor": "gov",
+            "dependent": "dep",
+            "references": []
+        }]
+    },
+    {
         "name": "NPROLE01",
         "match": "S|SBAR(*+NP={dep}+*)",
         "relations": [{
@@ -2304,11 +2342,8 @@ export const rules: IRule[][] = [[{
             "dependent": "dep"
         }],
         "commands": [
-            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE01"] },
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE01])", "NP", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE01(NP+[*]))", "S|SBAR(*+PARTNPROLE01([NP]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE01])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE01])", "role", "sbj"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "sbj"] },
         ]
     },
     {
@@ -2319,11 +2354,8 @@ export const rules: IRule[][] = [[{
             "dependent": "dep"
         }],
         "commands": [
-            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE02"] },
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE02])", "NP", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE02(NP+[*]))", "S|SBAR(*+PARTNPROLE02([NP]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE02])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE02])", "role", "obj"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "obj"] },
         ]
     },
     {
@@ -2334,11 +2366,8 @@ export const rules: IRule[][] = [[{
             "dependent": "dep"
         }],
         "commands": [
-            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE04"] },
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE04])", "NP", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE04(NP+[*]))", "S|SBAR(*+PARTNPROLE04([NP]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE04])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE04])", "role", "cpm"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "cpm"] },
         ]
     },
     {
@@ -2352,11 +2381,8 @@ export const rules: IRule[][] = [[{
             "dependent": "dep"
         }],
         "commands": [
-            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[NP])", "PARTNPROLE06"] },
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTNPROLE06])", "NP", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTNPROLE06(NP+[*]))", "S|SBAR(*+PARTNPROLE06([NP]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTNPROLE06])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTNPROLE06])", "role", "cpm"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "cpm"] },
         ]
     },
     {
@@ -2367,11 +2393,8 @@ export const rules: IRule[][] = [[{
             "dependent": "dep"
         }],
         "commands": [
-            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[ADJP])", "PARTAJROLE01"] },
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTAJROLE01])", "ADJP", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTAJROLE01(ADJP+[*]))", "S|SBAR(*+PARTAJROLE01([ADJP]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTAJROLE01])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTAJROLE01])", "role", "cpm"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[ADJP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[ADJP])", "role", "cpm"] },
         ]
     },
     {
@@ -2386,33 +2409,46 @@ export const rules: IRule[][] = [[{
             "dependent": "dep"
         }],
         "commands": [
-            { "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+[ADJP])", "PARTAJROLE03"] },
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[PARTAJROLE03])", "ADJP", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+PARTAJROLE03(ADJP+[*]))", "S|SBAR(*+PARTAJROLE03([ADJP]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[PARTAJROLE03])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[PARTAJROLE03])", "role", "cpm"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[ADJP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[ADJP])", "role", "cpm"] },
         ]
     },
     {
         "name": "VPROLE01",
-        "match": "S|SBAR(*+VP+*)",
+        "match": "S|SBAR(*+VP(*+VBP|VBZ=be+*)+*)",
         "commands": [
             { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE01", "unshift"] },
             { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE01+[*])+*)", "S|SBAR(*+VP([WORDVPROLE01]))"] },
             { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
             { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
             { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "word"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "pos", "vb"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "pos", "be"] },
         ], "relations": []
     },
     {
-        "name": "NP01",
-        "match": "NP(*+NN|NNS|NNP|NNPS|PRP)",
+        "name": "VPROLE02",
+        "match": "S|SBAR(*+VP(*+VBP|VBZ=!be+*)+*)",
         "commands": [
-            { "cmd": ECommand.SET, "args": ["[NP]", "pos", "nn"] },
-            { "cmd": ECommand.ELEMENT, "args": ["[NP]", "word"] },
+            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE02", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE02+[*])+*)", "S|SBAR(*+VP([WORDVPROLE02]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
+            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE02]))", "word"] },
+            { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE02]))", "pos", "vb"] },
         ], "relations": []
     },
+    {
+        "name": "SB01",
+        "match": "SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP+*)",
+        "commands": [
+            { "cmd": ECommand.CREATE, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "WORDCJ", "unshift"] },
+            { "cmd": ECommand.MOVE, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP(WORDCJ+[*]))", "SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))"] },
+            { "cmd": ECommand.ELEMENT, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))", "word"] },
+            { "cmd": ECommand.SET, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))", "pos", "cj"] },
+            { "cmd": ECommand.ELEMENT, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "part"] },
+            { "cmd": ECommand.SET, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "role", "trg"] }
+        ]
+    }
 ]]
 
 
@@ -2778,55 +2814,56 @@ export const testSentence = {
         "after": "",
         "pos": ".",
         "lemma": "."
-    }], "basicDependencies": [{
-        "dep": "ROOT",
-        "governor": 0, "governorGloss": "ROOT",
-        "dependent": 7, "dependentGloss": "is"
-    }, {
-        "dep": "det",
-        "governor": 3, "governorGloss": "time",
-        "dependent": 1, "dependentGloss": "The"
-    }, {
-        "dep": "amod",
-        "governor": 3, "governorGloss": "time",
-        "dependent": 2, "dependentGloss": "only"
-    }, {
-        "dep": "nsubj",
-        "governor": 7, "governorGloss": "is",
-        "dependent": 3, "dependentGloss": "time"
-    }, {
-        "dep": "nsubj",
-        "governor": 5, "governorGloss": "feel",
-        "dependent": 4, "dependentGloss": "I"
-    }, {
-        "dep": "acl:relcl",
-        "governor": 3, "governorGloss": "time",
-        "dependent": 5, "dependentGloss": "feel"
-    }, {
-        "dep": "xcomp",
-        "governor": 5, "governorGloss": "feel",
-        "dependent": 6, "dependentGloss": "alive"
-    }, {
-        "dep": "advmod",
-        "governor": 11, "governorGloss": "painting",
-        "dependent": 8, "dependentGloss": "when"
-    }, {
-        "dep": "nsubj",
-        "governor": 11, "governorGloss": "painting",
-        "dependent": 9, "dependentGloss": "I"
-    }, {
-        "dep": "cop",
-        "governor": 11, "governorGloss": "painting",
-        "dependent": 10, "dependentGloss": "am"
-    }, {
-        "dep": "advcl",
-        "governor": 7, "governorGloss": "is",
-        "dependent": 11, "dependentGloss": "painting"
-    }, {
-        "dep": "punct",
-        "governor": 7, "governorGloss": "is",
-        "dependent": 12, "dependentGloss": "."
-    }]
+    }], "basicDependencies": [
+        {
+            "dep": "ROOT",
+            "governor": 0, "governorGloss": "ROOT",
+            "dependent": 7, "dependentGloss": "is"
+        }, {
+            "dep": "det",
+            "governor": 3, "governorGloss": "time",
+            "dependent": 1, "dependentGloss": "The"
+        }, {
+            "dep": "amod",
+            "governor": 3, "governorGloss": "time",
+            "dependent": 2, "dependentGloss": "only"
+        }, {
+            "dep": "nsubj",
+            "governor": 7, "governorGloss": "is",
+            "dependent": 3, "dependentGloss": "time"
+        }, {
+            "dep": "nsubj",
+            "governor": 5, "governorGloss": "feel",
+            "dependent": 4, "dependentGloss": "I"
+        }, {
+            "dep": "acl:relcl",
+            "governor": 3, "governorGloss": "time",
+            "dependent": 5, "dependentGloss": "feel"
+        }, {
+            "dep": "xcomp",
+            "governor": 5, "governorGloss": "feel",
+            "dependent": 6, "dependentGloss": "alive"
+        }, {
+            "dep": "advmod",
+            "governor": 11, "governorGloss": "painting",
+            "dependent": 8, "dependentGloss": "when"
+        }, {
+            "dep": "nsubj",
+            "governor": 11, "governorGloss": "painting",
+            "dependent": 9, "dependentGloss": "I"
+        }, {
+            "dep": "cop",
+            "governor": 11, "governorGloss": "painting",
+            "dependent": 10, "dependentGloss": "am"
+        }, {
+            "dep": "advcl",
+            "governor": 7, "governorGloss": "is",
+            "dependent": 11, "dependentGloss": "painting"
+        }, {
+            "dep": "punct",
+            "governor": 7, "governorGloss": "is",
+            "dependent": 12, "dependentGloss": "."
+        }]
 }
 
 export const testJSON = {

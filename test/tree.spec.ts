@@ -147,12 +147,12 @@ describe('Test about parse JSON to XML', () => {
                 const node = tree.search(rule, testSentence.basicDependencies)
                 if (!node) break;
                 Tree.apply(node, rule.commands)
-                tree.init();
             }
         }
+        tree.init();
         for (let rule of rules[1]) {
             while (1) {
-                if (rule.name === "NPROLE01")
+                if (rule.name === "NPROLE04-05")
                     rule.name;
                 const node = tree.search(rule, testSentence.basicDependencies)
                 if (!node) break;

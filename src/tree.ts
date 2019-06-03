@@ -2,6 +2,7 @@ import { INode, IXMLNode, IRule, IDependency, ICommand, POS } from "./rule.inter
 import * as convert from "xml-js";
 
 const relRegExp = new RegExp("\\{|\\}", "g")
+const invertRegExp = new RegExp("^\\!", "g")
 export class Tree {
     private _curNode: INode;
     private _curIndex: number;
@@ -69,14 +70,10 @@ export class Tree {
                     encoding: "utf-8"
                 }
             },
-            elements: [{
-                type: "element",
-                name: "sentence",
-                elements: [],
-            }]
+            elements: []
         }
 
-        const json = this.toJSON();
+        const json = Object.assign({}, this._tree).children[0];
         this.loopNode(json, (node) => {
             const element: IXMLNode = { type: "" };
 
@@ -102,7 +99,9 @@ export class Tree {
                     element.elements.push(child.element);
                 }
 
-                if (node.element) {
+                if (node.parent && node.parent.pos === "ROOT") {
+                    element["name"] = "sentence"
+                } else if (node.element) {
                     element["name"] = node.element;
                 } else {
                     if (element.elements.filter(child => child.type === "text").length)
@@ -116,7 +115,7 @@ export class Tree {
             if (node.attr) element["attributes"] = node.attr
             node.element = element;
         })
-        form.elements[0].elements.push(json.element)
+        form.elements.push(json.element)
 
         // const result = convert.json2xml(JSON.parse(JSON.stringify({ sentence: this.toJSON() })), options);
         const result = convert.json2xml(JSON.stringify(form), options);
@@ -333,6 +332,7 @@ export class Tree {
 
         if (node.children) {
             for (let child of node.children) {
+                if (["S", "SBAR"].includes(child.pos)) continue;
                 const ret = Tree._findRefNode(child, ref);
                 if (ret) return ret;
             }
@@ -403,9 +403,33 @@ export class Tree {
                                     relArgs[rel] = tree._curNode
                                 }
 
-                                if (lemmas.length && !lemmas.includes(tree._curNode.token.lemma)) {
-                                    continue;
+                                if (lemmas.length) {
+                                    let include = false;
+                                    for (let _lemma of lemmas) {
+                                        if (_lemma.match(invertRegExp)) {
+                                            if (tree._curNode.token.lemma !== _lemma.replace(invertRegExp, "")) {
+                                                include = true;
+                                                break;
+                                            }
+                                        } else {
+                                            if (tree._curNode.token.lemma === _lemma) {
+                                                include = true;
+                                                break;
+                                            }
+                                        }
+                                        // if (lemma.includes("!") && (tree._curNode.token.lemma !== lemma)) {
+                                        //     cont = true;
+                                        //     break;
+                                        // }
+                                        // if (!lemma.includes("!") && (tree._curNode.token.lemma === lemma)) {
+                                        //     cont = true;
+                                        //     break;
+                                        // }
+                                    }
+
+                                    if (!include) continue;
                                 }
+
                                 cur = tree._curNode;
                                 break; // 노드가 검색됨
                             }
@@ -628,6 +652,12 @@ export class Tree {
 
     private static _element(node: INode, args: string[]) {
         const target = Tree._select(node, args[0])[0];
+        if (target.element && target.element !== args[1]) {
+            const clone = Object.assign({}, target);
+            clone.parent = target;
+            target.children = [clone];
+            target.attr = {}
+        }
         target.element = args[1];
     }
 
