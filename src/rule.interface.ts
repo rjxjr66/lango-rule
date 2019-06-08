@@ -59,6 +59,7 @@ export interface INode {
     children: INode[];
     word: string;
     token: IToken;
+    nodeTokens?: string;
     matchRules: IRule[];
     attr: any;
     element: string;
@@ -91,6 +92,7 @@ export enum ECommand {
     SET = "SET",
     REPLACE = "REPLACE",
     ELEMENT = "ELEMENT",
+    MERGE = "MERGE"
 }
 
 

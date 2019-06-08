@@ -1,6 +1,165 @@
 import { Tree } from "../src/tree";
 import { INode } from "../src/rule.interface";
-import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSentence, testJSON } from "./sample-data"
+import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSentence, _testSentence } from "./sample-data"
+
+describe('Test Commands', () => {
+    it('Commnands.CREATE', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [{
+                pos: "VP",
+                children: []
+            }, {
+                pos: "NP",
+                children: []
+            }]
+        }
+        Tree.create(<INode>tree, "SAMPLE1", "unshift");
+        Tree.create(<INode>tree, "SAMPLE2");
+
+        expect(tree.children.map(_ => _.pos)).toEqual(["SAMPLE1", "VP", "NP", "SAMPLE2"])
+    })
+
+    it('Commnands.DELETE:non-recursive', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "NP1",
+                    children: []
+                }, {
+                    pos: "VP",
+                    children: [{
+                        pos: "NP2",
+                        children: []
+                    }, {
+                        pos: "NP3",
+                        children: []
+                    }]
+                }, {
+                    pos: "NP4",
+                    children: []
+                }]
+        }
+        Tree.loopNode(<INode>tree, (node) => {
+            for (let child of node.children) {
+                child.parent = node
+            }
+        })
+        Tree.delete(<INode>tree.children[1]);
+        expect(tree.children.map(_ => _.pos)).toEqual(["NP1", "NP2", "NP3", "NP4"])
+    })
+
+    it('Commnands.DELETE:recursive', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "NP1",
+                    children: []
+                }, {
+                    pos: "VP",
+                    children: [{
+                        pos: "NP2",
+                        children: []
+                    }, {
+                        pos: "NP3",
+                        children: []
+                    }]
+                }, {
+                    pos: "NP4",
+                    children: []
+                }]
+        }
+        Tree.loopNode(<INode>tree, (node) => {
+            for (let child of node.children) {
+                child.parent = node
+            }
+        })
+        Tree.delete(<INode>tree.children[1], true);
+        expect(tree.children.map(_ => _.pos)).toEqual(["NP1", "NP4"])
+    })
+
+    it('Commnands.MOVE', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "VP1",
+                    children: [{
+                        pos: "NP1",
+                        children: []
+                    }, {
+                        pos: "NP2",
+                        children: []
+                    }]
+                }, {
+                    pos: "VP2",
+                    children: [{
+                        pos: "NP3",
+                        children: []
+                    }, {
+                        pos: "NP4",
+                        children: []
+                    }]
+                }]
+        }
+        Tree.loopNode(<INode>tree, (node) => {
+            for (let child of node.children) {
+                child.parent = node
+            }
+        })
+        Tree.move(<INode[]>tree.children[0].children, <INode>tree.children[1], "push");
+        expect(tree.children[1].children.map(_ => _.pos)).toEqual(["NP3", "NP4", "NP1", "NP2"])
+    })
+
+    it('Commnands.SET', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "VP",
+                    children: []
+                }, {
+                    pos: "NP",
+                    children: []
+                }]
+        }
+        Tree.set(<INode>tree.children[0], "role", "trg");
+        expect((<INode>tree.children[0]).attr["role"]).toEqual("trg")
+    })
+    it('Commnands.REPLACE', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "VP",
+                    children: []
+                }, {
+                    pos: "NP",
+                    children: []
+                }]
+        }
+        Tree.replace(<INode>tree.children[0], "VP1");
+        expect((<INode>tree.children[0]).pos).toEqual("VP1")
+    })
+    it('Commnands.ELEMENT', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "VP",
+                    children: []
+                }, {
+                    pos: "NP",
+                    children: []
+                }]
+        }
+        Tree.element(<INode>tree.children[0], "word");
+        expect((<INode>tree.children[0]).element).toEqual("word")
+    })
+})
+
 
 // it('올바르게 트리가 빌드되어야 한다.', () => {
 //     const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTree.tree)));
@@ -104,22 +263,22 @@ import { withComma, sampleTreeWithLemma, sampleTreeWithRelation, rules, testSent
 //     });
 // })
 
-describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
-    it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
+// describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
+//     it('CREATE와 relation이 있는 패턴 NPMD04을 적용한다.', (done) => {
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sampleTreeWithRelation.tree)));
 
-        for (let rule of rules[0]) {
-            // if (rule.name !== "NPMD04") continue;
-            while (1) {
-                const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
-                if (!node) break;
-                Tree.apply(node, rule.commands)
-                tree.init();
-            }
-        }
-        done();
-    });
-})
+//         for (let rule of rules[0]) {
+//             // if (rule.name !== "NPMD04") continue;
+//             while (1) {
+//                 const node = tree.search(rule, sampleTreeWithRelation.basicDependencies)
+//                 if (!node) break;
+//                 Tree.apply(node, rule.commands)
+//                 tree.init();
+//             }
+//         }
+//         done();
+//     });
+// })
 
 // describe(`Test about \"${withComma.text}\"`, () => {
 //     it(', 가 들어있는 부분의 VP01 테스트를 적용한다.', (done) => {
@@ -138,29 +297,44 @@ describe(`Test about \"${sampleTreeWithRelation.text}\"`, () => {
 //     });
 // })
 
-describe('Test about parse JSON to XML', () => {
-    it('JSON Tree객체를 XML로 파싱한다.', (done) => {
-        // const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(testJSON)) });
-        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(testSentence.tree)));
-        for (let rule of rules[0]) {
-            while (1) {
-                const node = tree.search(rule, testSentence.basicDependencies)
-                if (!node) break;
-                Tree.apply(node, rule.commands)
-            }
-        }
-        tree.init();
-        for (let rule of rules[1]) {
-            while (1) {
-                if (rule.name === "NPROLE04-05")
-                    rule.name;
-                const node = tree.search(rule, testSentence.basicDependencies)
-                if (!node) break;
-                Tree.apply(node, rule.commands)
-            }
-        }
-        tree.toXML();
-        done();
-    });
-})
+// describe('Test about to parse JSON ver.2', () => {
+//     it('JSON Tree객체를 파싱한다.', (done) => {
+//         let sentence = testSentence;
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(sentence.tree)));
+//         for (let rule of rules[0]) {
+//             while (1) {
+//                 const node = tree.search(rule, testSentence.basicDependencies)
+//                 if (!node) break;
+//                 Tree.apply(node, rule.commands)
+//             }
+//         }
+//         done()
+//     })
+// })
+
+// describe('Test about parse JSON to XML', () => {
+//     it('JSON Tree객체를 XML로 파싱한다.', (done) => {
+//         // const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(testJSON)) });
+//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(_testSentence.tree)));
+//         for (let rule of rules[0]) {
+//             while (1) {
+//                 const node = tree.search(rule, _testSentence.basicDependencies)
+//                 if (!node) break;
+//                 Tree.apply(node, rule.commands)
+//             }
+//         }
+//         tree.init();
+//         for (let rule of rules[1]) {
+//             while (1) {
+//                 if (rule.name === "NPROLE04-05")
+//                     rule.name;
+//                 const node = tree.search(rule, _testSentence.basicDependencies)
+//                 if (!node) break;
+//                 Tree.apply(node, rule.commands)
+//             }
+//         }
+//         tree.toXML();
+//         done();
+//     });
+// })
 

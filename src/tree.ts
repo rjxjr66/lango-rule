@@ -20,7 +20,21 @@ export class Tree {
 
     static fromJSON(json) {
         const tree = new Tree(json.rootNode);
-        tree.buildParent(null, tree._curNode);
+
+        // build parent
+        Tree.loopNode(tree._curNode, (node) => {
+            const nodeTokens = [];
+            for (let child of node.children) {
+                child.parent = node
+                child.tokens && nodeTokens.push(child.tokens)
+            }
+
+            node.tokens = node.pos
+            if (node.token) node.tokens += `=${node.token.lemma}`
+            if (nodeTokens.length)
+                node.tokens += `(${nodeTokens.join("+")})`
+        })
+        // tree.buildParent(null, tree._curNode);
 
         return tree;
     }
@@ -74,7 +88,7 @@ export class Tree {
         }
 
         const json = Object.assign({}, this._tree).children[0];
-        this.loopNode(json, (node) => {
+        Tree.loopNode(json, (node) => {
             const element: IXMLNode = { type: "" };
 
             // leaf node
@@ -135,6 +149,17 @@ export class Tree {
             this._curIndex = 0;
         }
     }
+
+
+    // search2(rule: IRule, dependencies: IDependency[] = [], curNode: INode = null): INode {
+    //     if (curNode) this._setCurrent(curNode);
+    //     else this.reset();
+
+    //     const ruleTokens = Tree._getTokens(rule.match);
+    //     // const matches = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
+
+    //     return null;
+    // }
 
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
@@ -201,6 +226,9 @@ export class Tree {
                     break;
                 case 'ELEMENT':
                     Tree._element(node, command.args)
+                    break;
+                case 'MERGE':
+                    Tree._merge(node, command.args)
                     break;
             }
         }
@@ -417,14 +445,6 @@ export class Tree {
                                                 break;
                                             }
                                         }
-                                        // if (lemma.includes("!") && (tree._curNode.token.lemma !== lemma)) {
-                                        //     cont = true;
-                                        //     break;
-                                        // }
-                                        // if (!lemma.includes("!") && (tree._curNode.token.lemma === lemma)) {
-                                        //     cont = true;
-                                        //     break;
-                                        // }
                                     }
 
                                     if (!include) continue;
@@ -510,7 +530,7 @@ export class Tree {
         }
     }
 
-    private static _select(node: INode, arg: string): INode[] {
+    public static select(node: INode, arg: string): INode[] {
         const tree = Tree.fromNode(node);
         const tokens = Tree._getTokens(arg);
         const selection: INode[] = [];
@@ -585,11 +605,7 @@ export class Tree {
         return selection;
     }
 
-    private static _move(node: INode, args: string[]) {
-        const source = Tree._select(node, args[0]);
-        const target = Tree._select(node, args[1])[0];
-        const method = args[2] || 'push';
-
+    public static move(source: INode[], target: INode, method: string = "push") {
         // 삭제
         let tmp = [...source];
         for (let node of tmp) {
@@ -605,72 +621,121 @@ export class Tree {
         }
     }
 
+    private static _move(node: INode, args: string[]) {
+        const source = Tree.select(node, args[0]);
+        const target = Tree.select(node, args[1])[0];
+        Tree.move(source, target, args[2])
+    }
+
+    public static delete(node: INode, recursive: boolean = false) {
+        const parent = node.parent;
+        // 전체제거
+        if (recursive) {
+            parent.children.splice(parent.children.findIndex(_ => _ == node), 1);
+        }
+        // 타겟만 제거
+        else {
+            parent.children.splice(parent.children.findIndex(_ => _ == node), 1, ...node.children);
+
+            // 부모변경
+            for (let child of node.children) {
+                child.parent = parent;
+            }
+        }
+    }
+
     private static _delete(node: INode, args: string[]) {
-        const target = Tree._select(node, args[0])[0];
-        const parent = target.parent;
+        const target = Tree.select(node, args[0])[0];
+        Tree.delete(target, args[1] === "true")
+    }
 
-        // 교체
-        parent.children.splice(parent.children.findIndex(_ => _ == target), 1, ...target.children);
+    public static create(node: INode, pos: string, method: string = "push") {
+        const newNode = {
+            pos,
+            parent: node,
+            children: [],
+            word: ""
+        }
 
-        // 부모변경
-        for (let child of target.children) {
-            child.parent = parent;
+        // 삽입
+        if (method === 'push') {
+            node.children.push(<INode>newNode);
+        } else {
+            node.children.unshift(<INode>newNode);
         }
     }
 
     private static _create(node: INode, args: string[]) {
-        const target = Tree._select(node, args[0])[0];
-        const method = args[2] || 'push';
+        const target = Tree.select(node, args[0])[0];
+        Tree.create(target, args[1], args[2]);
+        // const method = args[2] || 'push';
 
-        const newNode = {
-            pos: args[1],
-            parent: target,
-            children: [],
-            word: ""
+        // const newNode = {
+        //     pos: args[1],
+        //     parent: target,
+        //     children: [],
+        //     word: ""
+        // }
+        // // 삽입
+        // if (method === 'push') {
+        //     target.children.push(<INode>newNode);
+        // } else {
+        //     target.children.unshift(<INode>newNode);
+        // }
+    }
+
+    public static set(node: INode, attrName: string, attrVal: string) {
+        if (!node.attr) {
+            node.attr = {}
         }
-        // 삽입
-        if (method === 'push') {
-            target.children.push(<INode>newNode);
-        } else {
-            target.children.unshift(<INode>newNode);
-        }
+
+        node.attr[attrName] = attrVal;
     }
 
     private static _set(node: INode, args: string[]) {
-        const target = Tree._select(node, args[0])[0];
-        if (!target.attr) {
-            target.attr = {}
-        }
+        const target = Tree.select(node, args[0])[0];
+        Tree.set(target, args[1], args[2]);
+    }
 
-        target.attr[args[1]] = args[2];
+    public static replace(node: INode, pos: string) {
+        node.pos = pos as POS;
     }
 
     private static _replace(node: INode, args: string[]) {
-        const target = Tree._select(node, args[0])[0];
-        target.pos = args[1] as POS;
+        const target = Tree.select(node, args[0])[0];
+        Tree.replace(target, args[1])
+    }
+
+    public static element(node: INode, element: string) {
+        // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
+        if (node.element && node.element !== element) {
+            const clone = Object.assign({}, node);
+            clone.parent = node;
+            node.children = [clone];
+            node.attr = {}
+        }
+        node.element = element;
     }
 
     private static _element(node: INode, args: string[]) {
-        const target = Tree._select(node, args[0])[0];
-        if (target.element && target.element !== args[1]) {
-            const clone = Object.assign({}, target);
-            clone.parent = target;
-            target.children = [clone];
-            target.attr = {}
-        }
-        target.element = args[1];
+        const target = Tree.select(node, args[0])[0];
+        Tree.element(target, args[1])
     }
 
-    private loopNode(node: INode, cb: Function = null) {
+    // TODO merge 만들기
+    private static _merge(node: INode, args: string[]) {
+    }
+
+    public static loopNode(node: INode, cb: Function = null) {
         for (let child of node.children) {
-            this.loopNode(child, cb);
+            Tree.loopNode(child, cb);
         }
         cb && cb(node);
     }
 
     public toJSON() {
         const jsonObj = Object.assign({}, this._tree);
-        this.loopNode(jsonObj, (node) => {
+        Tree.loopNode(jsonObj, (node) => {
             delete node.parent;
         })
         return jsonObj;

@@ -2012,444 +2012,445 @@ export const withComma = {
     }]
 }
 
-export const rules: IRule[][] = [[{
-    "name": "have to",
-    "match": "VP(VBP|VBZ=have+S(VP(TO+*)))",
-    "commands": [{
-        "cmd": ECommand.CREATE, "args": ["[VP]",
-            "MD",
-            "unshift"]
+export const rules: IRule[][] = [
+    [{
+        "name": "have to",
+        "match": "VP(VBP|VBZ=have+S(VP(TO+*)))",
+        "commands": [{
+            "cmd": ECommand.CREATE, "args": ["[VP]",
+                "MD",
+                "unshift"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["VP(MD+[VBP|VBZ])",
+                "VP([MD])"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["VP(MD+S(VP([TO])))",
+                "VP([MD])"]
+        }, { "cmd": ECommand.DELETE, "args": ["VP(MD+[S])"] }, { "cmd": ECommand.DELETE, "args": ["VP(MD+[VP])"] }, { "cmd": ECommand.DELETE, "args": ["VP(MD+[VP])"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["VP(MD+[VBP|VBZ])",
-            "VP([MD])"]
+        "name": "VP01",
+        "match": "S|SBAR(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
+                "[S|SBAR]"]
+        }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["VP(MD+S(VP([TO])))",
-            "VP([MD])"]
-    }, { "cmd": ECommand.DELETE, "args": ["VP(MD+[S])"] }, { "cmd": ECommand.DELETE, "args": ["VP(MD+[VP])"] }, { "cmd": ECommand.DELETE, "args": ["VP(MD+[VP])"] }], "relations": []
-}, {
-    "name": "VP01",
-    "match": "S|SBAR(*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
-            "[S|SBAR]"]
-    }], "relations": []
-}, {
-    "name": "ETC01",
-    "match": "S(*+VP(NP)+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[VP])"] }], "relations": []
-}, {
-    "name": "ETC02",
-    "match": "S(*+S(NP+*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[S])"] }], "relations": []
-}, {
-    "name": "ETC03",
-    "match": "NP|VP(*+SBAR(S(TO+*)))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["NP|VP(*+[SBAR])"] }], "relations": []
-}, {
-    "name": "ETC05",
-    "match": "SBAR(*+S(*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["SBAR(*+[S])"] }], "relations": []
-}, {
-    "name": "ETC06",
-    "match": "QP(*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["[QP]"] }], "relations": []
-}, {
-    "name": "ETC07",
-    "match": "S(VP(*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S([VP])"] }], "relations": []
-}, {
-    "name": "SS06",
-    "match": "S(*+VP(*+VB)+S(TO+VP+*))",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S(*+VP(*+VB)+S([TO]+VP(VB+*)))",
-            "S(*+[VP])"]
+        "name": "ETC01",
+        "match": "S(*+VP(NP)+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[VP])"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["S(*+VP(*)+S(VP([VB])))",
-            "S(*+[VP])"]
-    }], "relations": []
-}, {
-    "name": "VP02(have+VBN)",
-    "match": "S|SBAR(*+VP(VBD|VBP|VBZ=have+*+VP(VBN+*))+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(VBD|VBP|VBZ=have+*+[VP]))"] }], "relations": []
-}, {
-    "name": "SS01-TO",
-    "match": "S|SBAR(*+VP(TO+VP(VB+*))+*)",
-    "commands": [
-        { "cmd": ECommand.DELETE, "args": ["S|SBAR(*+[VP])"] },
-        { "cmd": ECommand.SET, "args": ["[S|SBAR]", "part", "trg"] },
-    ], "relations": []
-}, {
-    "name": "AJMD01(JJ|VBN+PP)",
-    "match": "ADJP(JJ|VBN+PP(*))",
-    "commands": [{
-        "cmd": ECommand.CREATE, "args": ["[ADJP]",
-            "ADJP",
-            "unshift"]
+        "name": "ETC02",
+        "match": "S(*+S(NP+*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[S])"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["ADJP(ADJP+[*+JJ|VBN]+PP(*))",
-            "ADJP([ADJP])"]
-    }], "relations": []
-}, {
-    "name": "VBP+ADJP+VBN",
-    "match": "S(*+VP(VBD|VBP|VBZ=have)+ADVP(RB)+VP(VBN+*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+VP(VBD|VBP|VBZ=have)+ADVP(RB)+[VP])"] }, {
-        "cmd": ECommand.MOVE, "args": ["S(*+VP(VBD|VBP|VBZ=have)+[ADVP(RB)+VBN]))",
-            "S(*+[VP])"]
+        "name": "ETC03",
+        "match": "NP|VP(*+SBAR(S(TO+*)))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["NP|VP(*+[SBAR])"] }], "relations": []
     }, {
-        "cmd": ECommand.REPLACE, "args": ["S(*+VP(VBD|VBP|VBZ=have+[ADVP]))",
-            "advp"]
-    }], "relations": []
-}, {
-    "name": "VPMD03-1",
-    "match": "S|SBAR(*+VP(*={dov})+ADVP={dep}+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(*)+[ADVP])",
-            "[VP]"]
-    }], "relations": [{
-        "governor": "gov",
-        "dependent": "dep",
-        "relation": "advmod",
-        "references": []
-    }]
-}, {
-    "name": "VPMD03-2",
-    "match": "S|SBAR(*+ADVP={dep}+VP(*={dep})+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S|SBAR(*+[ADVP])",
-            "S|SBAR(*+ADVP+[VP])",
-            "unshift"]
-    }], "relations": [{
-        "relation": "advmod",
-        "governor": "gov",
-        "dependent": "dep",
-        "references": []
-    }]
-}, {
-    "name": "VBZ+*+VBG",
-    "match": "VP(VBZ+*+VP(VBG+*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["VP(VBZ+*+[VP])"] }], "relations": []
-}, {
-    "name": "VBP+VBN+VBN",
-    "match": "VP(VBP+VBN+VP(VBN+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["VP(VBP+VBN+[VP])"] }], "relations": []
-}, {
-    "name": "VP03(MD+VB)",
-    "match": "S|SBAR(*+VP(MD+*+VP(VB+*))+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(MD+*+[VP]))"] }], "relations": []
-}, {
-    "name": "VP04(MD+VBN)",
-    "match": "S|SBAR(*+VP(MD+*+VP(VBN+*))+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(MD+*+[VP]))"] }], "relations": []
-}, {
-    "name": "VPMD01",
-    "match": "S(*+PP(IN+PP)+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S(*+PP(IN+[PP]))",
-            "[S]"]
-    }], "relations": []
-}, {
-    "name": "VPMD02",
-    "match": "S(*+VP(*)+PP(*+IN))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+VP(*)+[PP])"] }], "relations": []
-}, {
-    "name": "SB01",
-    "match": "SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+S(*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+[S])"] }], "relations": []
-}, {
-    "name": "SS01-VBG/VBN",
-    "match": "S(*+VP(VBG|VBN+VP(VB+*))+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[VP])"] }], "relations": []
-}, {
-    "name": "VBP+VBN",
-    "match": "S(*+VP(VBP+*)+S|SBAR(VBN+*))",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S(*+VP(VBP+*)+S|SBAR([VBN]))",
-            "S(*+[VP])"]
-    }], "relations": []
-}, {
-    "name": "SS05",
-    "match": "S|SBAR(*+VP(*+VP(VBG+*))+*)",
-    "commands": [{
-        "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+VP(*+[VP]))",
-            "S"]
+        "name": "ETC05",
+        "match": "SBAR(*+S(*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["SBAR(*+[S])"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(*+[S]))",
-            "[S|SBAR]"]
-    }], "relations": []
-}, {
-    "name": "SS03",
-    "match": "VP(*+VP(VBG+*))",
-    "commands": [{
-        "cmd": ECommand.REPLACE, "args": ["VP(*+[VP])",
-            "S"]
-    }], "relations": []
-}, {
-    "name": "SS02",
-    "match": "NP(*+VP(VBG|VBN+*))",
-    "commands": [{
-        "cmd": ECommand.REPLACE, "args": ["NP(*+[VP])",
-            "S"]
-    }], "relations": []
-}, {
-    "name": "VP05(do+RB+VB)",
-    "match": "S|SBAR(*+VP(VBD|VBP|VBZ=do+RB+VP(VB+*))+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(VBD|VBP|VBZ=do+RB+[VP]))"] }], "relations": []
-}, {
-    "name": "VP07",
-    "match": "S|SBAR(*+VP(VBD|VBP|VBZ+*+VP(VBG+*))+*)",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(VBD|VBP|VBZ+*+[VP])+*)"] }], "relations": []
-}, {
-    "name": "SS04",
-    "match": "VP(*+VP(VBN+*))",
-    "commands": [{
-        "cmd": ECommand.REPLACE, "args": ["NP(*+[VP])",
-            "S"]
-    }], "relations": []
-}, {
-    "name": "CAJ_01",
-    "match": "NP(NP(DT+*+NN)+PP(IN=of+NP))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["NP(NP(DT+*+NN)+[PP])"] }, {
-        "cmd": ECommand.REPLACE, "args": ["NP([NP])",
-            "ADJP"]
+        "name": "ETC06",
+        "match": "QP(*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["[QP]"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["NP(ADJP(DT+*+NN)+[IN]+NP)",
-            "NP([ADJP])"]
-    }], "relations": []
-}, {
-    "name": "CAJ03",
-    "match": "NP(NP(*+CD)+PP(IN=of+NP(*)))",
-    "commands": [{
-        "cmd": ECommand.REPLACE, "args": ["NP([NP])",
-            "ADJP"]
-    }, { "cmd": ECommand.DELETE, "args": ["NP(NP+[PP])"] }, {
-        "cmd": ECommand.MOVE, "args": ["NP(ADJP(*+CD)+[IN])",
-            "NP([ADJP])"]
-    }], "relations": []
-}, {
-    "name": "AJMD03",
-    "match": "S(*+ADJP(*+JJ|VBN+SBAR)+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S(*+ADJP(*+JJ|VBN+[SBAR]))",
-            "[S]"]
-    }], "relations": []
-}, {
-    "name": "AJMD05",
-    "match": "VP(*+ADVP(RB)+S(VBG|VBN+*)+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S(*+ADVP([RB]))",
-            "S(*+ADVP(RB)+S([VBG|VBN]))"]
-    }], "relations": []
-},
-{
-    "name": "NPMD04",
-    "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S(*))",
-    "commands": [{
-        "cmd": ECommand.CREATE, "args": ["[NP]",
-            "NP",
-            "unshift"]
+        "name": "ETC07",
+        "match": "S(VP(*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S([VP])"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP])",
-            "NP([NP])"]
-    }], "relations": []
-}, {
-    "name": "VP01-2",
-    "match": "S|SBAR(*+VP(*)+*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP+*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
-            "[S|SBAR]"]
-    }], "relations": []
-}, {
-    "name": "PP(NP(NP+SBAR))",
-    "match": "PP(NP(NP+*+SBAR))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["PP([NP])"] }], "relations": []
-}, {
-    "name": "SS07",
-    "match": "S(*+VP(*+VB|VBD|VBZ)+ADJP(JJ+S(TO+VP(VB)+*)))",
-    "commands": [{
-        "cmd": ECommand.MOVE, "args": ["S(*+VP(*+VB|VBD|VBZ)+ADJP([JJ]))",
-            "S(*+[VP])"]
+        "name": "SS06",
+        "match": "S(*+VP(*+VB)+S(TO+VP+*))",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S(*+VP(*+VB)+S([TO]+VP(VB+*)))",
+                "S(*+[VP])"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["S(*+VP(*)+S(VP([VB])))",
+                "S(*+[VP])"]
+        }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["S(*+VP(*+JJ)+ADJP(S([TO+VP]+*)))",
-            "S(*+[VP])"]
-    }], "relations": []
-}, {
-    "name": "VPDelete",
-    "match": "VP(*+VP(*+VP+*))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["VP(*+[VP])"] }], "relations": []
-}, {
-    "name": "NPMD05",
-    "match": "S(NP={gov}+PP={dep})",
-    "commands": [{
-        "cmd": ECommand.CREATE, "args": ["[S]",
-            "NP",
-            "unshift"]
+        "name": "VP02(have+VBN)",
+        "match": "S|SBAR(*+VP(VBD|VBP|VBZ=have+*+VP(VBN+*))+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(VBD|VBP|VBZ=have+*+[VP]))"] }], "relations": []
     }, {
-        "cmd": ECommand.MOVE, "args": ["S([NP+PP]+NP)",
-            "S(NP+PP+[NP])"]
-    }], "relations": [{
-        "relation": "nmod",
-        "governor": "gov",
-        "dependent": "dep",
-        "references": []
-    }]
-}, {
-    "name": "S(*+S(PP(IN+NP)))",
-    "match": "S(*+S(PP(IN+NP)))",
-    "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[S])"] }], "relations": []
-}], [
-    {
-        "name": "NP01",
-        "match": "NP(*+NN|NNS|NNP|NNPS|PRP)",
+        "name": "SS01-TO",
+        "match": "S|SBAR(*+VP(TO+VP(VB+*))+*)",
         "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["[NP]", "word"] },
-            { "cmd": ECommand.SET, "args": ["[NP]", "pos", "nn"] },
+            { "cmd": ECommand.DELETE, "args": ["S|SBAR(*+[VP])"] },
+            { "cmd": ECommand.SET, "args": ["[S|SBAR]", "part", "trg"] },
         ], "relations": []
-    },
-    {
-        "name": "AJ01",
-        "match": "ADJP(*+JJ|VBN)",
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["[ADJP]", "word"] },
-            { "cmd": ECommand.SET, "args": ["[ADJP]", "pos", "aj"] },
-        ], "relations": []
-    },
-    {
-        "name": "AJ02",
-        "match": "ADVP",
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["[ADVP]", "word"] },
-            { "cmd": ECommand.SET, "args": ["[ADVP]", "pos", "av"] },
-        ], "relations": []
-    },
-    {
-        "name": "NPMD02",
-        "match": "NP(NP={gov}+SBAR={dep})",
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["NP(NP+[SBAR])", "chunk"] },
-            { "cmd": ECommand.SET, "args": ["NP(NP+[SBAR])", "pos", "aj"] }
-        ], "relations": [{
-            "relation": "acl:relcl",
+    }, {
+        "name": "AJMD01(JJ|VBN+PP)",
+        "match": "ADJP(JJ|VBN+PP(*))",
+        "commands": [{
+            "cmd": ECommand.CREATE, "args": ["[ADJP]",
+                "ADJP",
+                "unshift"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["ADJP(ADJP+[*+JJ|VBN]+PP(*))",
+                "ADJP([ADJP])"]
+        }], "relations": []
+    }, {
+        "name": "VBP+ADJP+VBN",
+        "match": "S(*+VP(VBD|VBP|VBZ=have)+ADVP(RB)+VP(VBN+*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+VP(VBD|VBP|VBZ=have)+ADVP(RB)+[VP])"] }, {
+            "cmd": ECommand.MOVE, "args": ["S(*+VP(VBD|VBP|VBZ=have)+[ADVP(RB)+VBN]))",
+                "S(*+[VP])"]
+        }, {
+            "cmd": ECommand.REPLACE, "args": ["S(*+VP(VBD|VBP|VBZ=have+[ADVP]))",
+                "advp"]
+        }], "relations": []
+    }, {
+        "name": "VPMD03-1",
+        "match": "S|SBAR(*+VP(*={dov})+ADVP={dep}+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(*)+[ADVP])",
+                "[VP]"]
+        }], "relations": [{
+            "governor": "gov",
+            "dependent": "dep",
+            "relation": "advmod",
+            "references": []
+        }]
+    }, {
+        "name": "VPMD03-2",
+        "match": "S|SBAR(*+ADVP={dep}+VP(*={dep})+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S|SBAR(*+[ADVP])",
+                "S|SBAR(*+ADVP+[VP])",
+                "unshift"]
+        }], "relations": [{
+            "relation": "advmod",
             "governor": "gov",
             "dependent": "dep",
             "references": []
         }]
-    },
-    {
-        "name": "NPROLE01",
-        "match": "S|SBAR(*+NP={dep}+*)",
-        "relations": [{
-            "relation": "nsubj|nsubjpass",
-            "dependent": "dep"
-        }],
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "sbj"] },
-        ]
-    },
-    {
-        "name": "NPROLE02-03",
-        "match": "S|SBAR(*+NP={dep}+*)",
-        "relations": [{
-            "relation": "dobj|iobj",
-            "dependent": "dep"
-        }],
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "obj"] },
-        ]
-    },
-    {
-        "name": "NPROLE04-05",
-        "match": "S|SBAR(*+NP={dep}+*)",
-        "relations": [{
-            "relation": "cop|xcomp",
-            "dependent": "dep"
-        }],
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "cpm"] },
-        ]
-    },
-    {
-        "name": "NPROLE06",
-        "match": "S|SBAR(*+NP={dep}+*)",
-        "relations": [{
-            "relation": "nsubj",
-            "dependent": "dep"
+    }, {
+        "name": "VBZ+*+VBG",
+        "match": "VP(VBZ+*+VP(VBG+*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["VP(VBZ+*+[VP])"] }], "relations": []
+    }, {
+        "name": "VBP+VBN+VBN",
+        "match": "VP(VBP+VBN+VP(VBN+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["VP(VBP+VBN+[VP])"] }], "relations": []
+    }, {
+        "name": "VP03(MD+VB)",
+        "match": "S|SBAR(*+VP(MD+*+VP(VB+*))+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(MD+*+[VP]))"] }], "relations": []
+    }, {
+        "name": "VP04(MD+VBN)",
+        "match": "S|SBAR(*+VP(MD+*+VP(VBN+*))+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(MD+*+[VP]))"] }], "relations": []
+    }, {
+        "name": "VPMD01",
+        "match": "S(*+PP(IN+PP)+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S(*+PP(IN+[PP]))",
+                "[S]"]
+        }], "relations": []
+    }, {
+        "name": "VPMD02",
+        "match": "S(*+VP(*)+PP(*+IN))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+VP(*)+[PP])"] }], "relations": []
+    }, {
+        "name": "SB01",
+        "match": "SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+S(*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["SBAR(IN|WHNP|WHPP|WHADVP|WHADJP+[S])"] }], "relations": []
+    }, {
+        "name": "SS01-VBG/VBN",
+        "match": "S(*+VP(VBG|VBN+VP(VB+*))+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[VP])"] }], "relations": []
+    }, {
+        "name": "VBP+VBN",
+        "match": "S(*+VP(VBP+*)+S|SBAR(VBN+*))",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S(*+VP(VBP+*)+S|SBAR([VBN]))",
+                "S(*+[VP])"]
+        }], "relations": []
+    }, {
+        "name": "SS05",
+        "match": "S|SBAR(*+VP(*+VP(VBG+*))+*)",
+        "commands": [{
+            "cmd": ECommand.REPLACE, "args": ["S|SBAR(*+VP(*+[VP]))",
+                "S"]
         }, {
-            "relation": "xcomp",
-            "dependent": "dep"
-        }],
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "cpm"] },
-        ]
+            "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(*+[S]))",
+                "[S|SBAR]"]
+        }], "relations": []
+    }, {
+        "name": "SS03",
+        "match": "VP(*+VP(VBG+*))",
+        "commands": [{
+            "cmd": ECommand.REPLACE, "args": ["VP(*+[VP])",
+                "S"]
+        }], "relations": []
+    }, {
+        "name": "SS02",
+        "match": "NP(*+VP(VBG|VBN+*))",
+        "commands": [{
+            "cmd": ECommand.REPLACE, "args": ["NP(*+[VP])",
+                "S"]
+        }], "relations": []
+    }, {
+        "name": "VP05(do+RB+VB)",
+        "match": "S|SBAR(*+VP(VBD|VBP|VBZ=do+RB+VP(VB+*))+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(VBD|VBP|VBZ=do+RB+[VP]))"] }], "relations": []
+    }, {
+        "name": "VP07",
+        "match": "S|SBAR(*+VP(VBD|VBP|VBZ+*+VP(VBG+*))+*)",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S|SBAR(*+VP(VBD|VBP|VBZ+*+[VP])+*)"] }], "relations": []
+    }, {
+        "name": "SS04",
+        "match": "VP(*+VP(VBN+*))",
+        "commands": [{
+            "cmd": ECommand.REPLACE, "args": ["NP(*+[VP])",
+                "S"]
+        }], "relations": []
+    }, {
+        "name": "CAJ_01",
+        "match": "NP(NP(DT+*+NN)+PP(IN=of+NP))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["NP(NP(DT+*+NN)+[PP])"] }, {
+            "cmd": ECommand.REPLACE, "args": ["NP([NP])",
+                "ADJP"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["NP(ADJP(DT+*+NN)+[IN]+NP)",
+                "NP([ADJP])"]
+        }], "relations": []
+    }, {
+        "name": "CAJ03",
+        "match": "NP(NP(*+CD)+PP(IN=of+NP(*)))",
+        "commands": [{
+            "cmd": ECommand.REPLACE, "args": ["NP([NP])",
+                "ADJP"]
+        }, { "cmd": ECommand.DELETE, "args": ["NP(NP+[PP])"] }, {
+            "cmd": ECommand.MOVE, "args": ["NP(ADJP(*+CD)+[IN])",
+                "NP([ADJP])"]
+        }], "relations": []
+    }, {
+        "name": "AJMD03",
+        "match": "S(*+ADJP(*+JJ|VBN+SBAR)+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S(*+ADJP(*+JJ|VBN+[SBAR]))",
+                "[S]"]
+        }], "relations": []
+    }, {
+        "name": "AJMD05",
+        "match": "VP(*+ADVP(RB)+S(VBG|VBN+*)+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S(*+ADVP([RB]))",
+                "S(*+ADVP(RB)+S([VBG|VBN]))"]
+        }], "relations": []
     },
     {
-        "name": "AJROLE01-02",
-        "match": "S|SBAR(*+ADJP={dep}+*)",
-        "relations": [{
-            "relation": "cop|xcomp",
-            "dependent": "dep"
-        }],
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[ADJP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[ADJP])", "role", "cpm"] },
-        ]
-    },
-    {
-        "name": "AJROLE03",
-        "match": "S|SBAR(*+ADJP={dep}+*)",
-        "relations": [{
-            "relation": "nsubj",
-            "dependent": "dep"
+        "name": "NPMD04",
+        "match": "NP(*+NN|NNS|NNP|NNPS|PRP+S(*))",
+        "commands": [{
+            "cmd": ECommand.CREATE, "args": ["[NP]",
+                "NP",
+                "unshift"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["NP(NP+[*+NN|NNS|NNP|NNPS|PRP])",
+                "NP([NP])"]
+        }], "relations": []
+    }, {
+        "name": "VP01-2",
+        "match": "S|SBAR(*+VP(*)+*+VP(*+NP|S|PP|SBAR|ADJP|ADVP+*)+*)",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP+*+VP(*+[NP|S|PP|SBAR|ADJP|ADVP+*]))",
+                "[S|SBAR]"]
+        }], "relations": []
+    }, {
+        "name": "PP(NP(NP+SBAR))",
+        "match": "PP(NP(NP+*+SBAR))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["PP([NP])"] }], "relations": []
+    }, {
+        "name": "SS07",
+        "match": "S(*+VP(*+VB|VBD|VBZ)+ADJP(JJ+S(TO+VP(VB)+*)))",
+        "commands": [{
+            "cmd": ECommand.MOVE, "args": ["S(*+VP(*+VB|VBD|VBZ)+ADJP([JJ]))",
+                "S(*+[VP])"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["S(*+VP(*+JJ)+ADJP(S([TO+VP]+*)))",
+                "S(*+[VP])"]
+        }], "relations": []
+    }, {
+        "name": "VPDelete",
+        "match": "VP(*+VP(*+VP+*))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["VP(*+[VP])"] }], "relations": []
+    }, {
+        "name": "NPMD05",
+        "match": "S(NP={gov}+PP={dep})",
+        "commands": [{
+            "cmd": ECommand.CREATE, "args": ["[S]",
+                "NP",
+                "unshift"]
+        }, {
+            "cmd": ECommand.MOVE, "args": ["S([NP+PP]+NP)",
+                "S(NP+PP+[NP])"]
+        }], "relations": [{
+            "relation": "nmod",
+            "governor": "gov",
+            "dependent": "dep",
+            "references": []
+        }]
+    }, {
+        "name": "S(*+S(PP(IN+NP)))",
+        "match": "S(*+S(PP(IN+NP)))",
+        "commands": [{ "cmd": ECommand.DELETE, "args": ["S(*+[S])"] }], "relations": []
+    }], [
+        {
+            "name": "NP01",
+            "match": "NP(*+NN|NNS|NNP|NNPS|PRP)",
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["[NP]", "word"] },
+                { "cmd": ECommand.SET, "args": ["[NP]", "pos", "nn"] },
+            ], "relations": []
         },
         {
-            "relation": "xcomp",
-            "dependent": "dep"
-        }],
-        "commands": [
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[ADJP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[ADJP])", "role", "cpm"] },
-        ]
-    },
-    {
-        "name": "VPROLE01",
-        "match": "S|SBAR(*+VP(*+VBP|VBZ=be+*)+*)",
-        "commands": [
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE01", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE01+[*])+*)", "S|SBAR(*+VP([WORDVPROLE01]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "word"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "pos", "be"] },
-        ], "relations": []
-    },
-    {
-        "name": "VPROLE02",
-        "match": "S|SBAR(*+VP(*+VBP|VBZ=!be+*)+*)",
-        "commands": [
-            { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE02", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE02+[*])+*)", "S|SBAR(*+VP([WORDVPROLE02]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
-            { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE02]))", "word"] },
-            { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE02]))", "pos", "vb"] },
-        ], "relations": []
-    },
-    {
-        "name": "SB01",
-        "match": "SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP+*)",
-        "commands": [
-            { "cmd": ECommand.CREATE, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "WORDCJ", "unshift"] },
-            { "cmd": ECommand.MOVE, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP(WORDCJ+[*]))", "SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))"] },
-            { "cmd": ECommand.ELEMENT, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))", "word"] },
-            { "cmd": ECommand.SET, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))", "pos", "cj"] },
-            { "cmd": ECommand.ELEMENT, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "part"] },
-            { "cmd": ECommand.SET, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "role", "trg"] }
-        ]
-    }
-]]
+            "name": "AJ01",
+            "match": "ADJP(*+JJ|VBN)",
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["[ADJP]", "word"] },
+                { "cmd": ECommand.SET, "args": ["[ADJP]", "pos", "aj"] },
+            ], "relations": []
+        },
+        {
+            "name": "AJ02",
+            "match": "ADVP",
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["[ADVP]", "word"] },
+                { "cmd": ECommand.SET, "args": ["[ADVP]", "pos", "av"] },
+            ], "relations": []
+        },
+        {
+            "name": "NPMD02",
+            "match": "NP(NP={gov}+SBAR={dep})",
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["NP(NP+[SBAR])", "chunk"] },
+                { "cmd": ECommand.SET, "args": ["NP(NP+[SBAR])", "pos", "aj"] }
+            ], "relations": [{
+                "relation": "acl:relcl",
+                "governor": "gov",
+                "dependent": "dep",
+                "references": []
+            }]
+        },
+        {
+            "name": "NPROLE01",
+            "match": "S|SBAR(*+NP={dep}+*)",
+            "relations": [{
+                "relation": "nsubj|nsubjpass",
+                "dependent": "dep"
+            }],
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "sbj"] },
+            ]
+        },
+        {
+            "name": "NPROLE02-03",
+            "match": "S|SBAR(*+NP={dep}+*)",
+            "relations": [{
+                "relation": "dobj|iobj",
+                "dependent": "dep"
+            }],
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "obj"] },
+            ]
+        },
+        {
+            "name": "NPROLE04-05",
+            "match": "S|SBAR(*+NP={dep}+*)",
+            "relations": [{
+                "relation": "cop|xcomp",
+                "dependent": "dep"
+            }],
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "cpm"] },
+            ]
+        },
+        {
+            "name": "NPROLE06",
+            "match": "S|SBAR(*+NP={dep}+*)",
+            "relations": [{
+                "relation": "nsubj",
+                "dependent": "dep"
+            }, {
+                "relation": "xcomp",
+                "dependent": "dep"
+            }],
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[NP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[NP])", "role", "cpm"] },
+            ]
+        },
+        {
+            "name": "AJROLE01-02",
+            "match": "S|SBAR(*+ADJP={dep}+*)",
+            "relations": [{
+                "relation": "cop|xcomp",
+                "dependent": "dep"
+            }],
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[ADJP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[ADJP])", "role", "cpm"] },
+            ]
+        },
+        {
+            "name": "AJROLE03",
+            "match": "S|SBAR(*+ADJP={dep}+*)",
+            "relations": [{
+                "relation": "nsubj",
+                "dependent": "dep"
+            },
+            {
+                "relation": "xcomp",
+                "dependent": "dep"
+            }],
+            "commands": [
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[ADJP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[ADJP])", "role", "cpm"] },
+            ]
+        },
+        {
+            "name": "VPROLE01",
+            "match": "S|SBAR(*+VP(*+VBP|VBZ=be+*)+*)",
+            "commands": [
+                { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE01", "unshift"] },
+                { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE01+[*])+*)", "S|SBAR(*+VP([WORDVPROLE01]))"] },
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "word"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE01]))", "pos", "be"] },
+            ], "relations": []
+        },
+        {
+            "name": "VPROLE02",
+            "match": "S|SBAR(*+VP(*+VBP|VBZ=!be+*)+*)",
+            "commands": [
+                { "cmd": ECommand.CREATE, "args": ["S|SBAR(*+[VP])", "WORDVPROLE02", "unshift"] },
+                { "cmd": ECommand.MOVE, "args": ["S|SBAR(*+VP(WORDVPROLE02+[*])+*)", "S|SBAR(*+VP([WORDVPROLE02]))"] },
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+[VP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+[VP])", "role", "prd"] },
+                { "cmd": ECommand.ELEMENT, "args": ["S|SBAR(*+VP([WORDVPROLE02]))", "word"] },
+                { "cmd": ECommand.SET, "args": ["S|SBAR(*+VP([WORDVPROLE02]))", "pos", "vb"] },
+            ], "relations": []
+        },
+        {
+            "name": "SB01",
+            "match": "SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP+*)",
+            "commands": [
+                { "cmd": ECommand.CREATE, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "WORDCJ", "unshift"] },
+                { "cmd": ECommand.MOVE, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP(WORDCJ+[*]))", "SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))"] },
+                { "cmd": ECommand.ELEMENT, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))", "word"] },
+                { "cmd": ECommand.SET, "args": ["SBAR(IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP([WORDCJ]))", "pos", "cj"] },
+                { "cmd": ECommand.ELEMENT, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "part"] },
+                { "cmd": ECommand.SET, "args": ["SBAR([IN|WHNP|WHPP|WHAVP|WHADJP|WHADVP])", "role", "trg"] }
+            ]
+        }
+    ]]
 
 
 // I am aware of what is important (advcl AJMD01)
@@ -2866,254 +2867,4 @@ export const testSentence = {
         }]
 }
 
-export const testJSON = {
-    "pos": "ROOT",
-    "word": "",
-    "children": [{
-        "pos": "S",
-        "posInfo": {
-            "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.",
-            "examples": []
-        }, "word": "",
-        "children": [{
-            "pos": "NP",
-            "posInfo": {
-                "description": "Noun Phrase. ",
-                "examples": []
-            }, "word": "",
-            "children": [{
-                "pos": "DT",
-                "posInfo": {
-                    "group": "Determiner",
-                    "tag": "Determiner",
-                    "examples": []
-                }, "word": "The",
-                "token": {
-                    "index": 1, "word": "The",
-                    "originalText": "The",
-                    "characterOffsetBegin": 0, "characterOffsetEnd": 3, "before": "",
-                    "after": " ",
-                    "pos": "DT",
-                    "lemma": "the"
-                }, "children": [], "parent": null
-            }, {
-                "pos": "JJ",
-                "posInfo": {
-                    "group": "Adjective",
-                    "tag": "Adjective",
-                    "examples": []
-                }, "word": "only",
-                "token": {
-                    "index": 2, "word": "only",
-                    "originalText": "only",
-                    "characterOffsetBegin": 4, "characterOffsetEnd": 8, "before": " ",
-                    "after": " ",
-                    "pos": "JJ",
-                    "lemma": "only"
-                }, "children": [], "parent": null
-            }, {
-                "pos": "NN",
-                "posInfo": {
-                    "group": "Noun, singular or mass",
-                    "tag": "Noun, singular or mass",
-                    "examples": []
-                }, "word": "time",
-                "token": {
-                    "index": 3, "word": "time",
-                    "originalText": "time",
-                    "characterOffsetBegin": 9, "characterOffsetEnd": 13, "before": " ",
-                    "after": " ",
-                    "pos": "NN",
-                    "lemma": "time"
-                }, "children": [], "parent": null
-            }], "parent": null
-        }, {
-            "pos": "SBAR",
-            "posInfo": {
-                "description": "Clause introduced by a (possibly empty) subordinating conjunction.",
-                "examples": []
-            }, "word": "",
-            "children": [{
-                "pos": "NP",
-                "posInfo": {
-                    "description": "Noun Phrase. ",
-                    "examples": []
-                }, "word": "",
-                "children": [{
-                    "pos": "PRP",
-                    "posInfo": {
-                        "group": "Personal pronoun",
-                        "tag": "Personal pronoun",
-                        "examples": []
-                    }, "word": "I",
-                    "token": {
-                        "index": 4, "word": "I",
-                        "originalText": "I",
-                        "characterOffsetBegin": 14, "characterOffsetEnd": 15, "before": " ",
-                        "after": " ",
-                        "pos": "PRP",
-                        "lemma": "I"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }, {
-                "pos": "VP",
-                "posInfo": {
-                    "description": "Vereb Phrase. ",
-                    "examples": []
-                }, "word": "",
-                "children": [{
-                    "pos": "VBP",
-                    "posInfo": {
-                        "group": "Verb, non-3rd person singular present",
-                        "tag": "Verb, non-3rd person singular present",
-                        "examples": []
-                    }, "word": "feel",
-                    "token": {
-                        "index": 5, "word": "feel",
-                        "originalText": "feel",
-                        "characterOffsetBegin": 16, "characterOffsetEnd": 20, "before": " ",
-                        "after": " ",
-                        "pos": "VBP",
-                        "lemma": "feel"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }, {
-                "pos": "ADJP",
-                "posInfo": {
-                    "description": "Adjective Phrase.",
-                    "examples": []
-                }, "word": "",
-                "children": [{
-                    "pos": "JJ",
-                    "posInfo": {
-                        "group": "Adjective",
-                        "tag": "Adjective",
-                        "examples": []
-                    }, "word": "alive",
-                    "token": {
-                        "index": 6, "word": "alive",
-                        "originalText": "alive",
-                        "characterOffsetBegin": 21, "characterOffsetEnd": 26, "before": " ",
-                        "after": " ",
-                        "pos": "JJ",
-                        "lemma": "alive"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }], "parent": null, "matchRules": []
-        }, {
-            "pos": "VP",
-            "posInfo": {
-                "description": "Vereb Phrase. ",
-                "examples": []
-            }, "word": "",
-            "children": [{
-                "pos": "VBZ",
-                "posInfo": {
-                    "group": "Verb, 3rd person singular present",
-                    "tag": "Verb, 3rd person singular present",
-                    "examples": []
-                }, "word": "is",
-                "token": {
-                    "index": 7, "word": "is",
-                    "originalText": "is",
-                    "characterOffsetBegin": 27, "characterOffsetEnd": 29, "before": " ",
-                    "after": " ",
-                    "pos": "VBZ",
-                    "lemma": "be"
-                }, "children": [], "parent": null
-            }], "parent": null
-        }, {
-            "pos": "SBAR",
-            "posInfo": {
-                "description": "Clause introduced by a (possibly empty) subordinating conjunction.",
-                "examples": []
-            }, "word": "",
-            "children": [{
-                "pos": "WHADVP",
-                "word": "",
-                "children": [{
-                    "pos": "WRB",
-                    "posInfo": {
-                        "group": "Wh-adverb",
-                        "tag": "Wh-adverb",
-                        "examples": []
-                    }, "word": "when",
-                    "token": {
-                        "index": 8, "word": "when",
-                        "originalText": "when",
-                        "characterOffsetBegin": 30, "characterOffsetEnd": 34, "before": " ",
-                        "after": " ",
-                        "pos": "WRB",
-                        "lemma": "when"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }, {
-                "pos": "NP",
-                "posInfo": {
-                    "description": "Noun Phrase. ",
-                    "examples": []
-                }, "word": "",
-                "children": [{
-                    "pos": "PRP",
-                    "posInfo": {
-                        "group": "Personal pronoun",
-                        "tag": "Personal pronoun",
-                        "examples": []
-                    }, "word": "I",
-                    "token": {
-                        "index": 9, "word": "I",
-                        "originalText": "I",
-                        "characterOffsetBegin": 35, "characterOffsetEnd": 36, "before": " ",
-                        "after": " ",
-                        "pos": "PRP",
-                        "lemma": "I"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }, {
-                "pos": "VP",
-                "posInfo": {
-                    "description": "Vereb Phrase. ",
-                    "examples": []
-                }, "word": "",
-                "children": [{
-                    "pos": "VBP",
-                    "posInfo": {
-                        "group": "Verb, non-3rd person singular present",
-                        "tag": "Verb, non-3rd person singular present",
-                        "examples": []
-                    }, "word": "am",
-                    "token": {
-                        "index": 10, "word": "am",
-                        "originalText": "am",
-                        "characterOffsetBegin": 37, "characterOffsetEnd": 39, "before": " ",
-                        "after": " ",
-                        "pos": "VBP",
-                        "lemma": "be"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }, {
-                "pos": "NP",
-                "posInfo": {
-                    "description": "Noun Phrase. ",
-                    "examples": []
-                }, "word": "",
-                "children": [{
-                    "pos": "NN",
-                    "posInfo": {
-                        "group": "Noun, singular or mass",
-                        "tag": "Noun, singular or mass",
-                        "examples": []
-                    }, "word": "painting",
-                    "token": {
-                        "index": 11, "word": "painting",
-                        "originalText": "painting",
-                        "characterOffsetBegin": 40, "characterOffsetEnd": 48, "before": " ",
-                        "after": "",
-                        "pos": "NN",
-                        "lemma": "painting"
-                    }, "children": [], "parent": null
-                }], "parent": null
-            }], "parent": null, "matchRules": []
-        }], "parent": null, "matchRules": []
-    }], "parent": null
-}
+export const _testSentence = { "text": "I have to study English.", "parse": "(ROOT\n  (S\n    (NP (PRP I))\n    (VP (VBP have)\n      (S\n        (VP (TO to)\n          (VP (VB study)\n            (NP (NNP English))))))\n    (. .)))", "tree": { "rootNode": { "pos": "ROOT", "word": "", "children": [{ "pos": "S", "posInfo": { "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.", "examples": [] }, "word": "", "children": [{ "pos": "NP", "posInfo": { "description": "Noun Phrase. ", "examples": [] }, "word": "", "children": [{ "pos": "PRP", "posInfo": { "group": "Personal pronoun", "tag": "Personal pronoun", "examples": [] }, "word": "I", "token": { "index": 1, "word": "I", "originalText": "I", "characterOffsetBegin": 0, "characterOffsetEnd": 1, "before": "", "after": " ", "pos": "PRP", "lemma": "I" }, "children": [] }] }, { "pos": "VP", "posInfo": { "description": "Vereb Phrase. ", "examples": [] }, "word": "", "children": [{ "pos": "VBP", "posInfo": { "group": "Verb, non-3rd person singular present", "tag": "Verb, non-3rd person singular present", "examples": [] }, "word": "have", "token": { "index": 2, "word": "have", "originalText": "have", "characterOffsetBegin": 2, "characterOffsetEnd": 6, "before": " ", "after": " ", "pos": "VBP", "lemma": "have" }, "children": [] }, { "pos": "S", "posInfo": { "description": "simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.", "examples": [] }, "word": "", "children": [{ "pos": "VP", "posInfo": { "description": "Vereb Phrase. ", "examples": [] }, "word": "", "children": [{ "pos": "TO", "posInfo": { "group": "to", "tag": "to", "examples": [] }, "word": "to", "token": { "index": 3, "word": "to", "originalText": "to", "characterOffsetBegin": 7, "characterOffsetEnd": 9, "before": " ", "after": " ", "pos": "TO", "lemma": "to" }, "children": [] }, { "pos": "VP", "posInfo": { "description": "Vereb Phrase. ", "examples": [] }, "word": "", "children": [{ "pos": "VB", "posInfo": { "group": "Verb, base form", "tag": "Verb, base form", "examples": [] }, "word": "study", "token": { "index": 4, "word": "study", "originalText": "study", "characterOffsetBegin": 10, "characterOffsetEnd": 15, "before": " ", "after": " ", "pos": "VB", "lemma": "study" }, "children": [] }, { "pos": "NP", "posInfo": { "description": "Noun Phrase. ", "examples": [] }, "word": "", "children": [{ "pos": "NNP", "posInfo": { "group": "Proper noun, singular", "tag": "Proper noun, singular", "examples": [] }, "word": "English", "token": { "index": 5, "word": "English", "originalText": "English", "characterOffsetBegin": 16, "characterOffsetEnd": 23, "before": " ", "after": "", "pos": "NNP", "lemma": "English" }, "children": [] }] }] }] }] }] }] }] } }, "tokens": [{ "index": 1, "word": "I", "originalText": "I", "characterOffsetBegin": 0, "characterOffsetEnd": 1, "before": "", "after": " ", "pos": "PRP", "lemma": "I" }, { "index": 2, "word": "have", "originalText": "have", "characterOffsetBegin": 2, "characterOffsetEnd": 6, "before": " ", "after": " ", "pos": "VBP", "lemma": "have" }, { "index": 3, "word": "to", "originalText": "to", "characterOffsetBegin": 7, "characterOffsetEnd": 9, "before": " ", "after": " ", "pos": "TO", "lemma": "to" }, { "index": 4, "word": "study", "originalText": "study", "characterOffsetBegin": 10, "characterOffsetEnd": 15, "before": " ", "after": " ", "pos": "VB", "lemma": "study" }, { "index": 5, "word": "English", "originalText": "English", "characterOffsetBegin": 16, "characterOffsetEnd": 23, "before": " ", "after": "", "pos": "NNP", "lemma": "English" }, { "index": 6, "word": ".", "originalText": ".", "characterOffsetBegin": 23, "characterOffsetEnd": 24, "before": "", "after": "", "pos": ".", "lemma": "." }], "basicDependencies": [{ "dep": "ROOT", "governor": 0, "governorGloss": "ROOT", "dependent": 2, "dependentGloss": "have" }, { "dep": "nsubj", "governor": 2, "governorGloss": "have", "dependent": 1, "dependentGloss": "I" }, { "dep": "mark", "governor": 4, "governorGloss": "study", "dependent": 3, "dependentGloss": "to" }, { "dep": "xcomp", "governor": 2, "governorGloss": "have", "dependent": 4, "dependentGloss": "study" }, { "dep": "dobj", "governor": 4, "governorGloss": "study", "dependent": 5, "dependentGloss": "English" }, { "dep": "punct", "governor": 2, "governorGloss": "have", "dependent": 6, "dependentGloss": "." }] }
