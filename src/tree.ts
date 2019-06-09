@@ -227,6 +227,9 @@ export class Tree {
                 case 'ELEMENT':
                     Tree._element(node, command.args)
                     break;
+                case 'WORD':
+                    Tree._word(node, command.args)
+                    break;
                 case 'MERGE':
                     Tree._merge(node, command.args)
                     break;
@@ -720,6 +723,18 @@ export class Tree {
     private static _element(node: INode, args: string[]) {
         const target = Tree.select(node, args[0])[0];
         Tree.element(target, args[1])
+    }
+
+    public static word(node: INode, word: string) {
+        node.word = word;
+        let token = Object.assign({}, node.token);
+        token.lemma = word;
+        node.token = token;
+    }
+
+    private static _word(node: INode, args: string[]) {
+        const target = Tree.select(node, args[0])[0];
+        Tree.word(target, args[1])
     }
 
     // TODO merge 만들기

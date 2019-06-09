@@ -158,6 +158,21 @@ describe('Test Commands', () => {
         Tree.element(<INode>tree.children[0], "word");
         expect((<INode>tree.children[0]).element).toEqual("word")
     })
+    it('Commnands.WORD', () => {
+        const tree = {
+            pos: "ROOT",
+            children: [
+                {
+                    pos: "VP",
+                    children: []
+                }, {
+                    pos: "NP",
+                    children: []
+                }]
+        }
+        Tree.word(<INode>tree.children[0], "test");
+        expect((<INode>tree.children[0]).word).toEqual("test")
+    })
 })
 
 
@@ -312,29 +327,29 @@ describe('Test Commands', () => {
 //     })
 // })
 
-// describe('Test about parse JSON to XML', () => {
-//     it('JSON Tree객체를 XML로 파싱한다.', (done) => {
-//         // const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(testJSON)) });
-//         const tree = Tree.fromJSON(JSON.parse(JSON.stringify(_testSentence.tree)));
-//         for (let rule of rules[0]) {
-//             while (1) {
-//                 const node = tree.search(rule, _testSentence.basicDependencies)
-//                 if (!node) break;
-//                 Tree.apply(node, rule.commands)
-//             }
-//         }
-//         tree.init();
-//         for (let rule of rules[1]) {
-//             while (1) {
-//                 if (rule.name === "NPROLE04-05")
-//                     rule.name;
-//                 const node = tree.search(rule, _testSentence.basicDependencies)
-//                 if (!node) break;
-//                 Tree.apply(node, rule.commands)
-//             }
-//         }
-//         tree.toXML();
-//         done();
-//     });
-// })
+describe('Test about parse JSON to XML', () => {
+    it('JSON Tree객체를 XML로 파싱한다.', (done) => {
+        // const tree = Tree.fromJSON({ rootNode: JSON.parse(JSON.stringify(testJSON)) });
+        const tree = Tree.fromJSON(JSON.parse(JSON.stringify(testSentence.tree)));
+        for (let rule of rules[0]) {
+            while (1) {
+                const node = tree.search(rule, testSentence.basicDependencies)
+                if (!node) break;
+                Tree.apply(node, rule.commands)
+            }
+        }
+        tree.init();
+        for (let rule of rules[1]) {
+            while (1) {
+                if (rule.name === "NPROLE04-05")
+                    rule.name;
+                const node = tree.search(rule, testSentence.basicDependencies)
+                if (!node) break;
+                Tree.apply(node, rule.commands)
+            }
+        }
+        tree.toXML();
+        done();
+    });
+})
 

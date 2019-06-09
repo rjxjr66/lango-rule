@@ -92,7 +92,8 @@ export enum ECommand {
     SET = "SET",
     REPLACE = "REPLACE",
     ELEMENT = "ELEMENT",
-    MERGE = "MERGE"
+    MERGE = "MERGE",
+    WORD = "WORD"
 }
 
 
