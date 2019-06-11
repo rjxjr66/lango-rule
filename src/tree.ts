@@ -726,10 +726,18 @@ export class Tree {
     }
 
     public static word(node: INode, word: string) {
-        node.word = word;
-        let token = Object.assign({}, node.token);
+        let curNode = node;
+
+        // 해당 노드의 최하위(leaf) 노드를 선택
+        while (curNode.children && curNode.children.length) {
+            curNode = curNode.children[0]
+        }
+
+        curNode.word = word;
+        let token = Object.assign({}, curNode.token);
         token.lemma = word;
-        node.token = token;
+        curNode.token = token;
+
     }
 
     private static _word(node: INode, args: string[]) {

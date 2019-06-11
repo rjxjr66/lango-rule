@@ -49,6 +49,7 @@ export interface INode {
     children: INode[];
     word: string;
     token: IToken;
+    nodeTokens?: string;
     matchRules: IRule[];
     attr: any;
     element: string;
@@ -76,5 +77,13 @@ export declare enum ECommand {
     CREATE = "CREATE",
     SET = "SET",
     REPLACE = "REPLACE",
-    ELEMENT = "ELEMENT"
+    ELEMENT = "ELEMENT",
+    MERGE = "MERGE",
+    WORD = "WORD"
+}
+export interface IXMLNode {
+    type: string;
+    attributes?: Object;
+    text?: string;
+    elements?: Array<IXMLNode>;
 }

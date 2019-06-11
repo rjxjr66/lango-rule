@@ -75,8 +75,8 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(1));
-__export(__webpack_require__(2));
-exports.LANGO_RULE_VERSION = 'v0.0.29';
+__export(__webpack_require__(3));
+exports.LANGO_RULE_VERSION = 'v0.0.32';
 
 
 /***/ }),
@@ -86,7 +86,9 @@ exports.LANGO_RULE_VERSION = 'v0.0.29';
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var convert = __webpack_require__(2);
 var relRegExp = new RegExp("\\{|\\}", "g");
+var invertRegExp = new RegExp("^\\!", "g");
 var Tree = /** @class */ (function () {
     function Tree(_tree) {
         this._tree = _tree;
@@ -101,7 +103,21 @@ var Tree = /** @class */ (function () {
     };
     Tree.fromJSON = function (json) {
         var tree = new Tree(json.rootNode);
-        tree.buildParent(null, tree._curNode);
+        // build parent
+        Tree.loopNode(tree._curNode, function (node) {
+            var nodeTokens = [];
+            for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.parent = node;
+                child.tokens && nodeTokens.push(child.tokens);
+            }
+            node.tokens = node.pos;
+            if (node.token)
+                node.tokens += "=" + node.token.lemma;
+            if (nodeTokens.length)
+                node.tokens += "(" + nodeTokens.join("+") + ")";
+        });
+        // tree.buildParent(null, tree._curNode);
         return tree;
     };
     Tree.fromNode = function (node) {
@@ -109,7 +125,95 @@ var Tree = /** @class */ (function () {
     };
     // 트리를 xml 로 변환한다.
     Tree.prototype.toXML = function () {
-        return null;
+        var options = {
+            compact: false,
+            ignoreComment: true, spaces: 4,
+            doctypeFn: function (val) {
+                return val.toUpperCase();
+            },
+            cdataFn: function (val) {
+                return val;
+            },
+            instructionFn: function (val) {
+                return val;
+            },
+            instructionNameFn: function (val) {
+                return val;
+            },
+            elementNameFn: function (val) {
+                return val;
+            },
+            attributeNameFn: function (val) {
+                return val;
+            },
+            attributeValueFn: function (val) {
+                return val;
+            },
+            attributesFn: function (val) {
+                return val;
+            },
+            fullTagEmptyElementFn: function (val) {
+                return val;
+            }
+        };
+        var form = {
+            declaration: {
+                attributes: {
+                    version: "1.0",
+                    encoding: "utf-8"
+                }
+            },
+            elements: []
+        };
+        var json = Object.assign({}, this._tree).children[0];
+        Tree.loopNode(json, function (node) {
+            var element = { type: "" };
+            // leaf node
+            if (!(node.children && node.children.length)) {
+                if (node.word) {
+                    element["type"] = "text";
+                    element["text"] = node.word;
+                }
+                else {
+                    element["type"] = "element";
+                    element["name"] = node.element;
+                }
+            }
+            // non-leaf node
+            else {
+                element["type"] = "element";
+                if (!element.elements)
+                    element.elements = [];
+                for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+                    var child = _a[_i];
+                    // 띄어쓰기 추가
+                    if (child.element.type === "text" && element.elements.length)
+                        child.element.text = " " + child.element.text;
+                    element.elements.push(child.element);
+                }
+                if (node.parent && node.parent.pos === "ROOT") {
+                    element["name"] = "sentence";
+                }
+                else if (node.element) {
+                    element["name"] = node.element;
+                }
+                else {
+                    if (element.elements.filter(function (child) { return child.type === "text"; }).length)
+                        element["name"] = "word";
+                    else if (element.elements.filter(function (child) { return ["word", "chunk"].includes(child["name"]); }).length)
+                        element["name"] = "part";
+                    else
+                        element["name"] = "chunk";
+                }
+            }
+            if (node.attr)
+                element["attributes"] = node.attr;
+            node.element = element;
+        });
+        form.elements.push(json.element);
+        // const result = convert.json2xml(JSON.parse(JSON.stringify({ sentence: this.toJSON() })), options);
+        var result = convert.json2xml(JSON.stringify(form), options);
+        return result;
     };
     Tree.prototype.root = function () {
         return this._tree;
@@ -125,6 +229,13 @@ var Tree = /** @class */ (function () {
             this._curIndex = 0;
         }
     };
+    // search2(rule: IRule, dependencies: IDependency[] = [], curNode: INode = null): INode {
+    //     if (curNode) this._setCurrent(curNode);
+    //     else this.reset();
+    //     const ruleTokens = Tree._getTokens(rule.match);
+    //     // const matches = this._loopMatchNode(this._curNode, rule, Tree._getTokens(rule.match));
+    //     return null;
+    // }
     // 패턴과 매칭되는 노드를 선택한다.
     // 선택된 노드를 현재 노드로 설정하고 매칭된 노드가 없으면 null 을 리턴한다.
     Tree.prototype.search = function (rule, dependencies, curNode) {
@@ -196,6 +307,12 @@ var Tree = /** @class */ (function () {
                 case 'ELEMENT':
                     Tree._element(node, command.args);
                     break;
+                case 'WORD':
+                    Tree._word(node, command.args);
+                    break;
+                case 'MERGE':
+                    Tree._merge(node, command.args);
+                    break;
             }
         }
     };
@@ -263,55 +380,56 @@ var Tree = /** @class */ (function () {
     };
     // 트리를 LL로 돌면서 매칭되는 노드가 있는지 순회
     Tree.prototype._loopMatchNode = function (node, rule, tokens) {
+        var matched;
         if (node.matchRules && node.matchRules.includes(rule)) {
-            return null;
+            matched = { match: false };
         }
         else {
-            var matched_1 = this._matchRule(node, tokens);
-            if (matched_1.match) {
-                if (rule.relations && rule.relations.length && matched_1.relArgs) {
-                    var passed = rule.relations.filter(function (relation) {
-                        if (relation.governor) {
-                            if (!matched_1.relArgs[relation.governor])
-                                return false;
-                        }
-                        if (relation.dependent) {
-                            if (!matched_1.relArgs[relation.dependent])
-                                return false;
-                        }
-                        var found = relation.references.find(function (ref) {
-                            if (relation.governor && !Tree._findRefNode(matched_1.relArgs[relation.governor], {
-                                index: ref.governor,
-                                lemma: ref.governorGloss
-                            }))
-                                return false;
-                            if (relation.dependent && !Tree._findRefNode(matched_1.relArgs[relation.dependent], {
-                                index: ref.dependent,
-                                lemma: ref.dependentGloss
-                            }))
-                                return false;
-                            return true;
-                        });
-                        return !!found;
+            matched = this._matchRule(node, tokens);
+        }
+        if (matched.match) {
+            if (rule.relations && rule.relations.length && matched.relArgs) {
+                var passed = rule.relations.filter(function (relation) {
+                    if (relation.governor) {
+                        if (!matched.relArgs[relation.governor])
+                            return false;
+                    }
+                    if (relation.dependent) {
+                        if (!matched.relArgs[relation.dependent])
+                            return false;
+                    }
+                    var found = relation.references.find(function (ref) {
+                        if (relation.governor && !Tree._findRefNode(matched.relArgs[relation.governor], {
+                            index: ref.governor,
+                            lemma: ref.governorGloss
+                        }))
+                            return false;
+                        if (relation.dependent && !Tree._findRefNode(matched.relArgs[relation.dependent], {
+                            index: ref.dependent,
+                            lemma: ref.dependentGloss
+                        }))
+                            return false;
+                        return true;
                     });
-                    if (passed.length === rule.relations.length)
-                        return node;
-                }
-                else
+                    return !!found;
+                });
+                if (passed.length === rule.relations.length)
                     return node;
             }
-            if (node.children) {
-                for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
-                    var _node = _a[_i];
-                    var match = this._loopMatchNode(_node, rule, tokens);
-                    if (match) {
-                        return match;
-                    }
+            else
+                return node;
+        }
+        if (node.children) {
+            for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+                var _node = _a[_i];
+                var match = this._loopMatchNode(_node, rule, tokens);
+                if (match) {
+                    return match;
                 }
             }
-            else {
-                return null;
-            }
+        }
+        else {
+            return null;
         }
     };
     // Node내에 해당 릴레이션 정보를 가진 하위 Node를 찾는다.
@@ -321,6 +439,8 @@ var Tree = /** @class */ (function () {
         if (node.children) {
             for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
                 var child = _a[_i];
+                if (["S", "SBAR"].includes(child.pos))
+                    continue;
                 var ret = Tree._findRefNode(child, ref);
                 if (ret)
                     return ret;
@@ -358,23 +478,24 @@ var Tree = /** @class */ (function () {
                     star = false;
                     break;
                 case '+':
-                    cur = tree.nextSibiling();
+                    if (!star)
+                        cur = tree.nextSibiling();
                     break;
                 case '*':
                     star = true;
                     break;
                 default:
-                    var node_1 = token.split('=');
-                    var _token = node_1[0].split('|');
-                    var lemma = void 0, rel = void 0;
-                    if (node_1[1]) {
-                        for (var _a = 0, _b = node_1[1].split("&"); _a < _b.length; _a++) {
+                    var _node = token.split('=');
+                    var _token = _node[0].split('|');
+                    var lemmas = [], rels = [];
+                    if (_node[1]) {
+                        for (var _a = 0, _b = _node[1].split("|"); _a < _b.length; _a++) {
                             var query = _b[_a];
                             if (query.match(relRegExp)) {
-                                rel = query.replace(relRegExp, "");
+                                rels.push(query.replace(relRegExp, ""));
                             }
                             else {
-                                lemma = query;
+                                lemmas.push(query);
                             }
                         }
                     }
@@ -385,10 +506,29 @@ var Tree = /** @class */ (function () {
                         do {
                             if (_token.includes(tree._curNode.pos)) {
                                 // relation 변수 등록
-                                if (rel)
+                                for (var _c = 0, rels_1 = rels; _c < rels_1.length; _c++) {
+                                    var rel = rels_1[_c];
                                     relArgs[rel] = tree._curNode;
-                                if (lemma && lemma !== tree._curNode.token.lemma) {
-                                    continue;
+                                }
+                                if (lemmas.length) {
+                                    var include = false;
+                                    for (var _d = 0, lemmas_1 = lemmas; _d < lemmas_1.length; _d++) {
+                                        var _lemma = lemmas_1[_d];
+                                        if (_lemma.match(invertRegExp)) {
+                                            if (tree._curNode.token.lemma !== _lemma.replace(invertRegExp, "")) {
+                                                include = true;
+                                                break;
+                                            }
+                                        }
+                                        else {
+                                            if (tree._curNode.token.lemma === _lemma) {
+                                                include = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (!include)
+                                        continue;
                                 }
                                 cur = tree._curNode;
                                 break; // 노드가 검색됨
@@ -405,9 +545,11 @@ var Tree = /** @class */ (function () {
                         }
                         else {
                             // relation 변수 등록
-                            if (rel)
+                            for (var _e = 0, rels_2 = rels; _e < rels_2.length; _e++) {
+                                var rel = rels_2[_e];
                                 relArgs[rel] = tree._curNode;
-                            if (lemma && lemma !== tree._curNode.token.lemma) {
+                            }
+                            if (lemmas.length && !lemmas.includes(tree._curNode.token.lemma)) {
                                 return { match: false };
                             }
                             cur = tree._curNode;
@@ -465,7 +607,7 @@ var Tree = /** @class */ (function () {
             return this._curIndex = 0;
         }
     };
-    Tree._select = function (node, arg) {
+    Tree.select = function (node, arg) {
         var tree = Tree.fromNode(node);
         var tokens = Tree._getTokens(arg);
         var selection = [];
@@ -538,20 +680,18 @@ var Tree = /** @class */ (function () {
         }
         return selection;
     };
-    Tree._move = function (node, args) {
+    Tree.move = function (source, target, method) {
         var _a, _b;
-        var source = Tree._select(node, args[0]);
-        var target = Tree._select(node, args[1])[0];
-        var method = args[2] || 'push';
+        if (method === void 0) { method = "push"; }
         // 삭제
         var tmp = source.slice();
-        var _loop_2 = function (node_2) {
-            node_2.parent.children.splice(node_2.parent.children.findIndex(function (_) { return _ == node_2; }), 1);
-            node_2.parent = target; // parent가 업데이트됨
+        var _loop_2 = function (node) {
+            node.parent.children.splice(node.parent.children.findIndex(function (_) { return _ == node; }), 1);
+            node.parent = target; // parent가 업데이트됨
         };
         for (var _i = 0, tmp_1 = tmp; _i < tmp_1.length; _i++) {
-            var node_2 = tmp_1[_i];
-            _loop_2(node_2);
+            var node = tmp_1[_i];
+            _loop_2(node);
         }
         // 삽입
         if (method === 'push') {
@@ -561,61 +701,128 @@ var Tree = /** @class */ (function () {
             (_b = target.children).unshift.apply(_b, tmp);
         }
     };
-    Tree._delete = function (node, args) {
+    Tree._move = function (node, args) {
+        var source = Tree.select(node, args[0]);
+        var target = Tree.select(node, args[1])[0];
+        Tree.move(source, target, args[2]);
+    };
+    Tree.delete = function (node, recursive) {
         var _a;
-        var target = Tree._select(node, args[0])[0];
-        var parent = target.parent;
-        // 교체
-        (_a = parent.children).splice.apply(_a, [parent.children.findIndex(function (_) { return _ == target; }), 1].concat(target.children));
-        // 부모변경
-        for (var _i = 0, _b = target.children; _i < _b.length; _i++) {
-            var child = _b[_i];
-            child.parent = parent;
+        if (recursive === void 0) { recursive = false; }
+        var parent = node.parent;
+        // 전체제거
+        if (recursive) {
+            parent.children.splice(parent.children.findIndex(function (_) { return _ == node; }), 1);
+        }
+        // 타겟만 제거
+        else {
+            (_a = parent.children).splice.apply(_a, [parent.children.findIndex(function (_) { return _ == node; }), 1].concat(node.children));
+            // 부모변경
+            for (var _i = 0, _b = node.children; _i < _b.length; _i++) {
+                var child = _b[_i];
+                child.parent = parent;
+            }
         }
     };
-    Tree._create = function (node, args) {
-        var target = Tree._select(node, args[0])[0];
-        var method = args[2] || 'push';
+    Tree._delete = function (node, args) {
+        var target = Tree.select(node, args[0])[0];
+        Tree.delete(target, args[1] === "true");
+    };
+    Tree.create = function (node, pos, method) {
+        if (method === void 0) { method = "push"; }
         var newNode = {
-            pos: args[1],
-            parent: target,
+            pos: pos,
+            parent: node,
             children: [],
             word: ""
         };
         // 삽입
         if (method === 'push') {
-            target.children.push(newNode);
+            node.children.push(newNode);
         }
         else {
-            target.children.unshift(newNode);
+            node.children.unshift(newNode);
         }
+    };
+    Tree._create = function (node, args) {
+        var target = Tree.select(node, args[0])[0];
+        Tree.create(target, args[1], args[2]);
+        // const method = args[2] || 'push';
+        // const newNode = {
+        //     pos: args[1],
+        //     parent: target,
+        //     children: [],
+        //     word: ""
+        // }
+        // // 삽입
+        // if (method === 'push') {
+        //     target.children.push(<INode>newNode);
+        // } else {
+        //     target.children.unshift(<INode>newNode);
+        // }
+    };
+    Tree.set = function (node, attrName, attrVal) {
+        if (!node.attr) {
+            node.attr = {};
+        }
+        node.attr[attrName] = attrVal;
     };
     Tree._set = function (node, args) {
-        var target = Tree._select(node, args[0])[0];
-        if (!target.attr) {
-            target.attr = {};
-        }
-        target.attr[args[1]] = args[2];
+        var target = Tree.select(node, args[0])[0];
+        Tree.set(target, args[1], args[2]);
+    };
+    Tree.replace = function (node, pos) {
+        node.pos = pos;
     };
     Tree._replace = function (node, args) {
-        var target = Tree._select(node, args[0])[0];
-        target.pos = args[1];
+        var target = Tree.select(node, args[0])[0];
+        Tree.replace(target, args[1]);
+    };
+    Tree.element = function (node, element) {
+        // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
+        if (node.element && node.element !== element) {
+            var clone = Object.assign({}, node);
+            clone.parent = node;
+            node.children = [clone];
+            node.attr = {};
+        }
+        node.element = element;
     };
     Tree._element = function (node, args) {
-        var target = Tree._select(node, args[0])[0];
-        target.element = args[1];
+        var target = Tree.select(node, args[0])[0];
+        Tree.element(target, args[1]);
     };
-    Tree.prototype.loopNode = function (node, cb) {
+    Tree.word = function (node, word) {
+        var curNode = node;
+        // 해당 노드의 최하위(leaf) 노드를 선택
+        while (curNode.children && curNode.children.length) {
+            curNode = curNode.children[0];
+        }
+        curNode.word = word;
+        var token = Object.assign({}, curNode.token);
+        token.lemma = word;
+        curNode.token = token;
+    };
+    Tree._word = function (node, args) {
+        var target = Tree.select(node, args[0])[0];
+        Tree.word(target, args[1]);
+    };
+    // TODO merge 만들기
+    Tree._merge = function (node, args) {
+    };
+    Tree.loopNode = function (node, cb) {
         if (cb === void 0) { cb = null; }
-        cb && cb(node);
         for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
             var child = _a[_i];
-            this.loopNode(child, cb);
+            Tree.loopNode(child, cb);
         }
+        cb && cb(node);
     };
     Tree.prototype.toJSON = function () {
         var jsonObj = Object.assign({}, this._tree);
-        this.loopNode(jsonObj, function (node) { node.parent = null; });
+        Tree.loopNode(jsonObj, function (node) {
+            delete node.parent;
+        });
         return jsonObj;
     };
     return Tree;
@@ -625,6 +832,12 @@ exports.Tree = Tree;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("xml-js");
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -638,6 +851,8 @@ var ECommand;
     ECommand["SET"] = "SET";
     ECommand["REPLACE"] = "REPLACE";
     ECommand["ELEMENT"] = "ELEMENT";
+    ECommand["MERGE"] = "MERGE";
+    ECommand["WORD"] = "WORD";
 })(ECommand = exports.ECommand || (exports.ECommand = {}));
 
 
