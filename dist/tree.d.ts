@@ -25,13 +25,22 @@ export declare class Tree {
     private static _getTokens;
     private _setCurrent;
     private _setCurrentIndex;
-    private static _select;
+    static select(node: INode, arg: string): INode[];
+    static move(source: INode[], target: INode, method?: string): void;
     private static _move;
+    static delete(node: INode, recursive?: boolean): void;
     private static _delete;
+    static create(node: INode, pos: string, method?: string): void;
     private static _create;
+    static set(node: INode, attrName: string, attrVal: string): void;
     private static _set;
+    static replace(node: INode, pos: string): void;
     private static _replace;
+    static element(node: INode, element: string): void;
     private static _element;
-    private loopNode;
+    static word(node: INode, word: string): void;
+    private static _word;
+    private static _merge;
+    static loopNode(node: INode, cb?: Function): void;
     toJSON(): any;
 }
