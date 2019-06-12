@@ -164,14 +164,17 @@ describe('Test Commands', () => {
             children: [
                 {
                     pos: "VP",
-                    children: []
+                    children: [{
+                        pos: "PRP",
+                        word: "hi"
+                    }]
                 }, {
                     pos: "NP",
                     children: []
                 }]
         }
         Tree.word(<INode>tree.children[0], "test");
-        expect((<INode>tree.children[0]).word).toEqual("test")
+        expect((<INode>tree.children[0].children[0]).word).toEqual("test")
     })
 })
 

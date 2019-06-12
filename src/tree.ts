@@ -710,13 +710,13 @@ export class Tree {
     }
 
     public static element(node: INode, element: string) {
-        // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
-        if (node.element && node.element !== element) {
-            const clone = Object.assign({}, node);
-            clone.parent = node;
-            node.children = [clone];
-            node.attr = {}
-        }
+        // // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
+        // if (node.element && node.element !== element) {
+        //     const clone = Object.assign({}, node);
+        //     clone.parent = node;
+        //     node.children = [clone];
+        //     node.attr = {}
+        // }
         node.element = element;
     }
 
@@ -726,10 +726,18 @@ export class Tree {
     }
 
     public static word(node: INode, word: string) {
-        node.word = word;
-        let token = Object.assign({}, node.token);
+        let curNode = node;
+
+        // 해당 노드의 최하위(leaf) 노드를 선택
+        while (curNode.children && curNode.children.length) {
+            curNode = curNode.children[0]
+        }
+
+        curNode.word = word;
+        let token = Object.assign({}, curNode.token);
         token.lemma = word;
-        node.token = token;
+        curNode.token = token;
+
     }
 
     private static _word(node: INode, args: string[]) {
