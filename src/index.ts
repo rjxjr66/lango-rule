@@ -1,4 +1,4 @@
 export * from "./tree";
 export * from "./rule.interface";
 
-export const LANGO_RULE_VERSION = 'v0.0.32'
+export const LANGO_RULE_VERSION = 'v0.0.33'

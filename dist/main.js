@@ -76,7 +76,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(1));
 __export(__webpack_require__(3));
-exports.LANGO_RULE_VERSION = 'v0.0.32';
+exports.LANGO_RULE_VERSION = 'v0.0.33';
 
 
 /***/ }),
@@ -779,13 +779,13 @@ var Tree = /** @class */ (function () {
         Tree.replace(target, args[1]);
     };
     Tree.element = function (node, element) {
-        // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
-        if (node.element && node.element !== element) {
-            var clone = Object.assign({}, node);
-            clone.parent = node;
-            node.children = [clone];
-            node.attr = {};
-        }
+        // // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
+        // if (node.element && node.element !== element) {
+        //     const clone = Object.assign({}, node);
+        //     clone.parent = node;
+        //     node.children = [clone];
+        //     node.attr = {}
+        // }
         node.element = element;
     };
     Tree._element = function (node, args) {

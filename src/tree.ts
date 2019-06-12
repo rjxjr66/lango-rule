@@ -710,13 +710,13 @@ export class Tree {
     }
 
     public static element(node: INode, element: string) {
-        // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
-        if (node.element && node.element !== element) {
-            const clone = Object.assign({}, node);
-            clone.parent = node;
-            node.children = [clone];
-            node.attr = {}
-        }
+        // // WORD 엘리먼트로 확정된 상태에서 다른 ELEMENT의 룰이 중복 선언되면 하위에 WORD를 생성후에 현재 노드에 ELEMENT를 부여한다
+        // if (node.element && node.element !== element) {
+        //     const clone = Object.assign({}, node);
+        //     clone.parent = node;
+        //     node.children = [clone];
+        //     node.attr = {}
+        // }
         node.element = element;
     }
 
